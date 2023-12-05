@@ -1,5 +1,5 @@
 
-class ant:
+class Ant:
     def __init__(self, pheromon_status, coordinates, size, speed, amount_to_carry):
         """
         This class represents an ant in the Ant search algorithm.
