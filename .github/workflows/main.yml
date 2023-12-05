@@ -26,7 +26,7 @@ jobs:
           pip install -r REQUIREMENTS.txt
       - name: lint with ruff
         run: |
-          ruff src/main.py
+          ruff resources/main.py
       - name: test with pytest
         run: |
           pytest
