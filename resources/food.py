@@ -1,5 +1,5 @@
 
-class food:
+class Food:
     def __init__(self, size, coordinates, amount_of_food):
         """
         This class represents a food source in the Ant Search Algorithm.
