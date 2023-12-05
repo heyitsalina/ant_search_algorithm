@@ -1,4 +1,4 @@
-from resources.ant import *
+from resources.Ant import *
 
 
 def test_switch_pheromon():
