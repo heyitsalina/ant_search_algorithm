@@ -1,2 +1,2 @@
 import pytest
-from resources.Food import *
+from resources.food import *
