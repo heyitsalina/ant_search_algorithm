@@ -1,5 +1,5 @@
 import pytest
-from resources.Ant import *
+from resources.ant import *
 
 
 def test_switch_pheromon():
