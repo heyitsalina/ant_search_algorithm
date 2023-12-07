@@ -1,5 +1,5 @@
 import pytest
-from resources.ant import World
+from resources.world import World
 
 def generate_obstacles():
     pass
