@@ -6,8 +6,10 @@ from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.dropdown import DropDown
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.image import Image
 from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -52,8 +54,6 @@ class SimulationWidget(Widget):
     def __init__(self, **kwargs):
         super(SimulationWidget, self).__init__(**kwargs)
         self.is_running = False
-        # self.pos = (0, 100)
-
 
         with self.canvas:
             Color(1, 1, 1, 1)  # White background
@@ -69,15 +69,43 @@ class ButtonWidget(BoxLayout):
         super(ButtonWidget, self).__init__(**kwargs)
         self.simulation_widget = simulation_widget
 
-        start_stop_button = Button(text='Start', on_press=simulation_widget.toggle_simulation, height=100, size_hint_y=None)
+        food_button = Button(text='Food', height=100, size_hint_y=None, size_hint_x=None)
+        colonie_button = Button(text='Colonie', height=100, size_hint_y=None, size_hint_x=None)
 
-        food_button = Button(text='Food', height=100, size_hint_y=None)
+        sizes = [(480, 360), (720, 480), (1080, 720), (1920, 1080), (2560, 1440)]
+        sizes.reverse()
+        dropdown = DropDown()
 
-        colonie_button = Button(text='Colonie', height=100, size_hint_y=None)
+        for size in sizes:
+            btn = Button(text=str(size[0]) + 'x' + str(size[1]), size_hint_y = None, height = 40)
+            btn.bind(on_release = lambda btn: dropdown.select(btn.text))
+            dropdown.add_widget(btn)
 
-        self.add_widget(food_button)
-        self.add_widget(colonie_button)
-        self.add_widget(start_stop_button)
+        size_button= Button(text ='Size', size_hint =(None, None))#, pos =(350, 300))
+        
+        size_button.bind(on_release = dropdown.open)
+
+        dropdown.bind(on_select = lambda instance, x: setattr(size_button, 'text', x))
+
+
+        # Create a horizontal box layout for "Food" and "Colonie" buttons
+        food_colonie_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
+        food_colonie_layout.add_widget(food_button)
+        food_colonie_layout.add_widget(colonie_button)
+        food_colonie_layout.add_widget(size_button)
+
+        # Create the "Start/Stop" button
+        start_stop_button = Button(text='Start', on_press=simulation_widget.toggle_simulation, height=100, size_hint_y=None, size_hint_x=None)
+
+
+
+        # Create a box layout for the buttons with space and positioning
+        buttons_layout = BoxLayout(orientation='horizontal', spacing=500, padding=0, size_hint_y=None)
+        buttons_layout.add_widget(food_colonie_layout)
+        buttons_layout.add_widget(start_stop_button)
+
+        # Add buttons layout to the main layout
+        self.add_widget(buttons_layout)
 
 
 if __name__ == "__main__":
