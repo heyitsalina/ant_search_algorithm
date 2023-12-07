@@ -1,33 +1,26 @@
+from kivy.config import Config
+Config.set('graphics', 'resizable', '0')
+
 import kivy
 from kivy.app import App
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.textinput import TextInput
-from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.dropdown import DropDown
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.relativelayout import RelativeLayout
-from kivy.uix.image import Image
 from kivy.graphics import Rectangle, Color, Ellipse
-from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.clock import Clock
-import random
 from kivy.config import Config
 import numpy as np
 
 
 kivy.require('2.2.1')
-Config.set('graphics', 'resizable', '0')
 
 
 
 class GUI(App):
     """
     This class is used to create a graphical user interface (GUI) for the simulation.
-
     ...
 
     Methods
@@ -40,7 +33,7 @@ class GUI(App):
         Window.size = (720, 480)
         root = BoxLayout(orientation='vertical', padding=0, spacing=0)
 
-        simulation_widget = SimulationWidget(size=(1080, 680), pos=(0, 100))
+        simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
 
         root.add_widget(simulation_widget)
@@ -52,44 +45,55 @@ class GUI(App):
     
 
 class SimulationWidget(Widget):
+    """
+    This class is the actual widget for the simulation.
+    ...
+
+    Attributes
+    ----------
+    is_running : bool
+        indicates whether the simulation is running
+    size : tuple
+        size of the simulation canvas
+    pos : tuple
+        position of the canvas
+
+    Methods
+    -------
+    
+
+    """
     def __init__(self, **kwargs):
         super(SimulationWidget, self).__init__(**kwargs)
         self.is_running = False
-
-        with self.canvas:
-            Color(1, 1, 1, 1)  # White background
-            self.rect = Rectangle(pos=self.pos, size=self.size)
-            print(self.size)
-
         self.generate()
 
     def generate(self):
         self.array = np.random.choice([0, 1], size=(160, 90))
-        # self.array = np.eye(50, 50)
         self.points = np.array(np.where(self.array == 1)).T
-        with self.canvas:
-                Color(1, 1, 1, 1)  # White background
-                self.rect = Rectangle(pos=self.pos, size=self.size)
+        self.size = (Window.size[0], Window.size[1] - 100)
+        self.pos = (0, 100)
+        self.update_canvas()
 
-                Color(0, 0, 0, 1)  # Black points
-                for point in self.points:
-                    Ellipse(pos=(point[0], point[1]), size=(5, 5))
+    def update_canvas(self):
+        self.canvas.clear()
+        self.size = (Window.size[0], Window.size[1] - 100)
+        with self.canvas:
+            Color(1, 1, 1, 1)  # White background
+            self.rect = Rectangle(pos=self.pos, size=self.size)
+
+            Color(0, 0, 0, 1)  # Black points
+            for point in self.points:
+                Ellipse(pos=(point[0] / self.array.shape[0] * self.size[0], point[1] / self.array.shape[1] * self.size[1] + 100),
+                        size=(5, 5))
 
     def update_world(self, dt):
         if self.is_running:
-            self.canvas.clear()
-            self.size=(1080, 680)
-            self.pos=(0, 100)
-            with self.canvas:
-                Color(1, 1, 1, 1)  # White background
-                self.rect = Rectangle(pos=self.pos, size=self.size)
-
-                Color(0, 0, 0, 1)  # Black points
-                for point in self.points:
-                    Ellipse(pos=(point[0]/self.array.shape[0]*self.size[0], point[1]/self.array.shape[1]*self.size[1] +100), size=(5, 5))
-                
-                self.array = np.random.choice([0, 1], size=(160, 90))
-                self.points = np.array(np.where(self.array == 1)).T
+            self.pos = (0, 100)
+            self.size = (Window.size[0], Window.size[1] - 100)
+            self.array = np.random.choice([0, 1], size=(160, 90))
+            self.points = np.array(np.where(self.array == 1)).T
+            self.update_canvas()
 
 
     def toggle_simulation(self, instance):
@@ -98,6 +102,17 @@ class SimulationWidget(Widget):
 
 
 class ButtonWidget(BoxLayout):
+    """
+    This class is the widget for all the buttons.
+    ...
+    
+    Attributs
+    simulation_widget : SimulationWidget()
+        instance of the SimulationWidget() to connect both widgets
+    dropdown : DropDown()
+        drop down menu to select the size of the window
+
+    """
     def __init__(self, simulation_widget,**kwargs):
         super(ButtonWidget, self).__init__(**kwargs)
         self.simulation_widget = simulation_widget
@@ -121,6 +136,8 @@ class ButtonWidget(BoxLayout):
 
         dropdown.bind(on_select = lambda instance, x: setattr(size_button, 'text', x))
 
+        self.dropdown = dropdown
+
 
         # Create a horizontal box layout for "Food" and "Colonie" buttons
         food_colonie_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
@@ -129,7 +146,7 @@ class ButtonWidget(BoxLayout):
         food_colonie_layout.add_widget(size_button)
 
         # Create the "Start/Stop" button
-        start_stop_button = Button(text='Start', on_press=simulation_widget.toggle_simulation, height=100, size_hint_y=None, size_hint_x=None)
+        start_stop_button = Button(text='Start', on_press=self.simulation_widget.toggle_simulation, height=100, size_hint_y=None, size_hint_x=None)
 
 
 
@@ -143,6 +160,8 @@ class ButtonWidget(BoxLayout):
 
     def change_window_size(self, window_size):
         Window.size = window_size
+        self.simulation_widget.generate()
+        self.simulation_widget.generate()
 
 
 
