@@ -16,6 +16,7 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 import random
 from kivy.config import Config
+import numpy as np
 
 
 kivy.require('2.2.1')
@@ -27,7 +28,7 @@ class GUI(App):
     """
     This class is used to create a graphical user interface (GUI) for the simulation.
 
-     ...
+    ...
 
     Methods
     -------
@@ -45,7 +46,7 @@ class GUI(App):
         root.add_widget(simulation_widget)
         root.add_widget(button_widget)
 
-        # Clock.schedule_interval(simulation_widget.update_points, 0.1)
+        Clock.schedule_interval(simulation_widget.update_world, 0.1)
 
         return root
     
@@ -58,6 +59,38 @@ class SimulationWidget(Widget):
         with self.canvas:
             Color(1, 1, 1, 1)  # White background
             self.rect = Rectangle(pos=self.pos, size=self.size)
+            print(self.size)
+
+        self.generate()
+
+    def generate(self):
+        self.array = np.random.choice([0, 1], size=(160, 90))
+        # self.array = np.eye(50, 50)
+        self.points = np.array(np.where(self.array == 1)).T
+        with self.canvas:
+                Color(1, 1, 1, 1)  # White background
+                self.rect = Rectangle(pos=self.pos, size=self.size)
+
+                Color(0, 0, 0, 1)  # Black points
+                for point in self.points:
+                    Ellipse(pos=(point[0], point[1]), size=(5, 5))
+
+    def update_world(self, dt):
+        if self.is_running:
+            self.canvas.clear()
+            self.size=(1080, 680)
+            self.pos=(0, 100)
+            with self.canvas:
+                Color(1, 1, 1, 1)  # White background
+                self.rect = Rectangle(pos=self.pos, size=self.size)
+
+                Color(0, 0, 0, 1)  # Black points
+                for point in self.points:
+                    Ellipse(pos=(point[0]/self.array.shape[0]*self.size[0], point[1]/self.array.shape[1]*self.size[1] +100), size=(5, 5))
+                
+                self.array = np.random.choice([0, 1], size=(160, 90))
+                self.points = np.array(np.where(self.array == 1)).T
+
 
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
