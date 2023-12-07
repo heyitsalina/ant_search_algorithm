@@ -39,7 +39,7 @@ class GUI(App):
         root.add_widget(simulation_widget)
         root.add_widget(button_widget)
 
-        Clock.schedule_interval(simulation_widget.update_world, 0.1)
+        Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
 
         return root
     
@@ -78,6 +78,7 @@ class SimulationWidget(Widget):
     def update_canvas(self):
         self.canvas.clear()
         self.size = (Window.size[0], Window.size[1] - 100)
+        self.pos = (0, 100)
         with self.canvas:
             Color(1, 1, 1, 1)  # White background
             self.rect = Rectangle(pos=self.pos, size=self.size)
@@ -160,9 +161,7 @@ class ButtonWidget(BoxLayout):
 
     def change_window_size(self, window_size):
         Window.size = window_size
-        self.simulation_widget.generate()
-        self.simulation_widget.generate()
-
+        Clock.schedule_once(lambda dt: self.simulation_widget.update_canvas(), 0.1)
 
 
 if __name__ == "__main__":
