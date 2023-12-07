@@ -112,9 +112,10 @@ class ButtonWidget(BoxLayout):
         for size in sizes:
             btn = Button(text=str(size[0]) + 'x' + str(size[1]), size_hint_y = None, height = 40)
             btn.bind(on_release = lambda btn: dropdown.select(btn.text))
+            btn.bind(on_release=lambda btn, size=size: self.change_window_size(size))
             dropdown.add_widget(btn)
 
-        size_button= Button(text ='Size', size_hint =(None, None))#, pos =(350, 300))
+        size_button= Button(text ='Size', size_hint =(None, None))
         
         size_button.bind(on_release = dropdown.open)
 
@@ -139,6 +140,10 @@ class ButtonWidget(BoxLayout):
 
         # Add buttons layout to the main layout
         self.add_widget(buttons_layout)
+
+    def change_window_size(self, window_size):
+        Window.size = window_size
+
 
 
 if __name__ == "__main__":
