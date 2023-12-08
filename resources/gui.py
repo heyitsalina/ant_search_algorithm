@@ -71,8 +71,6 @@ class SimulationWidget(Widget):
     def generate(self):
         self.array = np.random.choice([0, 1], size=(160, 90))
         self.points = np.array(np.where(self.array == 1)).T
-        self.size = (Window.size[0], Window.size[1] - 100)
-        self.pos = (0, 100)
         self.update_canvas()
 
     def update_canvas(self):
@@ -140,28 +138,23 @@ class ButtonWidget(BoxLayout):
         self.dropdown = dropdown
 
 
-        # Create a horizontal box layout for "Food" and "Colonie" buttons
         food_colonie_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         food_colonie_layout.add_widget(food_button)
         food_colonie_layout.add_widget(colonie_button)
         food_colonie_layout.add_widget(size_button)
 
-        # Create the "Start/Stop" button
         start_stop_button = Button(text='Start', on_press=self.simulation_widget.toggle_simulation, height=100, size_hint_y=None, size_hint_x=None)
 
-
-
-        # Create a box layout for the buttons with space and positioning
         buttons_layout = BoxLayout(orientation='horizontal', spacing=500, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colonie_layout)
         buttons_layout.add_widget(start_stop_button)
 
-        # Add buttons layout to the main layout
         self.add_widget(buttons_layout)
 
     def change_window_size(self, window_size):
         Window.size = window_size
         Clock.schedule_once(lambda dt: self.simulation_widget.update_canvas(), 0.1)
+
 
 
 if __name__ == "__main__":
