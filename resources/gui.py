@@ -66,16 +66,6 @@ class SimulationWidget(Widget):
     def __init__(self, **kwargs):
         super(SimulationWidget, self).__init__(**kwargs)
         self.is_running = False
-        matrix_shape = (160, 90)
-
-        # Erzeuge eine leere Matrix mit Nullen
-        self.result_matrix =  np.zeros(matrix_shape)
-
-        # Setze 1 und -1 auf der Hauptdiagonale
-        for i in range(min(matrix_shape)):
-            self.result_matrix[i, i] = 1 if i % 2 == 0 else -1
-        # print(self.result_matrix)
-
         self.generate()
 
     def generate(self):
