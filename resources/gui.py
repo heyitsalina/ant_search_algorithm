@@ -66,7 +66,7 @@ class SimulationWidget(Widget):
     def __init__(self, **kwargs):
         super(SimulationWidget, self).__init__(**kwargs)
         self.is_running = False
-        matrix_shape = (90, 160)
+        matrix_shape = (160, 90)
 
         # Erzeuge eine leere Matrix mit Nullen
         self.result_matrix =  np.zeros(matrix_shape)
@@ -74,19 +74,20 @@ class SimulationWidget(Widget):
         # Setze 1 und -1 auf der Hauptdiagonale
         for i in range(min(matrix_shape)):
             self.result_matrix[i, i] = 1 if i % 2 == 0 else -1
-        print(self.result_matrix)
+        # print(self.result_matrix)
 
         self.generate()
 
     def generate(self):
-        self.array = np.eye(160, 90)
+        self.array = np.eye(160, 160)
         self.array[0, :] = 1  # Erste Zeile
         self.array[-1, :] = 1  # Letzte Zeile
         self.array[:, 0] = 1  # Erste Spalte
         self.array[:, -1] = 1 
-            
+        print(self.array)
         # self.array = np.random.choice([0, 1], size=(160, 90))
-        self.array = self.array @self.result_matrix #np.delete(np.eye(160, 90) @ self.result_matrix, np.s_[-80:], axis=0)
+        self.array = self.array[self.array.shape[0]-1::-1, :] #@ self.result_matrix #self.array @self.result_matrix #np.delete(np.eye(160, 90) @ self.result_matrix, np.s_[-80:], axis=0)
+        print(self.array)
         print(self.array.shape)
         self.points = np.array(np.where(self.array == 1)).T
         self.update_canvas()
