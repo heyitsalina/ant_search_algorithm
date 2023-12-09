@@ -79,16 +79,9 @@ class SimulationWidget(Widget):
         self.generate()
 
     def generate(self):
-        self.array = np.eye(160, 160)
-        self.array[0, :] = 1  # Erste Zeile
-        self.array[-1, :] = 1  # Letzte Zeile
-        self.array[:, 0] = 1  # Erste Spalte
-        self.array[:, -1] = 1 
-        print(self.array)
-        # self.array = np.random.choice([0, 1], size=(160, 90))
-        self.array = self.array[self.array.shape[0]-1::-1, :] #@ self.result_matrix #self.array @self.result_matrix #np.delete(np.eye(160, 90) @ self.result_matrix, np.s_[-80:], axis=0)
-        print(self.array)
-        print(self.array.shape)
+        # self.array = np.ones((90, 160))
+        self.array = np.random.choice([0, 1], size=(90, 160))
+        self.array = self.array[self.array.shape[0]-1::-1, :].T
         self.points = np.array(np.where(self.array == 1)).T
         self.update_canvas()
 
