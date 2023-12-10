@@ -139,7 +139,7 @@ class ButtonWidget(BoxLayout):
         self.simulation_widget = simulation_widget
 
         food_button = Button(text='Food', height=100, size_hint_y=None, size_hint_x=None)
-        colonie_button = Button(text='Colonie', height=100, size_hint_y=None, size_hint_x=None)
+        colonie_button = Button(text='Colony', height=100, size_hint_y=None, size_hint_x=None)
 
         sizes = [(480, 360), (720, 480), (1080, 720), (1920, 1080), (2560, 1440)]
         sizes.reverse()
