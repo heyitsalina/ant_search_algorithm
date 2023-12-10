@@ -12,6 +12,7 @@ def app():
 
 def test_app_builds_without_errors(app):
     # Test that the application builds without errors
+    app.initialize_kivy()
     app.build()
 
 def test_simulation_widget_generate():
