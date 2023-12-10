@@ -8,6 +8,10 @@ from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.core.window import Window
 from kivy.clock import Clock
 
+# import kivy
+# from kivy.config import Config
+# kivy.require('2.2.1')
+# Config.set('graphics', 'resizable', '0')
 
 class GUI(App):
     """
@@ -147,7 +151,6 @@ class ButtonWidget(BoxLayout):
         dropdown.bind(on_select = lambda instance, x: setattr(size_button, 'text', x))
 
         self.dropdown = dropdown
-
 
         food_colonie_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         food_colonie_layout.add_widget(food_button)
