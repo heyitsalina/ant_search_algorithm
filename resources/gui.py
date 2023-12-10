@@ -1,4 +1,3 @@
-import kivy
 import numpy as np
 from kivy.app import App
 from kivy.uix.widget import Widget
@@ -9,6 +8,10 @@ from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.core.window import Window
 from kivy.clock import Clock
 
+# import kivy
+# from kivy.config import Config
+# kivy.require('2.2.1')
+# Config.set('graphics', 'resizable', '0')
 
 
 class GUI(App):
