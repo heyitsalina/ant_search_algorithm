@@ -1,6 +1,4 @@
-from kivy.config import Config
-Config.set('graphics', 'resizable', '0')
-
+from resources import gui_config
 import kivy
 from kivy.app import App
 from kivy.uix.widget import Widget
@@ -13,9 +11,7 @@ from kivy.clock import Clock
 from kivy.config import Config
 import numpy as np
 
-
 kivy.require('2.2.1')
-
 
 
 class GUI(App):
