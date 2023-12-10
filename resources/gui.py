@@ -60,6 +60,17 @@ class SimulationWidget(Widget):
 
     Methods
     -------
+    generate():     for demonstration purposes only!
+        generates random matrix
+    update_world():
+        generate new points if running
+    update_canvas():
+        show the points on the screen
+    transform_array():
+        transform the array to get show it right on the screen
+    toggle_simulation():
+        change whether the simulation is running or not
+    -------
     
 
     """
@@ -71,7 +82,7 @@ class SimulationWidget(Widget):
     def generate(self):
         # self.array = np.ones((90, 160))
         self.array = np.random.choice([0, 1], size=(90, 160))
-        self.array = self.array[self.array.shape[0]-1::-1, :].T
+        self.array = self.transform_array(self.array)
         self.points = np.array(np.where(self.array == 1)).T
         self.update_canvas()
 
@@ -92,9 +103,13 @@ class SimulationWidget(Widget):
         if self.is_running:
             self.pos = (0, 100)
             self.size = (Window.size[0], Window.size[1] - 100)
-            self.array = np.random.choice([0, 1], size=(160, 90))
+            self.array = np.random.choice([0, 1], size=(90, 160))
+            self.array = self.transform_array(self.array)
             self.points = np.array(np.where(self.array == 1)).T
             self.update_canvas()
+
+    def transform_array(self, array):
+        return array[array.shape[0]-1::-1, :].T
 
 
     def toggle_simulation(self, instance):
@@ -108,11 +123,16 @@ class ButtonWidget(BoxLayout):
     ...
     
     Attributs
+    ---------
     simulation_widget : SimulationWidget()
         instance of the SimulationWidget() to connect both widgets
     dropdown : DropDown()
         drop down menu to select the size of the window
-
+    
+    Methods
+    -------
+    change_window_size():
+        change the size of the window and update the canvas
     """
     def __init__(self, simulation_widget,**kwargs):
         super(ButtonWidget, self).__init__(**kwargs)
