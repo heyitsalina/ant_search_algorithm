@@ -70,10 +70,8 @@ class SimulationWidget(Widget):
         transform the array to get show it right on the screen
     toggle_simulation():
         change whether the simulation is running or not
-    -------
-    
-
     """
+
     def __init__(self, **kwargs):
         super(SimulationWidget, self).__init__(**kwargs)
         self.is_running = False
@@ -134,6 +132,7 @@ class ButtonWidget(BoxLayout):
     change_window_size():
         change the size of the window and update the canvas
     """
+    
     def __init__(self, simulation_widget,**kwargs):
         super(ButtonWidget, self).__init__(**kwargs)
         self.simulation_widget = simulation_widget
