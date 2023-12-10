@@ -1,10 +1,5 @@
 import kivy
 import numpy as np
-from kivy.config import Config
-
-kivy.require('2.2.1')
-Config.set('graphics', 'resizable', '0')
-
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
