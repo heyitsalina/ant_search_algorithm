@@ -8,11 +8,6 @@ from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.core.window import Window
 from kivy.clock import Clock
 
-# import kivy
-# from kivy.config import Config
-# kivy.require('2.2.1')
-# Config.set('graphics', 'resizable', '0')
-
 
 class GUI(App):
     """
@@ -74,7 +69,6 @@ class SimulationWidget(Widget):
         self.generate()
 
     def generate(self):
-        # self.array = np.ones((90, 160))
         self.array = np.random.choice([0, 1], size=(90, 160))
         self.array = self.transform_array(self.array)
         self.points = np.array(np.where(self.array == 1)).T
