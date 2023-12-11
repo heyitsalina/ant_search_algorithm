@@ -41,7 +41,7 @@ class GUI(App):
     def initialize_kivy(dt):
         try:
             Window.size = (720, 480)
-        except:
+        finally:
             print("No Window found!")
     
 
