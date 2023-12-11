@@ -6,6 +6,8 @@ from kivy.uix.button import Button
 from resources.gui import GUI, SimulationWidget, ButtonWidget
 from kivy.tests.common import GraphicUnitTest
 
+os.environ['KIVY_NO_FILELOG'] = '1'
+
 class TestGUI(GraphicUnitTest):
     def test_gui_creation(self):
         # Initialize the Kivy application
