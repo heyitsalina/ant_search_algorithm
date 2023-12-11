@@ -42,7 +42,7 @@ class GUI(App):
         try:
             Window.size = (720, 480)
         except:
-            pass
+            print("No Window found!")
     
 
 class SimulationWidget(Widget):
