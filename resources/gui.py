@@ -25,7 +25,6 @@ class GUI(App):
     """
 
     def build(self):
-        self.initialize_kivy()
         root = BoxLayout(orientation='vertical', padding=0, spacing=0)
 
         simulation_widget = SimulationWidget()
@@ -35,6 +34,8 @@ class GUI(App):
         root.add_widget(button_widget)
 
         Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
+        
+        self.initialize_kivy()
 
         return root
     
