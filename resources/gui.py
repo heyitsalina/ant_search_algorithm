@@ -34,6 +34,8 @@ class GUI(App):
         root.add_widget(button_widget)
 
         Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
+        
+        self.initialize_kivy()
 
         return root
     
