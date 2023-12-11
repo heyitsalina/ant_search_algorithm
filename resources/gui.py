@@ -25,7 +25,6 @@ class GUI(App):
     """
 
     def build(self):
-        self.initialize_kivy()
         root = BoxLayout(orientation='vertical', padding=0, spacing=0)
 
         simulation_widget = SimulationWidget()
@@ -37,12 +36,6 @@ class GUI(App):
         Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
 
         return root
-    
-    def initialize_kivy(dt):
-        try:
-            Window.size = (720, 480)
-        finally:
-            print("No Window found!")
     
 
 class SimulationWidget(Widget):
