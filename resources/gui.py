@@ -41,7 +41,6 @@ class GUI(App):
     
     def initialize_kivy(dt):
         Window.size = (720, 480)
-  
     
 
 class SimulationWidget(Widget):
