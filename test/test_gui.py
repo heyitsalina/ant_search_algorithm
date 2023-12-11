@@ -3,7 +3,17 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.uix.button import Button
 from resources.gui import GUI, SimulationWidget, ButtonWidget
+from xvfbwrapper import Xvfb
 
+# Fixture to create a virtual display during the tests
+@pytest.fixture
+def xvfb():
+    xvfb = Xvfb(width=1920, height=1080)
+    xvfb.start()
+    yield xvfb
+    xvfb.stop()
+
+    
 @pytest.fixture
 def app():
     # Initialize the Kivy application
