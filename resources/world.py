@@ -15,3 +15,7 @@ class World:
 
     def generate_obstacles(self):
         pass
+
+    def get_window_size(self, window_size):       
+        self.width, self.height = window_size[0], window_size[1]
+        return window_size

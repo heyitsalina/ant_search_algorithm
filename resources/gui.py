@@ -7,6 +7,7 @@ from kivy.uix.dropdown import DropDown
 from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.core.window import Window
 from kivy.clock import Clock
+from world import World
 
 # import kivy
 # from kivy.config import Config
@@ -172,6 +173,10 @@ class ButtonWidget(BoxLayout):
     def change_window_size(self, window_size):
         Window.size = window_size
         Clock.schedule_once(lambda dt: self.simulation_widget.update_canvas(), 0.1)
+        
+        #To inform the 'World' class about the current size of the GUI window...
+        world_instance = World()
+        world_instance.get_window_size(window_size)
 
 
 
