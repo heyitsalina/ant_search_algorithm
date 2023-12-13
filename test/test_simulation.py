@@ -1,5 +1,9 @@
 import pytest
-from resources.world import World
+from resources.simulation import Simulation
 
-def generate_obstacles():
-    pass
+sim = Simulation()
+
+def test_next_epoch():
+    for _ in range(5):
+        sim.next_epoch()
+
