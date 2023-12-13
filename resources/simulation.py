@@ -49,6 +49,7 @@ class Simulation:
     
     def update_pheromone(self, ant):
         # This will certainly not work, but just to understand the basic idea
+        # if ant.pheromone_status ist 1 or -1
         x, y = ant.coordinates
         self.pheromones[x][y] += ant.pheromon_status
 
