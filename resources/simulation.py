@@ -1,21 +1,41 @@
-class World:
-    def __init__(self, size=(720, 480), obstacles=0):
-        """
-        This class represents the world in which the ants are moving and the obstacles, food are.
-        
-        Args:
-        size (tuple):
-            Represents the width and height of the world.
-        obstacles (int):
-            The number of obstacles in the world. 
-        """
-        
-        self.width, self.height = size
-        self.obstacles = obstacles
+import numpy as np
 
-    def generate_obstacles(self):
-        pass
+class Simulation:
+    """
+    This class represents the simulation in which the ants are moving and the obstacles, food are.
+    ...
 
-    def get_window_size(self, window_size):       
-        self.width, self.height = window_size[0], window_size[1]
-        return window_size
+    Attributes
+    ----------
+    ants : list
+    pheromons : numpy array
+        A 2D numpy array representing the positions of the pheromons on a grid. 
+    food : list
+        A list containing the Food objects.
+    colonie : list
+        A list containing the colonie objects.
+    running : bool
+        Indicates if the simulation in running.
+    
+    Methods
+    -------
+    start():
+        Start the simulation.
+    next_epoch():
+        Calculates the next position of all Ant objects.
+    """
+    def __init__(self):
+        self.ants = []
+        self.pheromons = np.zeros((90, 160))
+        self.food = []
+        self.colonie = []
+        self.running = False
+
+    def start(self):
+        self.running = not self.running
+        while self.running:
+            self.next_epoch()
+
+    def next_epoch(self):
+        for ant in self.ants:
+            ant.move()
