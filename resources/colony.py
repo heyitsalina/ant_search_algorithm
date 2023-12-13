@@ -1,7 +1,9 @@
+from resources.ant import Ant
+
 class Colony:
     def __init__(self, amount, size, coordinates, color):
         """
-        This class represents the Ant-colony 
+        This class represents the Ant-colony.
 
         Args:
         amount (float):
@@ -11,11 +13,18 @@ class Colony:
         coordinates (tuple):
             The (x,y) coordinates of the ants nest?
         """
-
         self.amount = amount
         self.size = size
         self.coordinates = coordinates
         self.color = color
+        self.ants = []
 
+    def add_ants(self):
+        for _ in range(self.amount):
+            self.ants.append(Ant(pheromon_status=0, 
+                                 coordinates=self.coordinates,
+                                 size=(5,5),
+                                 speed=1,
+                                 amount_to_carry=1))
     
     

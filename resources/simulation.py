@@ -1,4 +1,5 @@
 import numpy as np
+from resources.colony import Colony
 
 class Simulation:
     """
@@ -7,12 +8,11 @@ class Simulation:
 
     Attributes
     ----------
-    ants : list
     pheromons : numpy array
         A 2D numpy array representing the positions of the pheromons on a grid. 
     food : list
         A list containing the Food objects.
-    colonie : list
+    colonies : list
         A list containing the colonie objects.
     running : bool
         Indicates if the simulation in running.
@@ -23,12 +23,16 @@ class Simulation:
         Start the simulation.
     next_epoch():
         Calculates the next position of all Ant objects.
+    add_colony():
+        Add a Colony object to the simulation.
+    add_food():
+        Add a Food object to the simulation.
     """
     def __init__(self):
-        self.ants = []
+        self
         self.pheromons = np.zeros((90, 160))
         self.food = []
-        self.colonie = []
+        self.colonies = []
         self.running = False
 
     def start(self):
@@ -37,5 +41,13 @@ class Simulation:
             self.next_epoch()
 
     def next_epoch(self):
-        for ant in self.ants:
-            ant.move()
+        for colony in self.colonies:
+            for ant in colony.ants:
+                ant.move()
+                
+    def add_colony(self, colony):
+        self.colonies.append(colony)
+
+    def add_food(self, food):
+        self.food.append(food)
+        
