@@ -2,7 +2,8 @@ import numpy as np
 
 class Simulation:
     """
-    This class represents the simulation in which the ants are moving and the obstacles, food are.
+    This class represents the simulation in which the ants are moving and the 
+    Colony and Food objects are.
     ...
 
     Attributes
