@@ -1,6 +1,6 @@
 
 class Ant:
-    def __init__(self, pheromon_status, coordinates, angle, size, speed, amount_to_carry):
+    def __init__(self, pheromon_status, coordinates, angle, size, speed, amount_to_carry, step_size):
         """
         This class represents an ant in the Ant search algorithm.
         
@@ -16,7 +16,9 @@ class Ant:
         speed (float):
             The speed at which the ant can move within the search space.
         amount_to_carry (float):
-            The maximum amount that the ant can carry during its search.  
+            The maximum amount that the ant can carry during its search.
+        step_size (float):
+            The distance covered by the ant in each step during its movement within the search space.
         """
         
         self.pheromon_status = pheromon_status
@@ -25,7 +27,7 @@ class Ant:
         self.speed = speed
         self.amount_to_carry = amount_to_carry
         self.angle = angle
-        
+        self.step_size = step_size
         
     def switch_pheromon(self):
         pass
