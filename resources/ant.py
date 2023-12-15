@@ -1,6 +1,6 @@
 
 class Ant:
-    def __init__(self, pheromon_status, coordinates, size, speed, amount_to_carry):
+    def __init__(self, pheromon_status, coordinates, angle, size, speed, amount_to_carry):
         """
         This class represents an ant in the Ant search algorithm.
         
@@ -8,7 +8,9 @@ class Ant:
         pheromone_status (float): 
             The current level of pheromone detected by the ant.
         coordinates (tuple):
-            The (x, y) coordinates of the ant in the search space.
+            The (x, y) current coordinates of the ant in the search space.
+        angle (float):
+            The current angle of the ant in the search space.
         size (float):
             The size of the ant, influencing its interaction with the environment.
         speed (float):
@@ -21,12 +23,15 @@ class Ant:
         self.coordinates = coordinates
         self.size = size
         self.speed = speed
-        self.amount_to_carry = amount_to_carry 
+        self.amount_to_carry = amount_to_carry
+        self.angle = angle
+        
         
     def switch_pheromon(self):
         pass
     
-    def move(self):
+    def move(self, target_pos, target_angle):
+        
         pass
     
     def find_food(self):
