@@ -34,7 +34,27 @@ class Ant:
     
     def move(self, target_pos, target_angle):
         
-        pass
+        # Gradual change of the attribute self.angle until reaching target_angle
+        # This allows smooth visualization based on self.angle
+        while abs(self.angle - target_angle) > 0:
+            if self.angle < target_angle:
+                self.angle += 0.1 #The step size for the angle change is initially set to 0.1
+            else:         
+                self.angle -= 0.1
+        
+        # Gradual change of the attribute self.coordinates until reaching target_pos        
+        while self.coordinates != target_pos:
+            
+            if self.coordinates[0] < target_pos[0]:
+                self.coordinates[0] += self.step_size
+            else:   
+                self.coordinates[0] -= self.step_size
+            
+            if self.coordinates[1] < target_pos[1]:
+                self.coordinates += self.step_size
+            else:   
+                self.coordinates[1] -= self.step_size[1]
+        
     
     def find_food(self):
         pass
