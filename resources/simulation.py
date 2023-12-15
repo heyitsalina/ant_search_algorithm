@@ -31,7 +31,6 @@ class Simulation:
         Add a Food object to the simulation.
     """
     def __init__(self):
-        self
         self.pheromones = np.zeros((90, 160))
         self.food = []
         self.colonies = []
