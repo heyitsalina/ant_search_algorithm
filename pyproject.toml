@@ -1,0 +1,76 @@
+# see documentation, e.g.
+# - https://packaging.python.org/en/latest/specifications/declaring-project-metadata/#declaring-project-metadata
+# - https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+# - https://www.python.org/dev/peps/pep-0621/
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+authors = [
+    { name = "Alina Weidemann", email = "alina.weidemann@study.hs-duesseldorf.de" },
+    { name = "Anas Al-Hariri", email = "anas.alhariri@study.hs-duesseldorf.de" },
+    { name = "Jonah Gräfe", email = "jonah.graefe@study.hs-duesseldorf.de" },
+    { name = "Nikita Rosig", email = "nikita.rosig@study.hs-duesseldorf.de" },
+    { name = "Tim Sandrock", email = "tim.sandrock@study.hs-duesseldorf.de" }
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+                "ruff= \"==0.1.7\"",
+                "pytest= \"==7.4.3\"", 
+                "kivy= \"==2.2.1\"", 
+                "numpy= \"==1.26.1\""
+                ]
+
+description = "A package implementing the ant search algorithm"
+license = {file = "LICENSE"}
+name = "ant_search_algorithm"
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.8"
+version = "0.1.0"
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "flake8",
+    "isort",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+publishing = [
+    "build",
+    "twine",
+    "wheel",
+]
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+)/
+'''
+
+[tool.isort]
+profile = "black"
+known_first_party = "ant_search_algorithm"
+packages = ["python_ant_search_algorithm"]
+src_paths = ["ant_search_algorithm", "tests"]
+line_length = "100"
+
+[tool.pylint]  # If you opt to use pylint
+# Pylint configuration options
