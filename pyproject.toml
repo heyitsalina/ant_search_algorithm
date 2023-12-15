@@ -28,10 +28,10 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "ruff",
-    "pytest", 
-    "kivy", 
-    "numpy"
+    "ruff == 0.1.7,
+    "pytest==7.4.3", 
+    "kivy==2.2.1", 
+    "numpy==1.26.1"
 ]
 
 description = "A package implementing the ant search algorithm"
