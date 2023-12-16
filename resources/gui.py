@@ -4,6 +4,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.dropdown import DropDown
+from kivy.uix.image import Image
 from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.core.window import Window
 from kivy.clock import Clock
@@ -113,6 +114,14 @@ class SimulationWidget(Widget):
         instance.text = 'Stop' if self.is_running else 'Start'
 
 
+class FoodButton(Button):
+    pass
+
+
+class ColonyButton(Button):
+    pass
+
+
 class ButtonWidget(BoxLayout):
     """
     This class is the widget for all the buttons.
@@ -131,37 +140,43 @@ class ButtonWidget(BoxLayout):
         change the size of the window and update the canvas
     """
     
-    def __init__(self, simulation_widget,**kwargs):
+    def __init__(self, simulation_widget, **kwargs):
         super(ButtonWidget, self).__init__(**kwargs)
         self.simulation_widget = simulation_widget
 
-        food_button = Button(text='Food', height=100, size_hint_y=None, size_hint_x=None)
-        colonie_button = Button(text='Colony', height=100, size_hint_y=None, size_hint_x=None)
+        self.food_button = FoodButton(text='Food', height=100, size_hint_y=None, size_hint_x=None)
+        self.colonie_button = ColonyButton(text='Colony', height=100, size_hint_y=None, size_hint_x=None)
+
+        self.food_button.bind(on_press=self.on_food_button_press)
+        self.colonie_button.bind(on_press=self.on_colony_button_press)
 
         sizes = [(480, 360), (720, 480), (1080, 720), (1920, 1080), (2560, 1440)]
         sizes.reverse()
         dropdown = DropDown()
 
         for size in sizes:
-            btn = Button(text=str(size[0]) + 'x' + str(size[1]), size_hint_y = None, height = 40)
-            btn.bind(on_release = lambda btn: dropdown.select(btn.text))
+            btn = Button(text=str(size[0]) + 'x' + str(size[1]), size_hint_y=None, height=40)
+            btn.bind(on_release=lambda btn: dropdown.select(btn.text))
             btn.bind(on_release=lambda btn, size=size: self.change_window_size(size))
             dropdown.add_widget(btn)
 
-        size_button= Button(text ='Size', size_hint =(None, None))
-        
-        size_button.bind(on_release = dropdown.open)
+        size_button = Button(text='Size', size_hint=(None, None))
 
-        dropdown.bind(on_select = lambda instance, x: setattr(size_button, 'text', x))
+        size_button.bind(on_release=dropdown.open)
+
+        dropdown.bind(on_select=lambda instance, x: setattr(size_button, 'text', x))
 
         self.dropdown = dropdown
 
         food_colonie_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
-        food_colonie_layout.add_widget(food_button)
-        food_colonie_layout.add_widget(colonie_button)
+        food_colonie_layout.add_widget(self.food_button)
+        food_colonie_layout.add_widget(self.colonie_button)
         food_colonie_layout.add_widget(size_button)
 
-        start_stop_button = Button(text='Start', on_press=self.simulation_widget.toggle_simulation, height=100, size_hint_y=None, size_hint_x=None)
+        start_stop_button = Button(
+            text='Start', on_press=self.simulation_widget.toggle_simulation, height=100, size_hint_y=None,
+            size_hint_x=None
+        )
 
         buttons_layout = BoxLayout(orientation='horizontal', spacing=500, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colonie_layout)
@@ -169,14 +184,29 @@ class ButtonWidget(BoxLayout):
 
         self.add_widget(buttons_layout)
 
+        self.food_button_pressed = False
+        self.colony_button_pressed = False
+
     def change_window_size(self, window_size):
         Window.size = window_size
         Clock.schedule_once(lambda dt: self.simulation_widget.update_canvas(), 0.1)
-        
-        #To inform the 'World' class about the current size of the GUI window...
-        # world_instance = World()
-        # world_instance.get_window_size(window_size)
 
+    def on_food_button_press(self, instance):
+        self.simulation_widget.bind(on_touch_down=self.place_food)
+       
+
+    def on_colony_button_press(self, instance):
+        self.simulation_widget.bind(on_touch_down=self.place_colony)
+
+    def place_food(self, instance, touch):
+        with self.simulation_widget.canvas:
+            Image(source=r"..\images\apple.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
+        self.simulation_widget.unbind(on_touch_down=self.place_food)
+
+    def place_colony(self, instance, touch):
+        with self.simulation_widget.canvas:
+            Image(source=r"..\images\colony.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
+        self.simulation_widget.unbind(on_touch_down=self.place_colony)
 
 
 if __name__ == "__main__":
