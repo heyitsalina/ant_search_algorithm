@@ -1,3 +1,4 @@
+import random 
 
 class Ant:
     def __init__(self, pheromon_status, coordinates, size, speed, amount_to_carry):
@@ -27,7 +28,8 @@ class Ant:
         pass
     
     def move(self):
-        pass
+        # for test purposes only:
+        self.coordinates = (self.coordinates[0]+random.randrange(-2, 3), self.coordinates[1]+random.randrange(-2, 3))
     
     def find_food(self):
         pass
