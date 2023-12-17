@@ -1,4 +1,3 @@
-import numpy as np
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
@@ -12,10 +11,6 @@ from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
 
-# import kivy
-# from kivy.config import Config
-# kivy.require('2.2.1')
-# Config.set('graphics', 'resizable', '0')
 
 sim = Simulation()
 
@@ -42,7 +37,6 @@ class GUI(App):
         Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
         
         return root
-    
     
 
 class SimulationWidget(Widget):
