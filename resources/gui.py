@@ -127,9 +127,9 @@ class ButtonWidget(BoxLayout):
         instance of the SimulationWidget() to connect both widgets
     dropdown : DropDown()
         drop down menu to select the size of the window
-    food_button : FoodButton
+    food_button : FoodButton()
         the food button
-    colony_button : ColonyButton
+    colony_button : ColonyButton()
         the colony button
     
     Methods
@@ -200,7 +200,6 @@ class ButtonWidget(BoxLayout):
     def on_food_button_press(self, instance):
         self.simulation_widget.bind(on_touch_down=self.place_food)
        
-
     def on_colony_button_press(self, instance):
         self.simulation_widget.bind(on_touch_down=self.place_colony)
 
