@@ -8,11 +8,16 @@ from kivy.uix.image import Image
 from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.core.window import Window
 from kivy.clock import Clock
+from resources.simulation import Simulation
+from resources.food import Food
+from resources.colony import Colony
 
 # import kivy
 # from kivy.config import Config
 # kivy.require('2.2.1')
 # Config.set('graphics', 'resizable', '0')
+
+sim = Simulation()
 
 class GUI(App):
     """
@@ -78,9 +83,6 @@ class SimulationWidget(Widget):
         self.generate()
 
     def generate(self):
-        self.array = np.random.choice([0, 1], size=(90, 160))
-        self.array = self.transform_array(self.array)
-        self.points = np.array(np.where(self.array == 1)).T
         self.update_canvas()
 
     def update_canvas(self):
@@ -88,26 +90,28 @@ class SimulationWidget(Widget):
         self.size = (Window.size[0], Window.size[1] - 100)
         self.pos = (0, 100)
         with self.canvas:
-            Color(1, 1, 1, 1)  # White background
+            Color(1, 1, 1, 1)
             self.rect = Rectangle(pos=self.pos, size=self.size)
 
+            for colony in sim.colonies:
+                Image(source=r"..\images\colony.png", pos=colony.coordinates, size=(100, 100))
+
+            for food in sim.food:
+                Image(source=r"..\images\apple.png", pos=food.coordinates, size=(100, 100))
+
             Color(0, 0, 0, 1)  # Black points
-            for point in self.points:
-                Ellipse(pos=(point[0] / self.array.shape[0] * self.size[0], point[1] / self.array.shape[1] * self.size[1] + 100),
-                        size=(5, 5))
+            for colony in sim.colonies:
+                for ant in colony.ants:
+                    Ellipse(pos=ant.coordinates,
+                            size=(15, 15))
 
     def update_world(self, dt):
         if self.is_running:
-            self.pos = (0, 100)
-            self.size = (Window.size[0], Window.size[1] - 100)
-            self.array = np.random.choice([0, 1], size=(90, 160))
-            self.array = self.transform_array(self.array)
-            self.points = np.array(np.where(self.array == 1)).T
+            sim.next_epoch()
             self.update_canvas()
-
+            
     def transform_array(self, array):
         return array[array.shape[0]-1::-1, :].T
-
 
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
@@ -202,11 +206,13 @@ class ButtonWidget(BoxLayout):
         with self.simulation_widget.canvas:
             Image(source=r"..\images\apple.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
         self.simulation_widget.unbind(on_touch_down=self.place_food)
+        sim.add_food(Food(size=(100, 100), coordinates=(touch.x-50, touch.y-50), amount_of_food=1000))
 
     def place_colony(self, instance, touch):
         with self.simulation_widget.canvas:
             Image(source=r"..\images\colony.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
         self.simulation_widget.unbind(on_touch_down=self.place_colony)
+        sim.add_colony(Colony(amount=1000, size=(100, 100), coordinates=(touch.x-50, touch.y-50), color="black"))
 
 
 if __name__ == "__main__":
