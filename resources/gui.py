@@ -88,7 +88,7 @@ class SimulationWidget(Widget):
             for colony in sim.colonies:
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
-                            size=(15, 15))
+                            size=(5, 5))
 
     def update_world(self, dt):
         if self.is_running:
