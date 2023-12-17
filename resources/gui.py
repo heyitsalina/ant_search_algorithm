@@ -41,12 +41,8 @@ class GUI(App):
 
         Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
         
-        self.initialize_kivy()
-
         return root
     
-    def initialize_kivy(dt):
-        Window.size = (720, 480)
     
 
 class SimulationWidget(Widget):
@@ -137,11 +133,23 @@ class ButtonWidget(BoxLayout):
         instance of the SimulationWidget() to connect both widgets
     dropdown : DropDown()
         drop down menu to select the size of the window
+    food_button : FoodButton
+        the food button
+    colony_button : ColonyButton
+        the colony button
     
     Methods
     -------
     change_window_size():
         change the size of the window and update the canvas
+    on_food_press():
+        executed after pressing the food button
+    on_colony_press():
+        executed after pressing the colony button
+    place_food():
+        place the food on the canvas
+    place_colony():
+        place the colony on the canvas
     """
     
     def __init__(self, simulation_widget, **kwargs):
@@ -149,10 +157,10 @@ class ButtonWidget(BoxLayout):
         self.simulation_widget = simulation_widget
 
         self.food_button = FoodButton(text='Food', height=100, size_hint_y=None, size_hint_x=None)
-        self.colonie_button = ColonyButton(text='Colony', height=100, size_hint_y=None, size_hint_x=None)
+        self.colony_button = ColonyButton(text='Colony', height=100, size_hint_y=None, size_hint_x=None)
 
         self.food_button.bind(on_press=self.on_food_button_press)
-        self.colonie_button.bind(on_press=self.on_colony_button_press)
+        self.colony_button.bind(on_press=self.on_colony_button_press)
 
         sizes = [(480, 360), (720, 480), (1080, 720), (1920, 1080), (2560, 1440)]
         sizes.reverse()
@@ -172,10 +180,10 @@ class ButtonWidget(BoxLayout):
 
         self.dropdown = dropdown
 
-        food_colonie_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
-        food_colonie_layout.add_widget(self.food_button)
-        food_colonie_layout.add_widget(self.colonie_button)
-        food_colonie_layout.add_widget(size_button)
+        food_colony_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
+        food_colony_layout.add_widget(self.food_button)
+        food_colony_layout.add_widget(self.colony_button)
+        food_colony_layout.add_widget(size_button)
 
         start_stop_button = Button(
             text='Start', on_press=self.simulation_widget.toggle_simulation, height=100, size_hint_y=None,
@@ -183,7 +191,7 @@ class ButtonWidget(BoxLayout):
         )
 
         buttons_layout = BoxLayout(orientation='horizontal', spacing=500, padding=0, size_hint_y=None)
-        buttons_layout.add_widget(food_colonie_layout)
+        buttons_layout.add_widget(food_colony_layout)
         buttons_layout.add_widget(start_stop_button)
 
         self.add_widget(buttons_layout)
