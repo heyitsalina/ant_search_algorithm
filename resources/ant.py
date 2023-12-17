@@ -29,7 +29,8 @@ class Ant:
     
     def move(self):
         # for test purposes only:
-        self.coordinates = (self.coordinates[0]+random.randrange(-2, 3), self.coordinates[1]+random.randrange(-2, 3))
+        # self.coordinates = (self.coordinates[0]+random.randrange(-2, 3), self.coordinates[1]+random.randrange(-2, 3))
+        pass
     
     def find_food(self):
         pass
