@@ -55,12 +55,10 @@ class SimulationWidget(Widget):
 
     Methods
     -------
-    generate():     for demonstration purposes only!
-        generates random matrix
     update_world():
-        generate new points if running
+        calculate the next epoch and update canvas
     update_canvas():
-        show the points on the screen
+        update the canvas
     transform_array():
         transform the array to get show it right on the screen
     toggle_simulation():
@@ -70,9 +68,6 @@ class SimulationWidget(Widget):
     def __init__(self, **kwargs):
         super(SimulationWidget, self).__init__(**kwargs)
         self.is_running = False
-        self.generate()
-
-    def generate(self):
         self.update_canvas()
 
     def update_canvas(self):
