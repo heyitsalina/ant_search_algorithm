@@ -66,6 +66,9 @@ class Ant:
             
             self.direction = np.dot(rotation_matrix, self.direction)
             self.direction = self.direction / np.linalg.norm(self.direction)
+            
+            position += self.direction
+
 
         
     
