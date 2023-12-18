@@ -59,6 +59,7 @@ class Ant:
             self.coordinates = tuple(position)
 
             self.epoch += 1
+        else:
 
         
     
