@@ -60,6 +60,7 @@ class Ant:
 
             self.epoch += 1
         else:
+            angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
 
         
     
