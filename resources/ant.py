@@ -32,7 +32,7 @@ class Ant:
     def switch_pheromon(self):
         pass
     
-    def move(self, target_pos, target_angle):
+    def move(self):
         pass
         
     
