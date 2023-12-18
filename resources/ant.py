@@ -42,7 +42,9 @@ class Ant:
         return (x, y)
 
     def move(self, move_to = (0, 0), random = False):
-        pass
+        
+        if random == True:
+            move_to = self.generate_random_coordinate()
         
     
     def find_food(self):
