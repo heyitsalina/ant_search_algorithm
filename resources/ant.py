@@ -1,4 +1,4 @@
-import random 
+# import random 
 
 class Ant:
     def __init__(self, pheromon_status, coordinates, size, speed, amount_to_carry):
