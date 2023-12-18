@@ -58,6 +58,7 @@ class Ant:
             position += self.direction
             self.coordinates = tuple(position)
 
+            self.epoch += 1
 
         
     
