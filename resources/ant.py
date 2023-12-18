@@ -1,7 +1,7 @@
 import numpy as np
 
 class Ant:
-    def __init__(self, pheromon_status, coordinates, angle, size, speed, amount_to_carry, step_size):
+    def __init__(self, pheromone_status, coordinates, amount_to_carry, step_size=1):
         """
         This class represents an ant in the Ant search algorithm.
         
@@ -10,12 +10,6 @@ class Ant:
             The current level of pheromone detected by the ant.
         coordinates (tuple):
             The (x, y) current coordinates of the ant in the search space.
-        angle (float):
-            The current angle of the ant in the search space.
-        size (float):
-            The size of the ant, influencing its interaction with the environment.
-        speed (float):
-            The speed at which the ant can move within the search space.
         amount_to_carry (float):
             The maximum amount that the ant can carry during its search.
         step_size (float):
@@ -29,12 +23,9 @@ class Ant:
             Represents the current epoch or step in the movement of the ant.
         """
         
-        self.pheromon_status = pheromon_status
+        self.pheromon_status = pheromone_status
         self.coordinates = coordinates
-        self.size = size
-        self.speed = speed
         self.amount_to_carry = amount_to_carry
-        self.angle = angle
         self.step_size = step_size
         self.direction = np.array([0, 0])
         self.epoch = 0
@@ -55,7 +46,7 @@ class Ant:
             y = np.sqrt(1 - z**2) * np.sin(theta)
             
             #Set direction vector        
-            self.direction = np.array([x, y])
+            self.direction = np.array([x, y]) * self.step_size
 
             #Update position using the direction vector
             position += self.direction
@@ -70,7 +61,7 @@ class Ant:
             
             #Rotate and normalize the direction vector
             self.direction = np.dot(rotation_matrix, self.direction)
-            self.direction = self.direction / np.linalg.norm(self.direction)
+            self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
             
             #Update position using the rotated direction
             position += self.direction
