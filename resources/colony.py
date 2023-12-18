@@ -18,11 +18,12 @@ class Colony:
         self.coordinates = coordinates
         self.color = color
         self.ants = []
+        self.add_ants()
 
     def add_ants(self):
         for _ in range(self.amount):
             self.ants.append(Ant(pheromon_status=0, 
-                                 coordinates=self.coordinates,
+                                 coordinates=(self.coordinates[0]+50, self.coordinates[1]+50),
                                  size=(5,5),
                                  speed=1,
                                  amount_to_carry=1))
