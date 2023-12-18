@@ -44,7 +44,8 @@ class Ant:
         pass
     
     def move(self):
-        pass
+        position = np.array(self.coordinates)
+
         
     
     def find_food(self):
