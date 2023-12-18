@@ -68,6 +68,7 @@ class Ant:
             self.direction = self.direction / np.linalg.norm(self.direction)
             
             position += self.direction
+            self.coordinates = tuple(position)
 
 
         
