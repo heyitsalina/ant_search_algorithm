@@ -34,7 +34,12 @@ class Ant:
         pass
     
     def generate_random_coordinate(self):
-        
+        """
+        Generates random coordinates within a predefined range.
+
+        Returns:
+        tuple: A tuple representing random coordinates (x, y).
+        """
         #This is just an example to ensure that the code works.
         x = random.randint(1, 10)
         y = random.randint(1, 10)
