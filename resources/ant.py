@@ -47,6 +47,8 @@ class Ant:
             move_to = self.generate_random_coordinate()
         
         last_coordinate = self.coordinates[-1]
+        new_coordinates = (last_coordinate[0] + move_to[0], last_coordinate[1] + move_to[1])
+        
     
     def find_food(self):
         pass
