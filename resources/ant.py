@@ -30,6 +30,7 @@ class Ant:
         self.angle = angle
         self.step_size = step_size
         self.direction = np.array([0, 0])
+        self.epoch = 0
 
         
     def switch_pheromon(self):
