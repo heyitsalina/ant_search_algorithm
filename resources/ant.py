@@ -34,7 +34,12 @@ class Ant:
         pass
     
     def generate_random_coordinate(self):
-        pass
+        
+        #This is just an example to ensure that the code works.
+        x = random.randint(1, 10)
+        y = random.randint(1, 10)
+               
+        return (x, y)
 
     def move(self, move_to = (0, 0), random = False):
         pass
