@@ -47,6 +47,7 @@ class Ant:
         position = np.array(self.coordinates)
         
         if self.epoch == 0:
+            theta = np.random.uniform(0, 2 * np.pi)
 
 
         
