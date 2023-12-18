@@ -48,6 +48,7 @@ class Ant:
         
         if self.epoch == 0:
             theta = np.random.uniform(0, 2 * np.pi)
+            z = np.random.uniform(-1, 1)
 
 
         
