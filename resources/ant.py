@@ -49,6 +49,8 @@ class Ant:
         last_coordinate = self.coordinates[-1]
         new_coordinates = (last_coordinate[0] + move_to[0], last_coordinate[1] + move_to[1])
         
+        self.coordinates.append(new_coordinates)
+
     
     def find_food(self):
         pass
