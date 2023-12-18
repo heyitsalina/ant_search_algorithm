@@ -1,6 +1,6 @@
 
 class Ant:
-    def __init__(self, pheromon_status, angle, size, speed, amount_to_carry, step_size):
+    def __init__(self, pheromon_status, start_coordinates, angle, size, speed, amount_to_carry, step_size):
         """
         This class represents an ant in the Ant search algorithm.
         
@@ -22,7 +22,7 @@ class Ant:
         """
         
         self.pheromon_status = pheromon_status
-        self.coordinates = 
+        self.coordinates = [start_coordinates]
         self.size = size
         self.speed = speed
         self.amount_to_carry = amount_to_carry
