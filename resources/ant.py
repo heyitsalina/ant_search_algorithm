@@ -55,6 +55,7 @@ class Ant:
             
             self.direction = np.array([x, y])
 
+            position += self.direction
 
 
         
