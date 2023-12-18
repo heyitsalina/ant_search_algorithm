@@ -22,10 +22,9 @@ class Colony:
 
     def add_ants(self):
         for _ in range(self.amount):
-            self.ants.append(Ant(pheromon_status=0, 
+            self.ants.append(Ant(pheromone_status=0, 
                                  coordinates=(self.coordinates[0]+50, self.coordinates[1]+50),
-                                 size=(5,5),
-                                 speed=1,
-                                 amount_to_carry=1))
+                                 amount_to_carry=1,
+                                 step_size=3))
     
     
