@@ -63,6 +63,9 @@ class Ant:
             angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
             rotation_matrix = np.array([[np.cos(angle_offset), -np.sin(angle_offset)],
                                     [np.sin(angle_offset), np.cos(angle_offset)]])
+            
+            self.direction = np.dot(rotation_matrix, self.direction)
+
         
     
     def find_food(self):
