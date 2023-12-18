@@ -25,6 +25,8 @@ class Ant:
         Attributes:
         direction (numpy array):
             The current direction vector of the ant.
+        epoch (int):
+            Represents the current epoch or step in the movement of the ant.
         """
         
         self.pheromon_status = pheromon_status
