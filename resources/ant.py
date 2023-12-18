@@ -52,6 +52,9 @@ class Ant:
             
             x = np.sqrt(1 - z**2) * np.cos(theta)
             y = np.sqrt(1 - z**2) * np.sin(theta)
+            
+            self.direction = np.array([x, y])
+
 
 
         
