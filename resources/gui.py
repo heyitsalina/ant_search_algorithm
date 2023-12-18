@@ -2,9 +2,12 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
+from kivy.uix.scatter import Scatter
 from kivy.graphics import Rectangle, Color, Ellipse
+from kivy.graphics.transformation import Matrix
 from kivy.core.window import Window
 from kivy.clock import Clock
 from resources.simulation import Simulation
@@ -26,20 +29,42 @@ class GUI(App):
     """
 
     def build(self):
-        root = BoxLayout(orientation='vertical', padding=0, spacing=0)
+        root = FloatLayout()
+
+        background = Scatter()
+        with background.canvas:
+            Color(1, 1, 1, 1)
+            Rectangle(pos=(0, 100), size=(1920, 1080))
 
         simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
-
-        root.add_widget(simulation_widget)
+        
+        background.add_widget(simulation_widget)
+        root.add_widget(background)
         root.add_widget(button_widget)
 
         Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
-        
+
         return root
+
+
+class ResizableDraggablePicture(Scatter):
+    def on_touch_down(self, touch):
+        # Override Scatter's `on_touch_down` behavior for mouse scroll
+        if touch.is_mouse_scrolling:
+            factor = None
+            if touch.button == 'scrolldown':
+                if self.scale < self.scale_max:
+                    factor = 1.1
+            elif touch.button == 'scrollup':
+                if self.scale > self.scale_min:
+                    factor = 1 / 1.1
+            if factor is not None:
+                self.apply_transform(Matrix().scale(factor, factor, factor),
+                                    anchor=touch.pos)
     
 
-class SimulationWidget(Widget):
+class SimulationWidget(ResizableDraggablePicture, Widget):
     """
     This class is the actual widget for the simulation.
     ...
@@ -72,12 +97,7 @@ class SimulationWidget(Widget):
 
     def update_canvas(self):
         self.canvas.clear()
-        self.size = (Window.size[0], Window.size[1] - 100)
-        self.pos = (0, 100)
         with self.canvas:
-            Color(1, 1, 1, 1)
-            self.rect = Rectangle(pos=self.pos, size=self.size)
-
             for colony in sim.colonies:
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
 
