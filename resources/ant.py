@@ -61,7 +61,8 @@ class Ant:
             self.epoch += 1
         else:
             angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
-
+            rotation_matrix = np.array([[np.cos(angle_offset), -np.sin(angle_offset)],
+                                    [np.sin(angle_offset), np.cos(angle_offset)]])
         
     
     def find_food(self):
