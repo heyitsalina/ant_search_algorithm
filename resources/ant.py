@@ -29,6 +29,7 @@ class Ant:
         self.amount_to_carry = amount_to_carry
         self.angle = angle
         self.step_size = step_size
+        self.direction = np.array([0, 0])
 
         
     def switch_pheromon(self):
