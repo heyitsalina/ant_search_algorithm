@@ -79,10 +79,10 @@ class SimulationWidget(Widget):
             self.rect = Rectangle(pos=self.pos, size=self.size)
 
             for colony in sim.colonies:
-                Image(source=r"..\images\colony.png", pos=colony.coordinates, size=(100, 100))
+                Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
 
             for food in sim.food:
-                Image(source=r"..\images\apple.png", pos=food.coordinates, size=(100, 100))
+                Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
 
             Color(0, 0, 0, 1)  # Black points
             for colony in sim.colonies:
@@ -200,13 +200,13 @@ class ButtonWidget(BoxLayout):
 
     def place_food(self, instance, touch):
         with self.simulation_widget.canvas:
-            Image(source=r"..\images\apple.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
+            Image(source="../images/apple.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
         self.simulation_widget.unbind(on_touch_down=self.place_food)
         sim.add_food(Food(size=(100, 100), coordinates=(touch.x-50, touch.y-50), amount_of_food=1000))
 
     def place_colony(self, instance, touch):
         with self.simulation_widget.canvas:
-            Image(source=r"..\images\colony.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
+            Image(source="../images/colony.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
         self.simulation_widget.unbind(on_touch_down=self.place_colony)
         sim.add_colony(Colony(amount=1000, size=(100, 100), coordinates=(touch.x-50, touch.y-50), color="black"))
 
