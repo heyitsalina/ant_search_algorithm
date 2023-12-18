@@ -46,6 +46,7 @@ class Ant:
         if random == True:
             move_to = self.generate_random_coordinate()
         
+        last_coordinate = self.coordinates[-1]
     
     def find_food(self):
         pass
