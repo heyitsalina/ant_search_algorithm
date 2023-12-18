@@ -65,6 +65,7 @@ class Ant:
                                     [np.sin(angle_offset), np.cos(angle_offset)]])
             
             self.direction = np.dot(rotation_matrix, self.direction)
+            self.direction = self.direction / np.linalg.norm(self.direction)
 
         
     
