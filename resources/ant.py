@@ -1,3 +1,4 @@
+import numpy as np
 
 class Ant:
     def __init__(self, pheromon_status, coordinates, angle, size, speed, amount_to_carry, step_size):
@@ -28,6 +29,7 @@ class Ant:
         self.amount_to_carry = amount_to_carry
         self.angle = angle
         self.step_size = step_size
+
         
     def switch_pheromon(self):
         pass
