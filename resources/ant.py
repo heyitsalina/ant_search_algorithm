@@ -33,6 +33,9 @@ class Ant:
     def switch_pheromon(self):
         pass
     
+    def generate_random_coordinate(self):
+        pass
+
     def move(self, move_to = (0, 0), random = False):
         pass
         
