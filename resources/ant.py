@@ -8,8 +8,8 @@ class Ant:
         Args:
         pheromone_status (float): 
             The current level of pheromone detected by the ant.
-        coordinates (tuple):
-            The (x, y) current coordinates of the ant in the search space.
+        coordinates (list):
+            A list of all visited coordinates.
         angle (float):
             The current angle of the ant in the search space.
         size (float):
