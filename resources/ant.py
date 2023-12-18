@@ -45,6 +45,9 @@ class Ant:
     
     def move(self):
         position = np.array(self.coordinates)
+        
+        if self.epoch == 0:
+
 
         
     
