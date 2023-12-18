@@ -31,7 +31,7 @@ class GUI(App):
     def build(self):
         root = FloatLayout()
 
-        background = Scatter()
+        background = BoxLayout()
         with background.canvas:
             Color(1, 1, 1, 1)
             Rectangle(pos=(0, 100), size=(1920, 1080))
@@ -50,7 +50,6 @@ class GUI(App):
 
 class ResizableDraggablePicture(Scatter):
     def on_touch_down(self, touch):
-        # Override Scatter's `on_touch_down` behavior for mouse scroll
         if touch.is_mouse_scrolling:
             factor = None
             if touch.button == 'scrolldown':
