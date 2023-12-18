@@ -20,6 +20,11 @@ class Ant:
             The maximum amount that the ant can carry during its search.
         step_size (float):
             The distance covered by the ant in each step during its movement within the search space.
+        ---------
+        
+        Attributes:
+        direction (numpy array):
+            The current direction vector of the ant.
         """
         
         self.pheromon_status = pheromon_status
