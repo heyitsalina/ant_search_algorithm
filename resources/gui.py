@@ -6,6 +6,9 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.graphics.transformation import Matrix
 from kivy.core.window import Window
@@ -120,6 +123,46 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
+
+    def on_touch_down(self, touch):
+            if not self.is_running and touch.is_double_tap:
+                # If simulation is not running and it's a double-tap, check for colonies
+                for colony in sim.colonies:
+                    if colony.coordinates[0] < touch.x < colony.coordinates[0] + 100 and \
+                    colony.coordinates[1] < touch.y < colony.coordinates[1] + 100:
+                        self.show_colony_popup(colony)
+                        return True  # Stop processing other touch handlers
+
+            return super(SimulationWidget, self).on_touch_down(touch)
+
+    def show_colony_popup(self, colony):
+        content = BoxLayout(orientation='vertical', spacing=10, padding=10)
+
+        # Label showing the current number of ants
+        self.ants_label = Label(text=f"Number of ants: ")
+        content.add_widget(self.ants_label)
+
+        # TextInput for the user to change the number of ants
+        ants_input = TextInput(text=str(len(colony.ants)), multiline=False)
+        content.add_widget(ants_input)
+
+        # Button to apply the changes
+        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text))
+        content.add_widget(apply_button)
+
+        popup = Popup(title='Colony Information',
+                      content=content,
+                      size_hint=(None, None), size=(400, 300))
+        popup.open()
+    
+    def apply_ant_changes(self, colony, new_ant_count):   
+        # Try to convert the user input to an integer
+        new_ant_count = int(new_ant_count)
+        if new_ant_count >= 0:
+            colony.amount = new_ant_count
+            colony.ants = []
+            colony.add_ants()
+            self.ants_label.text = f"Number of ants: {len(colony.ants)}"
 
 
 class FoodButton(Button):
