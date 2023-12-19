@@ -106,7 +106,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
 
-            Color(0, 0, 0, 1)  # Black points
+            Color(0, 0, 0, 1) 
             for colony in sim.colonies:
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
@@ -126,12 +126,11 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
 
     def on_touch_down(self, touch):
             if not self.is_running and touch.is_double_tap:
-                # If simulation is not running and it's a double-tap, check for colonies
                 for colony in sim.colonies:
                     if colony.coordinates[0] < touch.x < colony.coordinates[0] + 100 and \
                     colony.coordinates[1] < touch.y < colony.coordinates[1] + 100:
                         self.show_colony_popup(colony)
-                        return True  # Stop processing other touch handlers
+                        return True 
                 for food in sim.food:
                     if food.coordinates[0] < touch.x < food.coordinates[0] + 100 and \
                     food.coordinates[1] < touch.y < food.coordinates[1] + 100:
@@ -142,55 +141,50 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def show_colony_popup(self, colony):
         content = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
-        # Label showing the current number of ants
         ants_label = Label(text=f"Number of ants: ")
         content.add_widget(ants_label)
 
-        # TextInput for the user to change the number of ants
         ants_input = TextInput(text=str(len(colony.ants)), multiline=False)
         content.add_widget(ants_input)
 
-        # Button to apply the changes
         apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text))
         content.add_widget(apply_button)
 
-        popup = Popup(title='Colony Information',
+        self.popup = Popup(title='Colony Information',
                       content=content,
                       size_hint=(None, None), size=(400, 300))
-        popup.open()
+        self.popup.open()
     
     def show_food_popup(self, food):
         content = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
-        # Label showing the current number of ants
         food_label = Label(text=f"Amount of food: ")
         content.add_widget(food_label)
 
-        # TextInput for the user to change the number of ants
         food_input = TextInput(text=str(food.amount_of_food), multiline=False)
         content.add_widget(food_input)
 
-        # Button to apply the changes
         apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_food_changes(food, food_input.text))
         content.add_widget(apply_button)
 
-        popup = Popup(title='Food Information',
+        self.popup = Popup(title='Food Information',
                       content=content,
                       size_hint=(None, None), size=(400, 300))
-        popup.open()
+        self.popup.open()
     
     def apply_ant_changes(self, colony, new_ant_count):   
-        # Try to convert the user input to an integer
         new_ant_count = int(new_ant_count)
         if new_ant_count >= 0:
             colony.amount = new_ant_count
             colony.ants = []
             colony.add_ants()
+            self.popup.dismiss()
 
     def apply_food_changes(self, food, new_food_amount):
         new_food_amount = int(new_food_amount)
         if new_food_amount >= 0:
             food.amount_of_food = new_food_amount
+            self.popup.dismiss()
 
 
 class FoodButton(Button):
