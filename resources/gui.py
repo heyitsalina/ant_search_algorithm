@@ -147,12 +147,24 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         ants_input = TextInput(text=str(len(colony.ants)), multiline=False)
         content.add_widget(ants_input)
 
-        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text))
+        ant_settings_label = Label(text=f"Step size: ")
+        content.add_widget(ant_settings_label)
+
+        steps_input = TextInput(text=str(colony.ants[0].step_size), multiline=False)
+        content.add_widget(steps_input)
+
+        carry_label = Label(text=f"Amount to carry: ")
+        content.add_widget(carry_label)
+
+        carry_input = TextInput(text=str(colony.ants[0].amount_to_carry), multiline=False)
+        content.add_widget(carry_input)
+
+        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text, steps_input.text, carry_input.text))
         content.add_widget(apply_button)
 
         self.popup = Popup(title='Colony Information',
                       content=content,
-                      size_hint=(None, None), size=(400, 300))
+                      size_hint=(None, None), size=(400, 600))
         self.popup.open()
     
     def show_food_popup(self, food):
@@ -172,12 +184,14 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                       size_hint=(None, None), size=(400, 300))
         self.popup.open()
     
-    def apply_ant_changes(self, colony, new_ant_count):   
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry):   
         new_ant_count = int(new_ant_count)
+        new_amount_to_carry = int(new_amount_to_carry)
+        new_step_size = int(new_step_size)
         if new_ant_count >= 0:
             colony.amount = new_ant_count
             colony.ants = []
-            colony.add_ants()
+            colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry)
             self.popup.dismiss()
 
     def apply_food_changes(self, food, new_food_amount):
