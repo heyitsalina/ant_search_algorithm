@@ -132,6 +132,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     colony.coordinates[1] < touch.y < colony.coordinates[1] + 100:
                         self.show_colony_popup(colony)
                         return True  # Stop processing other touch handlers
+                for food in sim.food:
+                    if food.coordinates[0] < touch.x < food.coordinates[0] + 100 and \
+                    food.coordinates[1] < touch.y < food.coordinates[1] + 100:
+                        self.show_food_popup(food)
 
             return super(SimulationWidget, self).on_touch_down(touch)
 
@@ -139,8 +143,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         content = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
         # Label showing the current number of ants
-        self.ants_label = Label(text=f"Number of ants: ")
-        content.add_widget(self.ants_label)
+        ants_label = Label(text=f"Number of ants: ")
+        content.add_widget(ants_label)
 
         # TextInput for the user to change the number of ants
         ants_input = TextInput(text=str(len(colony.ants)), multiline=False)
@@ -155,6 +159,26 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                       size_hint=(None, None), size=(400, 300))
         popup.open()
     
+    def show_food_popup(self, food):
+        content = BoxLayout(orientation='vertical', spacing=10, padding=10)
+
+        # Label showing the current number of ants
+        food_label = Label(text=f"Amount of food: ")
+        content.add_widget(food_label)
+
+        # TextInput for the user to change the number of ants
+        food_input = TextInput(text=str(food.amount_of_food), multiline=False)
+        content.add_widget(food_input)
+
+        # Button to apply the changes
+        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_food_changes(food, food_input.text))
+        content.add_widget(apply_button)
+
+        popup = Popup(title='Food Information',
+                      content=content,
+                      size_hint=(None, None), size=(400, 300))
+        popup.open()
+    
     def apply_ant_changes(self, colony, new_ant_count):   
         # Try to convert the user input to an integer
         new_ant_count = int(new_ant_count)
@@ -162,7 +186,11 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             colony.amount = new_ant_count
             colony.ants = []
             colony.add_ants()
-            self.ants_label.text = f"Number of ants: {len(colony.ants)}"
+
+    def apply_food_changes(self, food, new_food_amount):
+        new_food_amount = int(new_food_amount)
+        if new_food_amount >= 0:
+            food.amount_of_food = new_food_amount
 
 
 class FoodButton(Button):
