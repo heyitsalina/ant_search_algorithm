@@ -141,19 +141,19 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def show_colony_popup(self, colony):
         content = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
-        ants_label = Label(text=f"Number of ants: ")
+        ants_label = Label(text="Number of ants: ")
         content.add_widget(ants_label)
 
         ants_input = TextInput(text=str(len(colony.ants)), multiline=False)
         content.add_widget(ants_input)
 
-        ant_settings_label = Label(text=f"Step size: ")
+        ant_settings_label = Label(text="Step size: ")
         content.add_widget(ant_settings_label)
 
         steps_input = TextInput(text=str(colony.ants[0].step_size), multiline=False)
         content.add_widget(steps_input)
 
-        carry_label = Label(text=f"Amount to carry: ")
+        carry_label = Label(text="Amount to carry: ")
         content.add_widget(carry_label)
 
         carry_input = TextInput(text=str(colony.ants[0].amount_to_carry), multiline=False)
@@ -170,7 +170,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def show_food_popup(self, food):
         content = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
-        food_label = Label(text=f"Amount of food: ")
+        food_label = Label(text="Amount of food: ")
         content.add_widget(food_label)
 
         food_input = TextInput(text=str(food.amount_of_food), multiline=False)
