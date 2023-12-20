@@ -1,3 +1,4 @@
+import ast
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
@@ -106,8 +107,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
 
-            Color(0, 0, 0, 1) 
+            
             for colony in sim.colonies:
+                Color(*colony.color)
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
                             size=(5, 5))
@@ -141,25 +143,31 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def show_colony_popup(self, colony):
         content = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
-        ants_label = Label(text="Number of ants: ")
+        ants_label = Label(text="Number of ants:")
         content.add_widget(ants_label)
 
         ants_input = TextInput(text=str(len(colony.ants)), multiline=False)
         content.add_widget(ants_input)
 
-        ant_settings_label = Label(text="Step size: ")
+        ant_settings_label = Label(text="Step size:")
         content.add_widget(ant_settings_label)
 
         steps_input = TextInput(text=str(colony.ants[0].step_size), multiline=False)
         content.add_widget(steps_input)
 
-        carry_label = Label(text="Amount to carry: ")
+        carry_label = Label(text="Amount to carry:")
         content.add_widget(carry_label)
 
         carry_input = TextInput(text=str(colony.ants[0].amount_to_carry), multiline=False)
         content.add_widget(carry_input)
 
-        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text, steps_input.text, carry_input.text))
+        color_label = Label(text="Color:")
+        content.add_widget(color_label)
+
+        color_input = TextInput(text=str(colony.color), multiline=False)
+        content.add_widget(color_input)
+
+        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text, steps_input.text, carry_input.text, color_input.text))
         content.add_widget(apply_button)
 
         self.popup = Popup(title='Colony Information',
@@ -170,7 +178,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def show_food_popup(self, food):
         content = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
-        food_label = Label(text="Amount of food: ")
+        food_label = Label(text="Amount of food:")
         content.add_widget(food_label)
 
         food_input = TextInput(text=str(food.amount_of_food), multiline=False)
@@ -184,14 +192,18 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                       size_hint=(None, None), size=(400, 300))
         self.popup.open()
     
-    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry):   
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color):   
         new_ant_count = int(new_ant_count)
         new_amount_to_carry = int(new_amount_to_carry)
         new_step_size = int(new_step_size)
+        new_color = ast.literal_eval(new_color)
+        print(new_color)
+        print(type(new_color[0]))
         if new_ant_count >= 0:
             colony.amount = new_ant_count
             colony.ants = []
             colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry)
+            colony.color = new_color
             self.popup.dismiss()
 
     def apply_food_changes(self, food, new_food_amount):
