@@ -20,12 +20,11 @@ class Colony:
         self.ants = []
         self.add_ants()
 
-    def add_ants(self):
+    def add_ants(self, amount_to_carry=1, step_size=3):
         for _ in range(self.amount):
-            self.ants.append(Ant(pheromon_status=0, 
+            self.ants.append(Ant(pheromone_status=0, 
                                  coordinates=(self.coordinates[0]+50, self.coordinates[1]+50),
-                                 size=(5,5),
-                                 speed=1,
-                                 amount_to_carry=1))
+                                 amount_to_carry=amount_to_carry,
+                                 step_size=step_size))
     
     

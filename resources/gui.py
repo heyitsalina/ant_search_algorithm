@@ -1,10 +1,17 @@
+import ast
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
+from kivy.uix.scatter import Scatter
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 from kivy.graphics import Rectangle, Color, Ellipse
+from kivy.graphics.transformation import Matrix
 from kivy.core.window import Window
 from kivy.clock import Clock
 from resources.simulation import Simulation
@@ -26,20 +33,41 @@ class GUI(App):
     """
 
     def build(self):
-        root = BoxLayout(orientation='vertical', padding=0, spacing=0)
+        root = FloatLayout()
+
+        background = BoxLayout()
+        with background.canvas:
+            Color(1, 1, 1, 1)
+            Rectangle(pos=(0, 100), size=(1920, 1080))
 
         simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
-
-        root.add_widget(simulation_widget)
+        
+        background.add_widget(simulation_widget)
+        root.add_widget(background)
         root.add_widget(button_widget)
 
         Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
-        
+
         return root
+
+
+class ResizableDraggablePicture(Scatter):
+    def on_touch_down(self, touch):
+        if touch.is_mouse_scrolling:
+            factor = None
+            if touch.button == 'scrolldown':
+                if self.scale < self.scale_max:
+                    factor = 1.1
+            elif touch.button == 'scrollup':
+                if self.scale > self.scale_min:
+                    factor = 1 / 1.1
+            if factor is not None:
+                self.apply_transform(Matrix().scale(factor, factor, factor),
+                                    anchor=touch.pos)
     
 
-class SimulationWidget(Widget):
+class SimulationWidget(ResizableDraggablePicture, Widget):
     """
     This class is the actual widget for the simulation.
     ...
@@ -72,20 +100,16 @@ class SimulationWidget(Widget):
 
     def update_canvas(self):
         self.canvas.clear()
-        self.size = (Window.size[0], Window.size[1] - 100)
-        self.pos = (0, 100)
         with self.canvas:
-            Color(1, 1, 1, 1)
-            self.rect = Rectangle(pos=self.pos, size=self.size)
-
             for colony in sim.colonies:
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
 
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
 
-            Color(0, 0, 0, 1)  # Black points
+            
             for colony in sim.colonies:
+                Color(*colony.color)
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
                             size=(5, 5))
@@ -101,6 +125,90 @@ class SimulationWidget(Widget):
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
+
+    def on_touch_down(self, touch):
+            if not self.is_running and touch.is_double_tap:
+                for colony in sim.colonies:
+                    if colony.coordinates[0] < touch.x < colony.coordinates[0] + 100 and \
+                    colony.coordinates[1] < touch.y < colony.coordinates[1] + 100:
+                        self.show_colony_popup(colony)
+                        return True 
+                for food in sim.food:
+                    if food.coordinates[0] < touch.x < food.coordinates[0] + 100 and \
+                    food.coordinates[1] < touch.y < food.coordinates[1] + 100:
+                        self.show_food_popup(food)
+
+            return super(SimulationWidget, self).on_touch_down(touch)
+
+    def show_colony_popup(self, colony):
+        content = BoxLayout(orientation='vertical', spacing=10, padding=10)
+
+        ants_label = Label(text="Number of ants:")
+        content.add_widget(ants_label)
+
+        ants_input = TextInput(text=str(len(colony.ants)), multiline=False)
+        content.add_widget(ants_input)
+
+        ant_settings_label = Label(text="Step size:")
+        content.add_widget(ant_settings_label)
+
+        steps_input = TextInput(text=str(colony.ants[0].step_size), multiline=False)
+        content.add_widget(steps_input)
+
+        carry_label = Label(text="Amount to carry:")
+        content.add_widget(carry_label)
+
+        carry_input = TextInput(text=str(colony.ants[0].amount_to_carry), multiline=False)
+        content.add_widget(carry_input)
+
+        color_label = Label(text="Color:")
+        content.add_widget(color_label)
+
+        color_input = TextInput(text=str(colony.color), multiline=False)
+        content.add_widget(color_input)
+
+        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text, steps_input.text, carry_input.text, color_input.text))
+        content.add_widget(apply_button)
+
+        self.popup = Popup(title='Colony Information',
+                      content=content,
+                      size_hint=(None, None), size=(400, 600))
+        self.popup.open()
+    
+    def show_food_popup(self, food):
+        content = BoxLayout(orientation='vertical', spacing=10, padding=10)
+
+        food_label = Label(text="Amount of food:")
+        content.add_widget(food_label)
+
+        food_input = TextInput(text=str(food.amount_of_food), multiline=False)
+        content.add_widget(food_input)
+
+        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_food_changes(food, food_input.text))
+        content.add_widget(apply_button)
+
+        self.popup = Popup(title='Food Information',
+                      content=content,
+                      size_hint=(None, None), size=(400, 300))
+        self.popup.open()
+    
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color):   
+        new_ant_count = int(new_ant_count)
+        new_amount_to_carry = int(new_amount_to_carry)
+        new_step_size = int(new_step_size)
+        new_color = ast.literal_eval(new_color)
+        if new_ant_count >= 0:
+            colony.amount = new_ant_count
+            colony.ants = []
+            colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry)
+            colony.color = new_color
+            self.popup.dismiss()
+
+    def apply_food_changes(self, food, new_food_amount):
+        new_food_amount = int(new_food_amount)
+        if new_food_amount >= 0:
+            food.amount_of_food = new_food_amount
+            self.popup.dismiss()
 
 
 class FoodButton(Button):
@@ -193,10 +301,12 @@ class ButtonWidget(BoxLayout):
         Clock.schedule_once(lambda dt: self.simulation_widget.update_canvas(), 0.1)
 
     def on_food_button_press(self, instance):
-        self.simulation_widget.bind(on_touch_down=self.place_food)
+        if not self.simulation_widget.is_running:
+            self.simulation_widget.bind(on_touch_down=self.place_food)
        
     def on_colony_button_press(self, instance):
-        self.simulation_widget.bind(on_touch_down=self.place_colony)
+        if not self.simulation_widget.is_running:
+            self.simulation_widget.bind(on_touch_down=self.place_colony)
 
     def place_food(self, instance, touch):
         with self.simulation_widget.canvas:
@@ -208,7 +318,7 @@ class ButtonWidget(BoxLayout):
         with self.simulation_widget.canvas:
             Image(source="../images/colony.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
         self.simulation_widget.unbind(on_touch_down=self.place_colony)
-        sim.add_colony(Colony(amount=1000, size=(100, 100), coordinates=(touch.x-50, touch.y-50), color="black"))
+        sim.add_colony(Colony(amount=100, size=(100, 100), coordinates=(touch.x-50, touch.y-50), color=(0, 0, 0, 1)))
 
 
 if __name__ == "__main__":
