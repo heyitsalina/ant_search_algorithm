@@ -197,8 +197,6 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         new_amount_to_carry = int(new_amount_to_carry)
         new_step_size = int(new_step_size)
         new_color = ast.literal_eval(new_color)
-        print(new_color)
-        print(type(new_color[0]))
         if new_ant_count >= 0:
             colony.amount = new_ant_count
             colony.ants = []
@@ -320,7 +318,7 @@ class ButtonWidget(BoxLayout):
         with self.simulation_widget.canvas:
             Image(source="../images/colony.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
         self.simulation_widget.unbind(on_touch_down=self.place_colony)
-        sim.add_colony(Colony(amount=1000, size=(100, 100), coordinates=(touch.x-50, touch.y-50), color="black"))
+        sim.add_colony(Colony(amount=100, size=(100, 100), coordinates=(touch.x-50, touch.y-50), color=(0, 0, 0, 1)))
 
 
 if __name__ == "__main__":
