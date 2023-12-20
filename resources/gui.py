@@ -291,10 +291,12 @@ class ButtonWidget(BoxLayout):
         Clock.schedule_once(lambda dt: self.simulation_widget.update_canvas(), 0.1)
 
     def on_food_button_press(self, instance):
-        self.simulation_widget.bind(on_touch_down=self.place_food)
+        if not self.simulation_widget.is_running:
+            self.simulation_widget.bind(on_touch_down=self.place_food)
        
     def on_colony_button_press(self, instance):
-        self.simulation_widget.bind(on_touch_down=self.place_colony)
+        if not self.simulation_widget.is_running:
+            self.simulation_widget.bind(on_touch_down=self.place_colony)
 
     def place_food(self, instance, touch):
         with self.simulation_widget.canvas:
