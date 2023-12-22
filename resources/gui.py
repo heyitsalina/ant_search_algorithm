@@ -104,7 +104,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.is_running = False
         self.update_canvas()
 
-    def draw_bounds(self):
+    def draw_bounds_area(self):
         """
         This method visualizes the current boundary to ensure it remains discernible in case the canvas is zoomed out.
         """
@@ -124,6 +124,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             
     def update_canvas(self):
         self.canvas.clear()
+        self.draw_bounds_area()
         with self.canvas:
             for colony in sim.colonies:
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
