@@ -68,4 +68,14 @@ class Simulation:
             'max_y': self.bounds[3]
         }
         
-        
+        # Check the ant's X-coordinate against the horizontal boundaries
+        if ant.coordinates[0] <= bounds['min_x']: 
+            ant.direction[0] = abs(ant.direction[0]) 
+        elif ant.coordinates[0] >= bounds['max_x']:
+            ant.direction[0] = -abs(ant.direction[0])
+            
+        # Check the ant's Y-coordinate against the vertical boundaries
+        if ant.coordinates[1] <= bounds['min_y']:
+            ant.direction[1] = abs(ant.direction[1])
+        elif ant.coordinates[1] >= bounds['max_y']:
+            ant.direction[1] = -abs(ant.direction[1])
