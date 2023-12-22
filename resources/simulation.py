@@ -70,12 +70,16 @@ class Simulation:
         
         # Check the ant's X-coordinate against the horizontal boundaries
         if ant.coordinates[0] <= bounds['min_x']: 
+            # invert the X-component of its direction vector to move rightward.
             ant.direction[0] = abs(ant.direction[0]) 
         elif ant.coordinates[0] >= bounds['max_x']:
+            # invert the X-component of its direction vector to move leftward.
             ant.direction[0] = -abs(ant.direction[0])
             
         # Check the ant's Y-coordinate against the vertical boundaries
         if ant.coordinates[1] <= bounds['min_y']:
+            # invert the Y-component of its direction vector to move upward.
             ant.direction[1] = abs(ant.direction[1])
         elif ant.coordinates[1] >= bounds['max_y']:
+            # invert the Y-component of its direction vector to move downward.
             ant.direction[1] = -abs(ant.direction[1])
