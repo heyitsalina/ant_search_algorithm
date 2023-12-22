@@ -36,6 +36,11 @@ class GUI(App):
         root = FloatLayout()
 
         background = BoxLayout()
+        #The 100 refers to the height of the button stripe; it should be dynamic later on. 
+        #The 4 has been added to reach the boundary 4 pixels before the actual boundary values; this 
+        #decision was made based on the observation of ant behavior
+        sim.bounds_area =  (0 + 4, Window.width - 4, 100 + 4, Window.height - 4)
+
         with background.canvas:
             Color(1, 1, 1, 1)
             Rectangle(pos=(0, 100), size=(1920, 1080))
