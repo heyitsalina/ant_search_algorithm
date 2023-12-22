@@ -104,6 +104,24 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.is_running = False
         self.update_canvas()
 
+    def draw_bounds(self):
+        """
+        This method visualizes the current boundary to ensure it remains discernible in case the canvas is zoomed out.
+        """
+        bounds = {
+            'min_x': 0,
+            'max_x': Window.width,
+            'min_y': 100, #The 100 refers to the height of the button stripe; it should be dynamic later on. 
+            'max_y': Window.height
+        }
+        with self.canvas:
+            Color(0, 0, 0, 1) 
+            Line(rectangle=(
+                bounds['min_x'], bounds['min_y'],
+                bounds['max_x'] - bounds['min_x'],
+                bounds['max_y'] - bounds['min_y']
+            ), width=1)
+            
     def update_canvas(self):
         self.canvas.clear()
         with self.canvas:
