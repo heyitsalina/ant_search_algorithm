@@ -14,6 +14,7 @@ from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.graphics.transformation import Matrix
 from kivy.core.window import Window
 from kivy.clock import Clock
+from kivy.graphics import Line
 from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
