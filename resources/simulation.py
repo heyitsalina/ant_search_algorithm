@@ -59,4 +59,6 @@ class Simulation:
 
     def add_food(self, food):
         self.food.append(food)
-        
+    
+    def check_bounds_area(self, ant):
+        pass
