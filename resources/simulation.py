@@ -63,10 +63,10 @@ class Simulation:
     
     def check_bounds_area(self, ant):
         bounds = {
-            'min_x': self.bounds[0],
-            'max_x': self.bounds[1],
-            'min_y': self.bounds[2],
-            'max_y': self.bounds[3]
+            'min_x': self.bounds_area[0],
+            'max_x': self.bounds_area[1],
+            'min_y': self.bounds_area[2],
+            'max_y': self.bounds_area[3]
         }
         
         # Check the ant's X-coordinate against the horizontal boundaries
