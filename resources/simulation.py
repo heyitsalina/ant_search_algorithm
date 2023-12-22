@@ -46,6 +46,7 @@ class Simulation:
         for colony in self.colonies:
             for ant in colony.ants:
                 self.update_pheromone(ant)
+                self.check_bounds_area(ant)
                 ant.move()
     
     def update_pheromone(self, ant):
