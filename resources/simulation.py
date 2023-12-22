@@ -61,4 +61,11 @@ class Simulation:
         self.food.append(food)
     
     def check_bounds_area(self, ant):
-        pass
+        bounds = {
+            'min_x': self.bounds[0],
+            'max_x': self.bounds[1],
+            'min_y': self.bounds[2],
+            'max_y': self.bounds[3]
+        }
+        
+        
