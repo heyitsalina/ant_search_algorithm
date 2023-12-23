@@ -313,6 +313,7 @@ class ButtonWidget(BoxLayout):
     def change_window_size(self, window_size):
         Window.size = window_size
         Clock.schedule_once(lambda dt: self.simulation_widget.update_canvas(), 0.1)
+        sim.bounds = (0, window_size[0] - 5, 100, window_size[1] - 5)
 
     def on_food_button_press(self, instance):
         if not self.simulation_widget.is_running:
