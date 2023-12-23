@@ -62,12 +62,11 @@ class Ant:
             #Rotate and normalize the direction vector
             self.direction = np.dot(rotation_matrix, self.direction)
             self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
-            
-            #Update position using the rotated direction
-            position += self.direction
-            self.coordinates = tuple(position)
-
+        
+        future_position = position + self.direction
         self.epoch += 1
+        return tuple(future_position)
+
         
     def find_food(self):
         pass
