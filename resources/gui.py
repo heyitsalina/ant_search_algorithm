@@ -92,6 +92,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         transform the array to get show it right on the screen
     toggle_simulation():
         change whether the simulation is running or not
+    draw_bounds():
+        draw the bounds of the simulation area on the canvas
     """
 
     def __init__(self, **kwargs):
@@ -100,7 +102,21 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.update_canvas()
 
     def draw_bounds(self):
-        min_x, max_x, min_y, max_y = sim.bounds
+        """
+        Draw the bounds of the simulation area on the canvas.
+
+        This method draws a rectangular boundary on the canvas to visualize the bounds
+        of the simulation area.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
+        min_x, max_x, min_y, max_y = 0, Window.width, 100, Window.height #100 should be dynamic later!
         
         with self.canvas:
             Color(0, 0, 0, 1)
