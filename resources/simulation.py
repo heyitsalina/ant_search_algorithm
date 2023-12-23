@@ -52,6 +52,7 @@ class Simulation:
                 self.update_pheromone(ant)
                 future_position = ant.move()
                 adjusted_position = self.check_future_position(future_position)
+                ant.direction *= -1
                 ant.coordinates = adjusted_position
 
     def update_pheromone(self, ant):
