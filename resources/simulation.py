@@ -46,7 +46,7 @@ class Simulation:
         for colony in self.colonies:
             for ant in colony.ants:
                 self.update_pheromone(ant)
-                ant.move()
+                future_position = ant.move()
     
     def update_pheromone(self, ant):
         # This will certainly not work, but just to understand the basic idea
