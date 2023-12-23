@@ -99,6 +99,18 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.is_running = False
         self.update_canvas()
 
+    def draw_bounds(self):
+        min_x, max_x, min_y, max_y = sim.bounds
+        
+        with self.canvas:
+            Color(0, 0, 0, 1)
+            Line(rectangle=(
+                min_x,
+                min_y,
+                max_x - min_x,
+                max_y - min_y
+            ), width=1)
+            
     def update_canvas(self):
         self.canvas.clear()
         with self.canvas:
