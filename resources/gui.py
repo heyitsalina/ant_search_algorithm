@@ -36,6 +36,7 @@ class GUI(App):
         root = FloatLayout()
 
         background = BoxLayout()
+        sim.bounds = (0, Window.width - 5, 100, Window.height - 5)
         with background.canvas:
             Color(1, 1, 1, 1)
             Rectangle(pos=(0, 100), size=(1920, 1080))
