@@ -61,4 +61,14 @@ class Simulation:
         self.food.append(food)
     
     def check_future_position(self, future_position):
-        pass
+        min_x, max_x, min_y, max_y = self.bounds
+        x, y = future_position
+        if x < min_x:
+            x = min_x
+        elif x > max_x:
+            x = max_x
+        if y < min_y:
+            y = min_y
+        elif y > max_y:
+            y = max_y
+        return np.array([x, y])   
