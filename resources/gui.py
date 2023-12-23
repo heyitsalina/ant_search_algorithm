@@ -17,7 +17,7 @@ from kivy.clock import Clock
 from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
-
+from kivy.graphics import Line
 
 sim = Simulation()
 
