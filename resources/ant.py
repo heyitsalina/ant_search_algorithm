@@ -35,10 +35,7 @@ class Ant:
         pass
     
     def move(self):
-        # for test purposes only:
-        # self.coordinates = (self.coordinates[0]+random.randrange(-2, 3), self.coordinates[1]+random.randrange(-2, 3))
-        pass
-    
+
         position = np.array(self.coordinates)
         
         if self.epoch == 0:
