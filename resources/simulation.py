@@ -16,6 +16,8 @@ class Simulation:
         A list containing the colonie objects.
     running : bool
         Indicates if the simulation in running.
+    bounds: Tuple
+        defines the spatial boundaries of the simulation area (min_x, max_x, min_y, max_y)
     
     Methods
     -------
@@ -29,6 +31,8 @@ class Simulation:
         Add a Colony object to the simulation.
     add_food():
         Add a Food object to the simulation.
+    check_future_position():    
+        Adjusts the given position to ensure it stays within the simulation bounds.
     """
     def __init__(self):
         self.pheromones = np.zeros((90, 160))
