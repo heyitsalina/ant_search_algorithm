@@ -36,7 +36,7 @@ class GUI(App):
         root = FloatLayout()
 
         background = BoxLayout()
-        sim.bounds = (0, Window.width - 5, 100, Window.height - 5)
+        sim.bounds = (0, Window.width - 5, 100, Window.height - 5) #100 is the height of buttons; it should be dynamic later
         with background.canvas:
             Color(1, 1, 1, 1)
             Rectangle(pos=(0, 100), size=(1920, 1080))
