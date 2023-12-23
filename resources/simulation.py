@@ -59,4 +59,6 @@ class Simulation:
 
     def add_food(self, food):
         self.food.append(food)
-        
+    
+    def check_future_position(self, future_position):
+        pass
