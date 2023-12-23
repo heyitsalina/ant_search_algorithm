@@ -63,6 +63,18 @@ class Simulation:
         self.food.append(food)
     
     def check_future_position(self, future_position):
+        """
+        Adjusts the given position to ensure it stays within the simulation bounds.
+
+        Args
+        -------
+        future_position (np.array):
+            The anticipated future position of an ant.
+
+        Returns
+        -------
+        np.array: The adjusted position within the simulation bounds.
+        """
         min_x, max_x, min_y, max_y = self.bounds
         x, y = future_position
         if x < min_x:
