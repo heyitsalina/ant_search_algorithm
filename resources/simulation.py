@@ -48,7 +48,8 @@ class Simulation:
                 self.update_pheromone(ant)
                 future_position = ant.move()
                 adjusted_position = self.check_future_position(future_position)
-    
+                ant.coordinates = adjusted_position
+
     def update_pheromone(self, ant):
         # This will certainly not work, but just to understand the basic idea
         # if ant.pheromone_status ist 1 or -1
