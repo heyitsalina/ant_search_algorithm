@@ -53,7 +53,6 @@ class Ant:
             position += self.direction
             self.coordinates = tuple(position)
 
-            self.epoch += 1
         else:
             #Apply a random rotation to the existing direction
             angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
@@ -68,7 +67,7 @@ class Ant:
             position += self.direction
             self.coordinates = tuple(position)
 
-            self.epoch += 1
+        self.epoch += 1
         
     def find_food(self):
         pass
