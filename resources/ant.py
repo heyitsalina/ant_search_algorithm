@@ -49,10 +49,6 @@ class Ant:
             #Set direction vector        
             self.direction = np.array([x, y]) * self.step_size
 
-            #Update position using the direction vector
-            position += self.direction
-            self.coordinates = tuple(position)
-
         else:
             #Apply a random rotation to the existing direction
             angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
