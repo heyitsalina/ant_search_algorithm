@@ -35,7 +35,8 @@ class Simulation:
         self.food = []
         self.colonies = []
         self.running = False
-
+        self.bounds = () #(min_x, max_x, min_y, max_y)
+        
     def start(self):
         self.running = not self.running
         while self.running:
