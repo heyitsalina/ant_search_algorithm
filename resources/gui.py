@@ -116,7 +116,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         -------
         None
         """
-        min_x, max_x, min_y, max_y = 0, Window.width, 100, Window.height #100 should be dynamic later!
+        min_x, max_x, min_y, max_y = sim.bounds
         
         with self.canvas:
             Color(0, 0, 0, 1)
@@ -259,7 +259,7 @@ class ButtonWidget(BoxLayout):
     simulation_widget : SimulationWidget()
         instance of the SimulationWidget() to connect both widgets
     dropdown : DropDown()
-        drop down menu to select the size of the window
+        drop down menu to select the size of the border
     food_button : FoodButton()
         the food button
     colony_button : ColonyButton()
@@ -267,8 +267,8 @@ class ButtonWidget(BoxLayout):
     
     Methods
     -------
-    change_window_size():
-        change the size of the window and update the canvas
+    change_border_size():
+        change the size of the border
     on_food_press():
         executed after pressing the food button
     on_colony_press():
@@ -296,7 +296,7 @@ class ButtonWidget(BoxLayout):
         for size in sizes:
             btn = Button(text=str(size[0]) + 'x' + str(size[1]), size_hint_y=None, height=40)
             btn.bind(on_release=lambda btn: dropdown.select(btn.text))
-            btn.bind(on_release=lambda btn, size=size: self.change_window_size(size))
+            btn.bind(on_release=lambda btn, size=size: self.change_border_size(size))
             dropdown.add_widget(btn)
 
         size_button = Button(text='Size', size_hint=(None, None))
@@ -326,10 +326,8 @@ class ButtonWidget(BoxLayout):
         self.food_button_pressed = False
         self.colony_button_pressed = False
 
-    def change_window_size(self, window_size):
-        Window.size = window_size
-        Clock.schedule_once(lambda dt: self.simulation_widget.update_canvas(), 0.1)
-        sim.bounds = (0, window_size[0] - 5, 100, window_size[1] - 5)
+    def change_border_size(self, new_border_size):
+        sim.bounds = (0, new_border_size[0] - 5, 100, new_border_size[1] - 5)
 
     def on_food_button_press(self, instance):
         if not self.simulation_widget.is_running:
