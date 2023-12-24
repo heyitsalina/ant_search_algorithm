@@ -17,7 +17,7 @@ from kivy.clock import Clock
 from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
-
+from kivy.graphics import Line
 
 sim = Simulation()
 
@@ -36,6 +36,7 @@ class GUI(App):
         root = FloatLayout()
 
         background = BoxLayout()
+        sim.bounds = (0, Window.width - 5, 100, Window.height - 5) #100 is the height of buttons; it should be dynamic later
         with background.canvas:
             Color(1, 1, 1, 1)
             Rectangle(pos=(0, 100), size=(1920, 1080))
@@ -91,6 +92,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         transform the array to get show it right on the screen
     toggle_simulation():
         change whether the simulation is running or not
+    draw_bounds():
+        draw the bounds of the simulation area on the canvas
     """
 
     def __init__(self, **kwargs):
@@ -98,8 +101,35 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.is_running = False
         self.update_canvas()
 
+    def draw_bounds(self):
+        """
+        Draw the bounds of the simulation area on the canvas.
+
+        This method draws a rectangular boundary on the canvas to visualize the bounds
+        of the simulation area.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
+        min_x, max_x, min_y, max_y = 0, Window.width, 100, Window.height #100 should be dynamic later!
+        
+        with self.canvas:
+            Color(0, 0, 0, 1)
+            Line(rectangle=(
+                min_x,
+                min_y,
+                max_x - min_x,
+                max_y - min_y
+            ), width=1)
+            
     def update_canvas(self):
         self.canvas.clear()
+        self.draw_bounds() 
         with self.canvas:
             for colony in sim.colonies:
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
@@ -299,6 +329,7 @@ class ButtonWidget(BoxLayout):
     def change_window_size(self, window_size):
         Window.size = window_size
         Clock.schedule_once(lambda dt: self.simulation_widget.update_canvas(), 0.1)
+        sim.bounds = (0, window_size[0] - 5, 100, window_size[1] - 5)
 
     def on_food_button_press(self, instance):
         if not self.simulation_widget.is_running:

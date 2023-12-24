@@ -1,4 +1,3 @@
-# import random 
 import numpy as np
 
 class Ant:
@@ -36,10 +35,7 @@ class Ant:
         pass
     
     def move(self):
-        # for test purposes only:
-        # self.coordinates = (self.coordinates[0]+random.randrange(-2, 3), self.coordinates[1]+random.randrange(-2, 3))
-        pass
-    
+
         position = np.array(self.coordinates)
         
         if self.epoch == 0:
@@ -53,11 +49,6 @@ class Ant:
             #Set direction vector        
             self.direction = np.array([x, y]) * self.step_size
 
-            #Update position using the direction vector
-            position += self.direction
-            self.coordinates = tuple(position)
-
-            self.epoch += 1
         else:
             #Apply a random rotation to the existing direction
             angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
@@ -67,12 +58,11 @@ class Ant:
             #Rotate and normalize the direction vector
             self.direction = np.dot(rotation_matrix, self.direction)
             self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
-            
-            #Update position using the rotated direction
-            position += self.direction
-            self.coordinates = tuple(position)
+        
+        future_position = position + self.direction
+        self.epoch += 1
+        return tuple(future_position)
 
-            self.epoch += 1
         
     def find_food(self):
         pass
