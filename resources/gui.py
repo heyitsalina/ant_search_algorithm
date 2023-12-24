@@ -156,6 +156,12 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
 
+    def clear_canvas(self, instance):
+        # self.is_running = False
+        sim.food = []
+        sim.colonies= []
+        self.update_canvas()
+
     def on_touch_down(self, touch):
             if not self.is_running and touch.is_double_tap:
                 for colony in sim.colonies:
@@ -317,9 +323,22 @@ class ButtonWidget(BoxLayout):
             size_hint_x=None
         )
 
+        clear_canvas_button = Button(
+            text="Clear",
+            on_press=lambda instance: start_stop_button.trigger_action(0),
+            on_release=simulation_widget.clear_canvas,
+            height=100,
+            size_hint_y=None,
+            size_hint_x=None
+        )           
+
+        clear_start_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
+        clear_start_layout.add_widget(clear_canvas_button)
+        clear_start_layout.add_widget(start_stop_button)
+
         buttons_layout = BoxLayout(orientation='horizontal', spacing=500, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colony_layout)
-        buttons_layout.add_widget(start_stop_button)
+        buttons_layout.add_widget(clear_start_layout)
 
         self.add_widget(buttons_layout)
 
