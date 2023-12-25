@@ -67,6 +67,10 @@ class Ant:
     def find_food(self, food_position):
         food_center_x = food_position[0]
         food_center_y = food_position[1]
+        
+        #coordiantes of ant
+        ant_x = np.round(self.coordinates[0], 2)
+        ant_y = np.round(self.coordinates[1], 2)
     
     def carry_food(self):
         pass
