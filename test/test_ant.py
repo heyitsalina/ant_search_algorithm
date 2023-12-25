@@ -1,4 +1,5 @@
 import pytest
+import numpy as np
 from resources.ant import Ant
 
 ant = Ant(pheromone_status=1,
@@ -11,6 +12,9 @@ def test_switch_pheromon():
 def test_move():
     ant.move()
     assert ant.epoch == 1, "Epoch should increment after move"
+    initial_direction = ant.direction.copy()
+    ant.move()
+    assert not np.array_equal(ant.direction, initial_direction), "Direction should change after move"
 
 def test_find_food():
     ant.coordinates = (145, 145)  # Inside radius
