@@ -19,6 +19,9 @@ def test_move():
     ant.move()
     new_step_size = np.linalg.norm(ant.direction)
     assert np.isclose(initial_step_size, new_step_size), "Step size should remain constant"
+    original_position = ant.coordinates
+    ant.move()
+    assert ant.coordinates != original_position, "Ant's position should change after move"
 
 def test_find_food():
     ant.coordinates = (145, 145)  # Inside radius
