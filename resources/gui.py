@@ -36,7 +36,7 @@ class GUI(App):
         root = FloatLayout()
 
         background = BoxLayout()
-        sim.bounds = (0, Window.width - 5, 100, Window.height - 5) #100 is the height of buttons; it should be dynamic later
+        sim.bounds = (0, Window.width, 100, Window.height) #100 is the height of buttons; it should be dynamic later
         with background.canvas:
             Color(1, 1, 1, 1)
             Rectangle(pos=(0, 100), size=(1920, 1080))
@@ -123,8 +123,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             Line(rectangle=(
                 min_x,
                 min_y,
-                max_x - min_x,
-                max_y - min_y
+                max_x - min_x + 5,
+                max_y - min_y + 5
             ), width=1)
             
     def update_canvas(self):
