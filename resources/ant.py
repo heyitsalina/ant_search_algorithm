@@ -74,6 +74,9 @@ class Ant:
         
         #calculation of Euclidean distance
         distance = np.sqrt((food_center_x - ant_x)**2 + (food_center_y - ant_y)**2)
+        
+        #radius of the circle
+        radius = 20
     
     def carry_food(self):
         pass
