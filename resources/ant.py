@@ -71,6 +71,9 @@ class Ant:
         #coordiantes of ant
         ant_x = np.round(self.coordinates[0], 2)
         ant_y = np.round(self.coordinates[1], 2)
+        
+        #calculation of Euclidean distance
+        distance = np.sqrt((food_center_x - ant_x)**2 + (food_center_y - ant_y)**2)
     
     def carry_food(self):
         pass
