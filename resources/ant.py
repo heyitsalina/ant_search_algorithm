@@ -64,8 +64,9 @@ class Ant:
         return tuple(future_position)
 
         
-    def find_food(self):
-        pass
+    def find_food(self, food_position):
+        food_center_x = food_position[0]
+        food_center_y = food_position[1]
     
     def carry_food(self):
         pass
