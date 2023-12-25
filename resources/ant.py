@@ -92,6 +92,7 @@ class Ant:
         #check whether the ant is inside or on the edge of the circle
         if distance <= radius:
             return (ant_x, ant_y)
+        return None
     
     def carry_food(self):
         pass
