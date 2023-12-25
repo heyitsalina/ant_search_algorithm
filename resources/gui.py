@@ -336,7 +336,7 @@ class ButtonWidget(BoxLayout):
         clear_start_layout.add_widget(clear_canvas_button)
         clear_start_layout.add_widget(start_stop_button)
 
-        buttons_layout = BoxLayout(orientation='horizontal', spacing=500, padding=0, size_hint_y=None)
+        buttons_layout = BoxLayout(orientation='horizontal', spacing=800, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colony_layout)
         buttons_layout.add_widget(clear_start_layout)
 
