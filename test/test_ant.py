@@ -9,7 +9,8 @@ def test_switch_pheromon():
     pass
 
 def test_move():
-    pass
+    ant.move()
+    assert ant.epoch == 1, "Epoch should increment after move"
 
 def test_find_food():
     ant.coordinates = (145, 145)  # Inside radius
@@ -25,4 +26,4 @@ def test_carry_food():
 
 if __name__ == "__main__":
     test_move()
-    
+    test_find_food()
