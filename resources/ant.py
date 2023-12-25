@@ -65,8 +65,8 @@ class Ant:
 
         
     def find_food(self, food_position):
-        food_center_x = food_position[0]
-        food_center_y = food_position[1]
+        food_center_x = food_position[0] + 45
+        food_center_y = food_position[1] + 45
         
         #coordiantes of ant
         ant_x = np.round(self.coordinates[0], 2)
