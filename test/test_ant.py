@@ -15,7 +15,9 @@ def test_find_food():
     ant.coordinates = (145, 145)  # Inside radius
     result = ant.find_food((100, 100))
     assert result is not None, "Should return coordinates when ant is inside radius"
-
+    ant.coordinates = (30, 30)  # Outside radius
+    result = ant.find_food((100, 100))
+    assert result is None, "Should return None when ant is outside radius"
 
 def test_carry_food():
     pass
