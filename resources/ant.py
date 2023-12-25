@@ -65,6 +65,17 @@ class Ant:
 
         
     def find_food(self, food_position):
+        """
+        Determines if an ant is within a specified radius of a food source.
+
+        Parameters:
+        food_position (tuple): The (x, y) coordinates of the food source.
+
+        Returns:
+        tuple: The current (x, y) coordinates of the ant if it is within the specified radius; 
+        otherwise, returns None.
+        """
+
         food_center_x = food_position[0] + 45
         food_center_y = food_position[1] + 45
         
