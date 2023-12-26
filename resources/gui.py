@@ -157,24 +157,28 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         instance.text = 'Stop' if self.is_running else 'Start'
 
     def clear_canvas(self, instance):
-        # self.is_running = False
         sim.food = []
         sim.colonies= []
         self.update_canvas()
 
     def on_touch_down(self, touch):
-            if not self.is_running and touch.is_double_tap:
-                for colony in sim.colonies:
-                    if colony.coordinates[0] < touch.x < colony.coordinates[0] + 100 and \
-                    colony.coordinates[1] < touch.y < colony.coordinates[1] + 100:
-                        self.show_colony_popup(colony)
-                        return True 
-                for food in sim.food:
-                    if food.coordinates[0] < touch.x < food.coordinates[0] + 100 and \
-                    food.coordinates[1] < touch.y < food.coordinates[1] + 100:
-                        self.show_food_popup(food)
+        if not self.is_running and touch.is_double_tap:
+            transformed_touch = self.to_local(*touch.pos)
+            for colony in sim.colonies:
+                colony_x, colony_y = colony.coordinates
+                if colony_x < transformed_touch[0] < colony_x + 100 and \
+                   colony_y < transformed_touch[1] < colony_y + 100:
+                    self.show_colony_popup(colony)
+                    return True 
 
-            return super(SimulationWidget, self).on_touch_down(touch)
+            for food in sim.food:
+                food_x, food_y = food.coordinates
+                if food_x < transformed_touch[0] < food_x + 100 and \
+                   food_y < transformed_touch[1] < food_y + 100:
+                    self.show_food_popup(food)
+                    return True  
+
+        return super(SimulationWidget, self).on_touch_down(touch)
 
     def show_colony_popup(self, colony):
         content = BoxLayout(orientation='vertical', spacing=10, padding=10)
@@ -357,16 +361,20 @@ class ButtonWidget(BoxLayout):
             self.simulation_widget.bind(on_touch_down=self.place_colony)
 
     def place_food(self, instance, touch):
+        transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
+
         with self.simulation_widget.canvas:
-            Image(source="../images/apple.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
+            Image(source="../images/apple.png", pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
         self.simulation_widget.unbind(on_touch_down=self.place_food)
-        sim.add_food(Food(size=(100, 100), coordinates=(touch.x-50, touch.y-50), amount_of_food=1000))
+        sim.add_food(Food(size=(100, 100), coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), amount_of_food=1000))
 
     def place_colony(self, instance, touch):
+        transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
+
         with self.simulation_widget.canvas:
-            Image(source="../images/colony.png", pos=(touch.x - 50, touch.y - 50), size=(100, 100))
+            Image(source="../images/colony.png", pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
         self.simulation_widget.unbind(on_touch_down=self.place_colony)
-        sim.add_colony(Colony(amount=100, size=(100, 100), coordinates=(touch.x-50, touch.y-50), color=(0, 0, 0, 1)))
+        sim.add_colony(Colony(amount=100, size=(100, 100), coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
 
 
 if __name__ == "__main__":
