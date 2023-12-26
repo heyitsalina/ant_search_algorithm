@@ -36,7 +36,7 @@ class GUI(App):
         root = FloatLayout()
 
         background = BoxLayout()
-        sim.bounds = (0, Window.width, 100, Window.height) #100 is the height of buttons; it should be dynamic later
+        sim.bounds = (0, Window.width, 100, Window.height)
         with background.canvas:
             Color(1, 1, 1, 1)
             Rectangle(pos=(0, 100), size=(1920, 1080))
@@ -81,6 +81,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         size of the simulation canvas
     pos : tuple
         position of the canvas
+    popup : Popup()
+        a simple Kivy popup that shows settings about an object when it's double clicked
 
     Methods
     -------
@@ -94,6 +96,18 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         change whether the simulation is running or not
     draw_bounds():
         draw the bounds of the simulation area on the canvas
+    clear_canvas():
+        clear the canvas
+    on_touch_down():
+        notice double clicks
+    show_colony_popup():
+        show a popup to change the colony settings
+    show_food_popup():
+        show a popup to change the food settings
+    apply_ant_changes():
+        apply changes made in the ant popup to the ants
+    apply_food_changes():
+        apply changes made in the food popup to the food objects
     """
 
     def __init__(self, **kwargs):
