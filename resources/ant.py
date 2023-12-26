@@ -64,8 +64,35 @@ class Ant:
         return tuple(future_position)
 
         
-    def find_food(self):
-        pass
+    def find_food(self, food_position):
+        """
+        Determines if an ant is within a specified radius of a food source.
+
+        Parameters:
+        food_position (tuple): The (x, y) coordinates of the food source.
+
+        Returns:
+        tuple: The current (x, y) coordinates of the ant if it is within the specified radius; 
+        otherwise, returns None.
+        """
+
+        food_center_x = food_position[0] + 45
+        food_center_y = food_position[1] + 45
+        
+        #coordiantes of ant
+        ant_x = np.round(self.coordinates[0], 2)
+        ant_y = np.round(self.coordinates[1], 2)
+        
+        #calculation of Euclidean distance
+        distance = np.sqrt((food_center_x - ant_x)**2 + (food_center_y - ant_y)**2)
+        
+        #radius of the circle
+        radius = 20 #maybe radius should be reduced gradually? -> when a part of food has been taken
+        
+        #check whether the ant is inside or on the edge of the circle
+        if distance <= radius:
+            return (ant_x, ant_y)
+        return None
     
     def carry_food(self):
         pass
