@@ -1,13 +1,11 @@
 import numpy as np
 
 class Ant:
-    def __init__(self, pheromone_status, coordinates, amount_to_carry, step_size=1):
+    def __init__(self, coordinates, amount_to_carry, step_size=1):
         """
         This class represents an ant in the Ant search algorithm.
         
         Args:
-        pheromone_status (float): 
-            The current level of pheromone detected by the ant.
         coordinates (tuple):
             The (x, y) current coordinates of the ant in the search space.
         amount_to_carry (float):
@@ -17,22 +15,26 @@ class Ant:
         ---------
         
         Attributes:
+        pheromone_status (float): 
+            The current status of pheromone by the ant.
+                - -1 indicates the ant is searching for food and not carrying any.
+                -  1 indicates the ant has found food and is carrying it back to the nest.
         direction (numpy array):
             The current direction vector of the ant.
         epoch (int):
             Represents the current epoch or step in the movement of the ant.
         """
         
-        self.pheromone_status = pheromone_status
+        self.pheromone_status = -1
         self.coordinates = coordinates
         self.amount_to_carry = amount_to_carry
         self.step_size = step_size
         self.direction = np.array([0, 0])
         self.epoch = 0
-        self.carrying_food = False
 
         
     def switch_pheromone(self):
+        """Switches the pheromone status of the ant."""
         self.pheromone_status *= -1
     
 
@@ -111,8 +113,7 @@ class Ant:
             None: The method changes the state of the Ant and the food_source directly 
         """
         # if conditions are matched, switch state of ant to carryfood
-        if self.pheromone_status == -1 and self.find_food(food.coordiantes) and food.amount_of_food > 0:
-            self.carrying_food = True
+        if self.pheromone_status == -1 and self.find_food(food.coordinates) and food.amount_of_food > 0:
 
             # subtracts amount to carry or whatevers left 
             amount_taken = min(food.amount_of_food, self.amount_to_carry)
@@ -120,10 +121,5 @@ class Ant:
 
             #call switch pheromone method
             self.switch_pheromone()
-
-        #add blank for if food source is empty
-        elif food.amount_of_food == 0:
-            
-            pass
             
         
