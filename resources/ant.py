@@ -100,9 +100,18 @@ class Ant:
 
     
     def carry_food(self, food):
+        """
+        Enables the ant to take food from food_source if certain conditions are met 
+        and updates its pheromonestatus and the amount_of_food left at the food-source
+
+        Args:
+            food (Object): The food_source where the ant is trying to take food from
         
-        # if conditions are matched, change pheromonstatus and and carrying food now
-        if self.pheromone_status == -1 and self.find_food(food.coordiantes) and food.amount_of_food >0:
+        Return:
+            None: The method changes the state of the Ant and the food_source directly 
+        """
+        # if conditions are matched, switch state of ant to carryfood
+        if self.pheromone_status == -1 and self.find_food(food.coordiantes) and food.amount_of_food > 0:
             self.carrying_food = True
 
             # subtracts amount to carry or whatevers left 
