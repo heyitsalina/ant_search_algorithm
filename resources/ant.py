@@ -15,7 +15,7 @@ class Ant:
         ---------
         
         Attributes:
-        pheromone_status (float): 
+        pheromone_status (int): 
             The current status of pheromone by the ant.
                 - -1 indicates the ant is searching for food and not carrying any.
                 -  1 indicates the ant has found food and is carrying it back to the nest.
@@ -121,5 +121,3 @@ class Ant:
 
             #call switch pheromone method
             self.switch_pheromone()
-            
-        
