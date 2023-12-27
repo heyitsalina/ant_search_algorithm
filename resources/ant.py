@@ -23,17 +23,20 @@ class Ant:
             Represents the current epoch or step in the movement of the ant.
         """
         
-        self.pheromon_status = pheromone_status
+        self.pheromone_status = pheromone_status
         self.coordinates = coordinates
         self.amount_to_carry = amount_to_carry
         self.step_size = step_size
         self.direction = np.array([0, 0])
         self.epoch = 0
+        self.carrying_food = False
 
         
-    def switch_pheromon(self):
+    def switch_pheromone(self):
         pass
     
+
+
     def move(self):
 
         position = np.array(self.coordinates)
@@ -94,5 +97,24 @@ class Ant:
             return (ant_x, ant_y)
         return None
     
-    def carry_food(self):
-        pass
+
+    
+    def carry_food(self, food):
+        
+        # if conditions are matched, change pheromonstatus and and carrying food now
+        if self.pheromone_status == -1 and self.find_food(food.coordiantes) and food.amount_of_food >0:
+            self.carrying_food = True
+
+            # subtracts amount to carry or whatevers left 
+            amount_taken = min(food.amount_of_food, self.amount_to_carry)
+            food.amount_of_food -= amount_taken
+
+            #call switch pheromone method
+            self.switch_pheromone()
+
+        #add blank for if food source is empty
+        elif food.amount_of_food == 0:
+            
+            pass
+            
+        
