@@ -33,7 +33,7 @@ class Ant:
 
         
     def switch_pheromone(self):
-        pass
+        self.pheromone_status *= -1
     
 
 
