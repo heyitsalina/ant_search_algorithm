@@ -2,9 +2,8 @@ import pytest
 import numpy as np
 from resources.ant import Ant
 
-ant = Ant(pheromone_status=1,
-              coordinates=(100.0, 100.0),
-              amount_to_carry=20)
+ant = Ant(coordinates=(100.0, 100.0),
+          amount_to_carry=20)
 
 def test_switch_pheromon():
     pass

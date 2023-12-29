@@ -1,13 +1,11 @@
 import numpy as np
 
 class Ant:
-    def __init__(self, pheromone_status, coordinates, amount_to_carry, step_size=1):
+    def __init__(self, coordinates, amount_to_carry, step_size=1):
         """
         This class represents an ant in the Ant search algorithm.
         
         Args:
-        pheromone_status (float): 
-            The current level of pheromone detected by the ant.
         coordinates (tuple):
             The (x, y) current coordinates of the ant in the search space.
         amount_to_carry (float):
@@ -17,13 +15,17 @@ class Ant:
         ---------
         
         Attributes:
+        pheromone_status (int): 
+            The current status of pheromone by the ant.
+                - -1 indicates the ant is searching for food and not carrying any.
+                -  1 indicates the ant has found food and is carrying it back to the nest.
         direction (numpy array):
             The current direction vector of the ant.
         epoch (int):
             Represents the current epoch or step in the movement of the ant.
         """
         
-        self.pheromon_status = pheromone_status
+        self.pheromone_status = -1
         self.coordinates = coordinates
         self.amount_to_carry = amount_to_carry
         self.step_size = step_size
@@ -31,9 +33,12 @@ class Ant:
         self.epoch = 0
 
         
-    def switch_pheromon(self):
-        pass
+    def switch_pheromone(self):
+        """Switches the pheromone status of the ant."""
+        self.pheromone_status *= -1
     
+
+
     def move(self):
 
         position = np.array(self.coordinates)
@@ -94,5 +99,25 @@ class Ant:
             return (ant_x, ant_y)
         return None
     
-    def carry_food(self):
-        pass
+
+    
+    def carry_food(self, food):
+        """
+        Enables the ant to take food from food_source if certain conditions are met 
+        and updates its pheromonestatus and the amount_of_food left at the food-source
+
+        Args:
+            food (Object): The food_source where the ant is trying to take food from
+        
+        Return:
+            None: The method changes the state of the Ant and the food_source directly 
+        """
+        # if conditions are matched, switch state of ant to carryfood
+        if self.pheromone_status == -1 and self.find_food(food.coordinates) and food.amount_of_food > 0:
+
+            # subtracts amount to carry or whatevers left 
+            amount_taken = min(food.amount_of_food, self.amount_to_carry)
+            food.amount_of_food -= amount_taken
+
+            #call switch pheromone method
+            self.switch_pheromone()
