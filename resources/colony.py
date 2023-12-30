@@ -26,4 +26,3 @@ class Colony:
                                  amount_to_carry=amount_to_carry,
                                  step_size=step_size))
     
-    
