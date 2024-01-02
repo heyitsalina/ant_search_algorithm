@@ -2,14 +2,14 @@ from resources.colony import Colony
 import pytest
 import numpy as np
 
-colony = Colony(amount=10, size=10, coordinates=(100.0, 100.0), color="brown")
-amount_to_carry = 20     # anpassbar
-step_size = 5           # anpassbar
-colony.add_ants(amount_to_carry, step_size)
+colony = Colony(amount=10, size=10, coordinates=(100.0, 100.0), color=(1, 1, 1, 1))
 
 def test_add_ants():
-    initial_ant_count = len(colony.ants)
-    assert len(colony.ants) == initial_ant_count + colony.amount
+    assert colony.amount == len(colony.ants)
+    colony.ants = []
+    amount_to_carry = 20
+    step_size = 5
+    colony.add_ants(amount_to_carry, step_size)
     for ant in colony.ants:
         assert ant.amount_to_carry == amount_to_carry
         assert ant.step_size == step_size
