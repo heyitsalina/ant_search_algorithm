@@ -48,6 +48,8 @@ class GUI(App):
         root.add_widget(background)
         root.add_widget(button_widget)
 
+        Window.maximize()
+
         Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
 
         return root
@@ -377,9 +379,21 @@ class ButtonWidget(BoxLayout):
         self.colony_button_pressed = False
 
     def change_border_size(self, new_border_size):
-        sim.bounds = (0, new_border_size[0] - 5, 100, new_border_size[1] - 5)
+        old_min_x, old_max_x, old_min_y, old_max_y = sim.bounds
+        
+        current_center_x = (old_min_x + old_max_x) / 2
+        current_center_y = (old_min_y + old_max_y) / 2
+
+        sim.bounds = (
+            current_center_x - new_border_size[0] / 2,
+            current_center_x + new_border_size[0] / 2 - 5,
+            current_center_y - 100 / 2,
+            current_center_y + new_border_size[1] / 2 - 5
+        )
+
         self.simulation_widget.clear_canvas(0)
         self.simulation_widget.draw_bounds()
+
 
     def on_food_button_press(self, instance):
         if not self.simulation_widget.is_running:
