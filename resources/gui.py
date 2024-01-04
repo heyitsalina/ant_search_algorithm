@@ -46,6 +46,7 @@ class GUI(App):
             -480 / 2,
             480 / 2 
         )
+        
         with background.canvas:
             Color(1, 1, 1, 1)
             Rectangle(pos=(0, 0), size=(1920, 1080))
@@ -117,6 +118,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         apply changes made in the ant popup to the ants
     apply_food_changes():
         apply changes made in the food popup to the food objects
+    adjust_view():
+        change the view back to the original
     """
 
     def __init__(self, **kwargs):
