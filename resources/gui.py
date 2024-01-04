@@ -263,6 +263,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         if new_food_amount >= 0:
             food.amount_of_food = new_food_amount
             self.popup.dismiss()
+    
+    def adjust_view(self):
+        pass
 
 
 class FoodButton(Button):
@@ -374,6 +377,8 @@ class ButtonWidget(BoxLayout):
 
     def change_border_size(self, new_border_size):
         sim.bounds = (0, new_border_size[0] - 5, 100, new_border_size[1] - 5)
+        self.simulation_widget.clear_canvas(0)
+        self.simulation_widget.draw_bounds()
 
     def on_food_button_press(self, instance):
         if not self.simulation_widget.is_running:
