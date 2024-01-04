@@ -1,10 +1,10 @@
+from resources import config
 import ast
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
@@ -46,7 +46,7 @@ class GUI(App):
             -480 / 2,
             480 / 2 
         )
-        
+
         with background.canvas:
             Color(1, 1, 1, 1)
             Rectangle(pos=(0, 0), size=(1920, 1080))
@@ -430,4 +430,5 @@ class ButtonWidget(BoxLayout):
 
 
 if __name__ == "__main__":
+    config
     GUI().run()
