@@ -121,8 +121,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def __init__(self, **kwargs):
         super(SimulationWidget, self).__init__(**kwargs)
         self.is_running = False
-        self.pos = (-1920/2, -1080/2 +100)
         self.update_canvas()
+        Clock.schedule_interval(lambda instance: self.adjust_view(instance), 0.1)
 
     def draw_bounds(self):
         """
@@ -274,17 +274,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.popup.dismiss()
     
     def adjust_view(self, instance):
-        min_x, max_x, min_y, max_y = sim.bounds
-
-        # Calculate the new position to center the canvas
-        new_pos_x = -((max_x - min_x) / 2)
-        new_pos_y = -((max_y - min_y) / 2)
-
-        # Set the new position
-        self.pos = (new_pos_x, new_pos_y)
-
-        # Reset the scale
+        if self.scale == 1 and self.pos == (self.width/2, self.height/2):
+            return False
         self.scale = 1
+        self.pos = (self.width/2, self.height/2)
 
 
 class FoodButton(Button):
