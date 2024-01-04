@@ -70,27 +70,27 @@ class Ant:
         return tuple(future_position)
 
         
-    def find_food(self, food_position):
+    def is_near_target(self, target_position):
         """
-        Determines if an ant is within a specified radius of a food source.
+        Determines if an ant is within a specified radius of a food or colony source.
 
         Parameters:
-        food_position (tuple): The (x, y) coordinates of the food source.
+        target_position (tuple): The (x, y) coordinates of the food or colony source.
 
         Returns:
         tuple: The current (x, y) coordinates of the ant if it is within the specified radius; 
         otherwise, returns None.
         """
 
-        food_center_x = food_position[0] + 45
-        food_center_y = food_position[1] + 45
+        target_center_x = target_position[0] + 45
+        target_center_y = target_position[1] + 45
         
         #coordiantes of ant
         ant_x = np.round(self.coordinates[0], 2)
         ant_y = np.round(self.coordinates[1], 2)
         
         #calculation of Euclidean distance
-        distance = np.sqrt((food_center_x - ant_x)**2 + (food_center_y - ant_y)**2)
+        distance = np.sqrt((target_center_x - ant_x)**2 + (target_center_y - ant_y)**2)
         
         #radius of the circle
         radius = 20 #maybe radius should be reduced gradually? -> when a part of food has been taken
@@ -101,36 +101,9 @@ class Ant:
         return None
     
 
-    
-    def carry_food(self, food):
-        """
-        Enables the ant to take food from food_source if certain conditions are met 
-        and updates its pheromonestatus and the amount_of_food left at the food-source
-
-        Args:
-            food (Object): The food_source where the ant is trying to take food from
-        
-        Return:
-            None: The method changes the state of the Ant and the food_source directly 
-        """
-        # if conditions are matched, switch state of ant to carryfood
-        if self.pheromone_status == -1 and self.find_food(food.coordinates) and food.amount_of_food > 0:
-
-            # subtracts amount to carry or whatevers left 
-            amount_taken = min(food.amount_of_food, self.amount_to_carry)
-            food.amount_of_food -= amount_taken
-
-            #call switch pheromone method
-            self.switch_pheromone()
-
-
-    
-
-
-
-    def try_carry_food(self, food_coordinates, food):
+    def try_carry_food(self, food):
         # return true if ant has no food, is in range to take, and food is left
-        if self.pheromone_status == -1 and  self.find_food(food_coordinates) and food.amount_of_food > 0:
+        if self.pheromone_status == -1 and  self.is_near_target(food.coordinates) and food.amount_of_food > 0:
             return True
         return False
 
@@ -142,11 +115,12 @@ class Ant:
         self.ant_carries = amount_taken #if we dont do this we cant differ if the ant takes less food cuz there is not much food left
         self.switch_pheromone()
 
-    def try_drop_food(self, colony_coordinates):
-        if self.pheromone_status == 1 and self.find_food(colony_coordinates):
+    def try_drop_food(self, colony):
+        if self.pheromone_status == 1 and self.is_near_target(colony.coordinates):
             return True
         return False
             # and find_food() method needs to be adjusted to be able to find_colony()
+
 
     def drop_food(self, colony):
         colony.food_counter += self.ant_carries
