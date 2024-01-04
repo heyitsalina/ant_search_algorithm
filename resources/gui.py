@@ -36,10 +36,16 @@ class GUI(App):
         root = FloatLayout()
 
         background = BoxLayout()
-        sim.bounds = (0, Window.width, 100, Window.height)
+       
+        sim.bounds = (
+            - 720 / 2,
+            720 / 2,
+            -480 / 2,
+            480 / 2 
+        )
         with background.canvas:
             Color(1, 1, 1, 1)
-            Rectangle(pos=(0, 100), size=(1920, 1080))
+            Rectangle(pos=(0, 0), size=(1920, 1080))
 
         simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
@@ -115,6 +121,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def __init__(self, **kwargs):
         super(SimulationWidget, self).__init__(**kwargs)
         self.is_running = False
+        self.pos = (-1920/2, -1080/2 +100)
         self.update_canvas()
 
     def draw_bounds(self):
@@ -267,8 +274,17 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.popup.dismiss()
     
     def adjust_view(self, instance):
+        min_x, max_x, min_y, max_y = sim.bounds
+
+        # Calculate the new position to center the canvas
+        new_pos_x = -((max_x - min_x) / 2)
+        new_pos_y = -((max_y - min_y) / 2)
+
+        # Set the new position
+        self.pos = (new_pos_x, new_pos_y)
+
+        # Reset the scale
         self.scale = 1
-        self.pos = (0, 0)
 
 
 class FoodButton(Button):
@@ -379,21 +395,15 @@ class ButtonWidget(BoxLayout):
         self.colony_button_pressed = False
 
     def change_border_size(self, new_border_size):
-        old_min_x, old_max_x, old_min_y, old_max_y = sim.bounds
-        
-        current_center_x = (old_min_x + old_max_x) / 2
-        current_center_y = (old_min_y + old_max_y) / 2
-
         sim.bounds = (
-            current_center_x - new_border_size[0] / 2,
-            current_center_x + new_border_size[0] / 2 - 5,
-            current_center_y - 100 / 2,
-            current_center_y + new_border_size[1] / 2 - 5
+            - new_border_size[0] / 2,
+            new_border_size[0] / 2,
+            - new_border_size[1] / 2,
+            new_border_size[1] / 2 
         )
 
         self.simulation_widget.clear_canvas(0)
         self.simulation_widget.draw_bounds()
-
 
     def on_food_button_press(self, instance):
         if not self.simulation_widget.is_running:
