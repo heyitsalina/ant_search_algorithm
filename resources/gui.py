@@ -348,13 +348,22 @@ class ButtonWidget(BoxLayout):
             height=100,
             size_hint_y=None,
             size_hint_x=None
-        )           
+        )
+
+        ajust_view_button = Button(
+            text="Adjust view",
+            on_press=lambda instance: simulation_widget.adjust_view(),
+            height=100,
+            size_hint_x=None,
+            size_hint_y=None
+        )
 
         clear_start_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         clear_start_layout.add_widget(clear_canvas_button)
+        clear_start_layout.add_widget(ajust_view_button)
         clear_start_layout.add_widget(start_stop_button)
 
-        buttons_layout = BoxLayout(orientation='horizontal', spacing=800, padding=0, size_hint_y=None)
+        buttons_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colony_layout)
         buttons_layout.add_widget(clear_start_layout)
 
