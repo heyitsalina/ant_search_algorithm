@@ -4,6 +4,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
@@ -33,6 +34,8 @@ class GUI(App):
     """
 
     def build(self):
+        Window.maximize()
+
         root = FloatLayout()
 
         background = BoxLayout()
@@ -53,8 +56,6 @@ class GUI(App):
         background.add_widget(simulation_widget)
         root.add_widget(background)
         root.add_widget(button_widget)
-
-        Window.maximize()
 
         Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
 
@@ -365,7 +366,7 @@ class ButtonWidget(BoxLayout):
             size_hint_x=None
         )
 
-        ajust_view_button = Button(
+        adjust_view_button = Button(
             text="Adjust view",
             on_press=lambda instance: simulation_widget.adjust_view(instance),
             height=100,
@@ -374,11 +375,11 @@ class ButtonWidget(BoxLayout):
         )
 
         clear_start_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
+        clear_start_layout.add_widget(adjust_view_button)
         clear_start_layout.add_widget(clear_canvas_button)
-        clear_start_layout.add_widget(ajust_view_button)
         clear_start_layout.add_widget(start_stop_button)
 
-        buttons_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y=None)
+        buttons_layout = BoxLayout(orientation='horizontal', spacing=Window.width-600, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colony_layout)
         buttons_layout.add_widget(clear_start_layout)
 
