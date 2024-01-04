@@ -108,7 +108,7 @@ class Ant:
         return False
 
         
-    def carry_food2(self, food):
+    def carry_food(self, food):
         # subtract amount of food at source and switch ant status to carrying food
         amount_taken = min(food.amount_of_food, self.amount_to_carry)
         food.amount_of_food -= amount_taken
