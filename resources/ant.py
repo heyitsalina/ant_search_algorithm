@@ -31,6 +31,7 @@ class Ant:
         self.step_size = step_size
         self.direction = np.array([0, 0])
         self.epoch = 0
+        self.ant_carries = 0
 
         
     def switch_pheromone(self):
@@ -121,3 +122,36 @@ class Ant:
 
             #call switch pheromone method
             self.switch_pheromone()
+
+
+    
+
+
+
+    def try_carry_food(self, food_coordinates, food):
+        # return true if ant has no food, is in range to take, and food is left
+        if self.pheromone_status == -1 and  self.find_food(food_coordinates) and food.amount_of_food > 0:
+            return True
+        return False
+
+        
+    def carry_food2(self, food):
+        # subtract amount of food at source and switch ant status to carrying food
+        amount_taken = min(food.amount_of_food, self.amount_to_carry)
+        food.amount_of_food -= amount_taken
+        self.ant_carries = amount_taken #if we dont do this we cant differ if the ant takes less food cuz there is not much food left
+        self.switch_pheromone()
+
+    def try_drop_food(self, colony_coordinates):
+        if self.pheromone_status == 1 and self.find_food(colony_coordinates):
+            return True
+        return False
+            # and find_food() method needs to be adjusted to be able to find_colony()
+
+    def drop_food(self, colony):
+        colony.food_counter += self.ant_carries
+
+        # colony food counter + amount_taken ?
+        self.ant_carries = 0 # set what ant carries back to 0
+        self.switch_pheromone()
+        
