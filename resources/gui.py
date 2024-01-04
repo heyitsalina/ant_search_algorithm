@@ -264,8 +264,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             food.amount_of_food = new_food_amount
             self.popup.dismiss()
     
-    def adjust_view(self):
-        pass
+    def adjust_view(self, instance):
+        self.scale = 1
+        self.pos = (0, 0)
 
 
 class FoodButton(Button):
@@ -355,7 +356,7 @@ class ButtonWidget(BoxLayout):
 
         ajust_view_button = Button(
             text="Adjust view",
-            on_press=lambda instance: simulation_widget.adjust_view(),
+            on_press=lambda instance: simulation_widget.adjust_view(instance),
             height=100,
             size_hint_x=None,
             size_hint_y=None
