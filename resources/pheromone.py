@@ -28,7 +28,7 @@ class pheromone:
     def leave_pheromone(self):
         pass
     
-    def get_pheromone_level(self):
+    def get_pheromone_level(self, pos):
         pass
 
     def reduce_pheromone(self, reducing_factor, timeframe):
