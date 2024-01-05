@@ -25,7 +25,7 @@ class pheromone:
         """
         self.pheromones = np.zeros((grid_shape[0], grid_shape[1], 2))
 
-    def leave_pheromone(self, pos):
+    def leave_pheromone(self, pos, pheromone_status):
         pass
     
     def get_pheromone_level(self, pos):
