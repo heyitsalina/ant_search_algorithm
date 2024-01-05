@@ -42,7 +42,9 @@ class pheromone:
         depth = 0
         if pheromone_status == 1:
             depth = 1
-            
+        
+        #Add pheromones status in the corresponding position
+        self.pheromones[pos[0], pos[1], depth] += pheromone_status
     
     def get_pheromone_level(self, pos):
         pass
