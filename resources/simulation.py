@@ -49,11 +49,12 @@ class Simulation:
     def next_epoch(self):
         for colony in self.colonies:
             for ant in colony.ants:
-                #for food in self.food:
-                 #   if ant.try_carry_food(food):
-                  #      ant.carry_food(food)
-                   # if ant.drop_food(food):
-                    #    ant.drop_food(food)
+                for food in self.food:
+                    if ant.try_carry_food(food):
+                        ant.carry_food(food)
+                        break
+                if ant.drop_food(colony):
+                    ant.drop_food(colony)
 
                 self.update_pheromone(ant)
                 future_position = ant.move()
