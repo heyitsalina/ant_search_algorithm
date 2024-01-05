@@ -19,6 +19,7 @@ class Colony:
         self.color = color
         self.ants = []
         self.add_ants()
+        self.food_counter = 0
 
     def add_ants(self, amount_to_carry=1, step_size=3):
         for _ in range(self.amount):

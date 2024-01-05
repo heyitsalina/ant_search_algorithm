@@ -31,6 +31,7 @@ class Ant:
         self.step_size = step_size
         self.direction = np.array([0, 0])
         self.epoch = 0
+        self.ant_carries = 0
 
         
     def switch_pheromone(self):
@@ -69,27 +70,27 @@ class Ant:
         return tuple(future_position)
 
         
-    def find_food(self, food_position):
+    def is_near_target(self, target_position):
         """
-        Determines if an ant is within a specified radius of a food source.
+        Determines if an ant is within a specified radius of a food or colony source.
 
         Parameters:
-        food_position (tuple): The (x, y) coordinates of the food source.
+        target_position (tuple): The (x, y) coordinates of the food or colony source.
 
         Returns:
         tuple: The current (x, y) coordinates of the ant if it is within the specified radius; 
         otherwise, returns None.
         """
 
-        food_center_x = food_position[0] + 45
-        food_center_y = food_position[1] + 45
+        target_center_x = target_position[0] + 45
+        target_center_y = target_position[1] + 45
         
         #coordiantes of ant
         ant_x = np.round(self.coordinates[0], 2)
         ant_y = np.round(self.coordinates[1], 2)
         
         #calculation of Euclidean distance
-        distance = np.sqrt((food_center_x - ant_x)**2 + (food_center_y - ant_y)**2)
+        distance = np.sqrt((target_center_x - ant_x)**2 + (target_center_y - ant_y)**2)
         
         #radius of the circle
         radius = 20 #maybe radius should be reduced gradually? -> when a part of food has been taken
@@ -100,24 +101,57 @@ class Ant:
         return None
     
 
-    
+    def try_carry_food(self, food):
+        """
+        Determine if the ant can pick up food from a specified source.
+        
+        Args:
+            food (Food): The food source to potentially pick up food from.
+
+        Returns:
+            bool: True if the ant can carry food, False otherwise.
+        """
+        return self.pheromone_status == -1 and  self.is_near_target(food.coordinates) and food.amount_of_food > 0
+
+        
     def carry_food(self, food):
         """
-        Enables the ant to take food from food_source if certain conditions are met 
-        and updates its pheromonestatus and the amount_of_food left at the food-source
+        Have the ant pick up food from the specified source and update its status.
 
         Args:
-            food (Object): The food_source where the ant is trying to take food from
-        
-        Return:
-            None: The method changes the state of the Ant and the food_source directly 
+            food (Food): The food source to pick up food from.
         """
-        # if conditions are matched, switch state of ant to carryfood
-        if self.pheromone_status == -1 and self.find_food(food.coordinates) and food.amount_of_food > 0:
+        
+        amount_taken = min(food.amount_of_food, self.amount_to_carry)
+        food.amount_of_food -= amount_taken
+        # differenciate if ant takes less food because there is not enough food left
+        self.ant_carries = amount_taken 
+        self.switch_pheromone()
 
-            # subtracts amount to carry or whatevers left 
-            amount_taken = min(food.amount_of_food, self.amount_to_carry)
-            food.amount_of_food -= amount_taken
+    def try_drop_food(self, colony):
+        """
+        Determine if the ant can drop food at its colony.
 
-            #call switch pheromone method
-            self.switch_pheromone()
+        Args:
+            colony (Colony): The colony to potentially drop food at.
+
+        Returns:
+            bool: True if the ant can drop food, False otherwise.
+        """
+
+        return self.pheromone_status == 1 and self.is_near_target(colony.coordinates) 
+
+
+
+    def drop_food(self, colony):
+        """
+        Have the ant drop food at its colony and update its status.
+
+        Args:
+            colony (Colony): The colony to drop food at.
+        """
+
+        colony.food_counter += self.ant_carries
+        self.ant_carries = 0 
+        self.switch_pheromone()
+        
