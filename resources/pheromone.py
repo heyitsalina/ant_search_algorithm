@@ -24,7 +24,7 @@ class Pheromone:
                 Reduces the pheromone strength in the tensor after a certain timeframe by a specific factor.
         """
         self.pheromones = np.zeros((2, grid_shape[1], grid_shape[0]))
-        
+        self.timestamps = np.zeros((2, grid_shape[1], grid_shape[0]))
 
     def leave_pheromone(self, pos, pheromone_status):
         """
