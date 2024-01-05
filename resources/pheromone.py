@@ -1,4 +1,5 @@
+import numpy as np
 
 class pheromone:
-    def __init__(self):
-        pass
+    def __init__(self, pheromone_shape):
+        self.pheromones = np.zeros((pheromone_shape[0], pheromone_shape[1], 2))
