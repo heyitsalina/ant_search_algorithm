@@ -8,8 +8,8 @@ class Simulation:
 
     Attributes
     ----------
-    pheromones : numpy array
-        A 2D numpy array representing the positions of the pheromones on a grid. 
+    pheromones : list
+        A list containing the pheromone objects. 
     food : list
         A list containing the Food objects.
     colonies : list
@@ -35,7 +35,7 @@ class Simulation:
         Adjusts the given position to ensure it stays within the simulation bounds.
     """
     def __init__(self):
-        self.pheromones = np.zeros((90, 160))
+        self.pheromones = [] #for each colony there is a pheromone object
         self.food = []
         self.colonies = []
         self.running = False
