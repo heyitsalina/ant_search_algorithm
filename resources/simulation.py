@@ -41,11 +41,6 @@ class Simulation:
         self.running = False
         self.bounds = () #(min_x, max_x, min_y, max_y)
         
-    def start(self):
-        self.running = not self.running
-        while self.running:
-            self.next_epoch()
-
     def next_epoch(self):
         for colony in self.colonies:
             for ant in colony.ants:
