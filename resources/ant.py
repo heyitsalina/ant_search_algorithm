@@ -111,9 +111,7 @@ class Ant:
         Returns:
             bool: True if the ant can carry food, False otherwise.
         """
-        if self.pheromone_status == -1 and  self.is_near_target(food.coordinates) and food.amount_of_food > 0:
-            return True
-        return False
+        return self.pheromone_status == -1 and  self.is_near_target(food.coordinates) and food.amount_of_food > 0
 
         
     def carry_food(self, food):
@@ -123,7 +121,7 @@ class Ant:
         Args:
             food (Food): The food source to pick up food from.
         """
-        # subtract amount of food at source and switch ant status
+        
         amount_taken = min(food.amount_of_food, self.amount_to_carry)
         food.amount_of_food -= amount_taken
         # differenciate if ant takes less food because there is not enough food left
@@ -140,9 +138,8 @@ class Ant:
         Returns:
             bool: True if the ant can drop food, False otherwise.
         """
-        if self.pheromone_status == 1 and self.is_near_target(colony.coordinates):
-            return True
-        return False
+
+        return self.pheromone_status == 1 and self.is_near_target(colony.coordinates) 
 
 
 
