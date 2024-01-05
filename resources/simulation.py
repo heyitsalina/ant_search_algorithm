@@ -53,7 +53,7 @@ class Simulation:
                     if ant.try_carry_food(food):
                         ant.carry_food(food)
                         break
-                if ant.drop_food(colony):
+                if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
                 self.update_pheromone(ant)
