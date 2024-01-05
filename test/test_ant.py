@@ -22,12 +22,12 @@ def test_move():
     ant.coordinates = ant.move()
     assert (ant.coordinates != original_position), "Ant's position should change after move"
 
-def test_find_food():
+def test_is_near_target():
     ant.coordinates = (145, 145)  # Inside radius
-    result = ant.find_food((100, 100))
+    result = ant.is_near_target((100, 100))
     assert result is not None, "Should return coordinates when ant is inside radius"
     ant.coordinates = (30, 30)  # Outside radius
-    result = ant.find_food((100, 100))
+    result = ant.is_near_target((100, 100))
     assert result is None, "Should return None when ant is outside radius"
 
 def test_carry_food():
@@ -36,4 +36,4 @@ def test_carry_food():
 
 if __name__ == "__main__":
     test_move()
-    test_find_food()
+    test_is_near_target()
