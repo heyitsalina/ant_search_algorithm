@@ -10,7 +10,7 @@ class Pheromone:
             grid_shape (Tuple[int, int]): A tuple representing the height and width of the simulated environment.
 
         Attributes:
-            pheromones (numpy.ndarray): A 3D numpy array of dimensions (Height, Width, Depth), storing the pheromone strength at each visited position(int).
+            pheromones (numpy.ndarray): A 3D numpy array of dimensions (Depth, Height, Width), storing the pheromone strength at each visited position(int).
                                         The depth represents different pheromone matrices ('coming from colony' = -1 | 'coming from food' = 1).
 
         Methods:
@@ -23,7 +23,7 @@ class Pheromone:
             reduce_pheromone(reducing_factor: float, timeframe: float):
                 Reduces the pheromone strength in the tensor after a certain timeframe by a specific factor.
         """
-        self.pheromones = np.zeros((grid_shape[0], grid_shape[1], 2))
+        self.pheromones = np.zeros((2, grid_shape[1], grid_shape[0]))
         
 
     def leave_pheromone(self, pos, pheromone_status):
@@ -45,7 +45,7 @@ class Pheromone:
             depth = 1
         
         #Add pheromones status in the corresponding position
-        self.pheromones[pos[0], pos[1], depth] += pheromone_status
+        self.pheromones[depth, pos[1], pos[0]] += pheromone_status
     
     def get_pheromone_level(self, pos):
         """
@@ -60,8 +60,8 @@ class Pheromone:
         """
         
         level_of_pheromones = {
-        'coming from colony': self.pheromones[pos[0], pos[1], 0],
-        'coming from food': self.pheromones[pos[0], pos[1], 1]
+        'coming from colony': self.pheromones[0, pos[1], pos[0]],
+        'coming from food': self.pheromones[1, pos[1], pos[0]]
         }
         
         return level_of_pheromones
