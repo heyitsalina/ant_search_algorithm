@@ -163,7 +163,6 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
 
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
-
             
             for colony in sim.colonies:
                 Color(*colony.color)

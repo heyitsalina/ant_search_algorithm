@@ -60,6 +60,7 @@ class Simulation:
                 future_position = ant.move()
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
+        self.food = list(food for food in self.food if food.amount_of_food > 0)
 
     def update_pheromone(self, ant):
         # This will certainly not work, but just to understand the basic idea
