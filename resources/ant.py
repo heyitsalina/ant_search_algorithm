@@ -102,30 +102,59 @@ class Ant:
     
 
     def try_carry_food(self, food):
-        # return true if ant has no food, is in range to take, and food is left
+        """
+        Determine if the ant can pick up food from a specified source.
+        
+        Args:
+            food (Food): The food source to potentially pick up food from.
+
+        Returns:
+            bool: True if the ant can carry food, False otherwise.
+        """
         if self.pheromone_status == -1 and  self.is_near_target(food.coordinates) and food.amount_of_food > 0:
             return True
         return False
 
         
     def carry_food(self, food):
-        # subtract amount of food at source and switch ant status to carrying food
+        """
+        Have the ant pick up food from the specified source and update its status.
+
+        Args:
+            food (Food): The food source to pick up food from.
+        """
+        # subtract amount of food at source and switch ant status
         amount_taken = min(food.amount_of_food, self.amount_to_carry)
         food.amount_of_food -= amount_taken
-        self.ant_carries = amount_taken #if we dont do this we cant differ if the ant takes less food cuz there is not much food left
+        # differenciate if ant takes less food because there is not enough food left
+        self.ant_carries = amount_taken 
         self.switch_pheromone()
 
     def try_drop_food(self, colony):
+        """
+        Determine if the ant can drop food at its colony.
+
+        Args:
+            colony (Colony): The colony to potentially drop food at.
+
+        Returns:
+            bool: True if the ant can drop food, False otherwise.
+        """
         if self.pheromone_status == 1 and self.is_near_target(colony.coordinates):
             return True
         return False
-            # and find_food() method needs to be adjusted to be able to find_colony()
+
 
 
     def drop_food(self, colony):
-        colony.food_counter += self.ant_carries
+        """
+        Have the ant drop food at its colony and update its status.
 
-        # colony food counter + amount_taken ?
-        self.ant_carries = 0 # set what ant carries back to 0
+        Args:
+            colony (Colony): The colony to drop food at.
+        """
+
+        colony.food_counter += self.ant_carries
+        self.ant_carries = 0 
         self.switch_pheromone()
         
