@@ -39,7 +39,9 @@ class pheromone:
             None. This method modifies the internal state of the pheromone tensor.
         """
         
-        pass
+        depth = 0
+        if pheromone_status == 1:
+            depth = 1
             
     
     def get_pheromone_level(self, pos):
