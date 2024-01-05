@@ -67,4 +67,7 @@ class pheromone:
         return level_of_pheromones
 
     def reduce_pheromone(self, reducing_factor):
+        """
+        reduces the pheromone level by a reduction factor
+        """
         pass
