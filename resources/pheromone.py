@@ -26,7 +26,21 @@ class pheromone:
         self.pheromones = np.zeros((grid_shape[0], grid_shape[1], 2))
 
     def leave_pheromone(self, pos, pheromone_status):
+        """
+        Leaves pheromone at a given position based on the pheromone status. This method is typically
+        called when an ant moves, to mark its trail with pheromones.
+
+        Args:
+            pos (Tuple[int, int]): The (x, y) coordinates in the grid where the pheromone is to be placed.
+            pheromone_status (int): The status of the pheromone to be left, which determines the depth 
+                                    in the tensor where the pheromone is placed.
+
+        Returns:
+            None. This method modifies the internal state of the pheromone tensor.
+        """
+        
         pass
+            
     
     def get_pheromone_level(self, pos):
         pass
