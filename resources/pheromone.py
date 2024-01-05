@@ -1,6 +1,6 @@
 import numpy as np
 
-class pheromone:
+class Pheromone:
     def __init__(self, grid_shape):
         """
         Manages pheromone information in a tensor within a simulated environment.
