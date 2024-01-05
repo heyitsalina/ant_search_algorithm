@@ -7,3 +7,5 @@ class pheromone:
     def put_pheromone(self):
         pass
     
+    def get_pheromone_level(self):
+        pass
