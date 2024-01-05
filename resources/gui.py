@@ -1,3 +1,4 @@
+from resources import config
 import ast
 from kivy.app import App
 from kivy.uix.widget import Widget
@@ -33,13 +34,22 @@ class GUI(App):
     """
 
     def build(self):
+        Window.maximize()
+
         root = FloatLayout()
 
         background = BoxLayout()
-        sim.bounds = (0, Window.width, 100, Window.height)
+       
+        sim.bounds = (
+            - 720 / 2,
+            720 / 2,
+            -480 / 2,
+            480 / 2 
+        )
+
         with background.canvas:
             Color(1, 1, 1, 1)
-            Rectangle(pos=(0, 100), size=(1920, 1080))
+            Rectangle(pos=(0, 0), size=(1920, 1080))
 
         simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
@@ -108,12 +118,15 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         apply changes made in the ant popup to the ants
     apply_food_changes():
         apply changes made in the food popup to the food objects
+    adjust_view():
+        change the view back to the original
     """
 
     def __init__(self, **kwargs):
         super(SimulationWidget, self).__init__(**kwargs)
         self.is_running = False
         self.update_canvas()
+        Clock.schedule_interval(lambda instance: self.adjust_view(instance), 0.1)
 
     def draw_bounds(self):
         """
@@ -263,6 +276,12 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         if new_food_amount >= 0:
             food.amount_of_food = new_food_amount
             self.popup.dismiss()
+    
+    def adjust_view(self, instance):
+        if self.scale == 1 and self.pos == (self.width/2, self.height/2):
+            return False
+        self.scale = 1
+        self.pos = (self.width/2, self.height/2)
 
 
 class FoodButton(Button):
@@ -348,13 +367,22 @@ class ButtonWidget(BoxLayout):
             height=100,
             size_hint_y=None,
             size_hint_x=None
-        )           
+        )
+
+        adjust_view_button = Button(
+            text="Adjust view",
+            on_press=lambda instance: simulation_widget.adjust_view(instance),
+            height=100,
+            size_hint_x=None,
+            size_hint_y=None
+        )
 
         clear_start_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
+        clear_start_layout.add_widget(adjust_view_button)
         clear_start_layout.add_widget(clear_canvas_button)
         clear_start_layout.add_widget(start_stop_button)
 
-        buttons_layout = BoxLayout(orientation='horizontal', spacing=800, padding=0, size_hint_y=None)
+        buttons_layout = BoxLayout(orientation='horizontal', spacing=Window.width-600, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colony_layout)
         buttons_layout.add_widget(clear_start_layout)
 
@@ -364,7 +392,15 @@ class ButtonWidget(BoxLayout):
         self.colony_button_pressed = False
 
     def change_border_size(self, new_border_size):
-        sim.bounds = (0, new_border_size[0] - 5, 100, new_border_size[1] - 5)
+        sim.bounds = (
+            - new_border_size[0] / 2,
+            new_border_size[0] / 2,
+            - new_border_size[1] / 2,
+            new_border_size[1] / 2 
+        )
+
+        self.simulation_widget.clear_canvas(0)
+        self.simulation_widget.draw_bounds()
 
     def on_food_button_press(self, instance):
         if not self.simulation_widget.is_running:
@@ -394,4 +430,5 @@ class ButtonWidget(BoxLayout):
 
 
 if __name__ == "__main__":
+    config
     GUI().run()
