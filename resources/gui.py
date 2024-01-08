@@ -48,8 +48,9 @@ class GUI(App):
         )
 
         with background.canvas:
-            Color(1, 1, 1, 1)
-            Rectangle(pos=(0, 0), size=(1920, 1080))
+            # Color(1, 1, 1, 1)
+            # Rectangle(pos=(0, 0), size=(1920, 1080))
+            Image(source="../images/background.jpg", pos=(0, 100), size=(Window.size[0], Window.size[1]))
 
         simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
