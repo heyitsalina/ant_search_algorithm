@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 class Pheromone:
     def __init__(self, grid_shape):
@@ -46,6 +47,8 @@ class Pheromone:
         
         #Add pheromones status in the corresponding position
         self.pheromones[depth, pos[1], pos[0]] += pheromone_status
+        
+        self.timestamps[depth, pos[1], pos[0]] += round(time.time(), 2)
     
     def get_pheromone_level(self, pos):
         """
@@ -66,8 +69,9 @@ class Pheromone:
         
         return level_of_pheromones
 
-    def reduce_pheromone(self, reducing_factor):
+    def reduce_pheromone(self, reducing_factor, k_sec):
         """
         reduces the pheromone level by a reduction factor
         """
         pass
+    
