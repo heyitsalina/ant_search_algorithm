@@ -32,6 +32,7 @@ class GUI(App):
     build():
         initialize kivy window
     """
+    title = "Ant Search Simulation"
 
     def build(self):
         Window.maximize()
@@ -159,9 +160,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             
     def update_canvas(self):
         self.canvas.clear()
-        self.draw_bounds() 
+        self.draw_bounds()
         with self.canvas:
-            
             for colony in sim.colonies:
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
 
