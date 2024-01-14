@@ -47,10 +47,10 @@ class GUI(App):
             480 / 2 
         )
 
-        # with background.canvas:
-        #     # Color(1, 1, 1, 1)
-        #     # Rectangle(pos=(0, 0), size=(1920, 1080))
-        #     Image(source="../images/background.jpg", pos=(0, 100), size=(Window.size[0], Window.size[1]))
+        with background.canvas:
+            Color(0.6, 0.38, 0.27, 1)
+            Rectangle(pos=(0, 0), size=(1920, 1080))
+            # Image(source="../images/background.jpg", pos=(0, 100), size=(Window.size[0], Window.size[1]))
 
         simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
@@ -154,11 +154,14 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 max_x - min_x + 5, #5 is diameter of Ellipse
                 max_y - min_y + 5
             ), width=1)
+            pos = (min_x, min_y)
+            Image(source="../images/background.jpg", pos=pos, size=(max_x-min_x+5, max_y-min_y+5), allow_stretch = True, keep_ratio=False)
             
     def update_canvas(self):
         self.canvas.clear()
+        self.draw_bounds() 
         with self.canvas:
-            Image(source="../images/background.jpg", pos=(-Window.size[0]/2-500, -Window.size[1]/2+100), size=(Window.size[0], Window.size[1]))
+            
             for colony in sim.colonies:
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
 
@@ -170,7 +173,6 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
                             size=(5, 5))
-        self.draw_bounds() 
 
     def update_world(self, dt):
         if self.is_running:
