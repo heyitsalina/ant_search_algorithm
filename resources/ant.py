@@ -70,7 +70,7 @@ class Ant:
         return tuple(future_position)
 
         
-    def is_near_target(self, target_position):
+    def is_near_target(self, target_position, center_offset = 45, radius = 20):
         """
         Determines if an ant is within a specified radius of a food or colony source.
 
@@ -82,8 +82,8 @@ class Ant:
         otherwise, returns None.
         """
 
-        target_center_x = target_position[0] + 45
-        target_center_y = target_position[1] + 45
+        target_center_x = target_position[0] + center_offset
+        target_center_y = target_position[1] + center_offset
         
         #coordiantes of ant
         ant_x = np.round(self.coordinates[0], 2)
