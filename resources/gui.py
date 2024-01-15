@@ -1,5 +1,5 @@
-from resources import config
 import ast
+from resources import config
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
