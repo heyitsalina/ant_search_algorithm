@@ -36,6 +36,7 @@ class GUI(App):
 
     def build(self):
         Window.maximize()
+        Window.bind(mouse_pos=self.on_mouse_pos)
 
         root = FloatLayout()
 
@@ -51,7 +52,6 @@ class GUI(App):
         with background.canvas:
             Color(0.6, 0.38, 0.27, 1)
             Rectangle(pos=(0, 0), size=(1920, 1080))
-            # Image(source="../images/background.jpg", pos=(0, 100), size=(Window.size[0], Window.size[1]))
 
         simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
@@ -63,6 +63,20 @@ class GUI(App):
         Clock.schedule_interval(lambda dt: simulation_widget.update_world(dt), 0.1)
 
         return root
+
+    def on_mouse_pos(self, *args):
+        pos = args[1]
+        for button in self.root.children[0].children:
+            if button.collide_point(*pos):
+                Clock.schedule_once(self.mouse_enter_css, 0)
+            else:
+                Clock.schedule_once(self.mouse_leave_css, 0)
+
+    def mouse_leave_css(self, *args):
+        Window.set_system_cursor('arrow')
+
+    def mouse_enter_css(self, *args):           
+        Window.set_system_cursor('hand')
 
 
 class ResizableDraggablePicture(Scatter):
@@ -289,10 +303,134 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
 
 class FoodButton(Button):
     pass
+    # def __init__(self, **kwargs):
+    #      super(FoodButton, self).__init__(**kwargs)
+    #      Window.bind(mouse_pos=self.on_mouse_pos)
+     
+    # def on_mouse_pos(self, *args):
+    #     if not self.get_root_window():
+    #         return
+    #     pos = args[1]
+    #     if self.collide_point(*pos):
+    #         Clock.schedule_once(self.mouse_enter_css, 0)
+    #     else:
+    #         Clock.schedule_once(self.mouse_leave_css, 0)
+
+    # def mouse_leave_css(self, *args):
+    #     Window.set_system_cursor('arrow')
+
+    # def mouse_enter_css(self, *args):           
+    #     Window.set_system_cursor('hand')
 
 
 class ColonyButton(Button):
     pass
+    # def __init__(self, **kwargs):
+    #      super(ColonyButton, self).__init__(**kwargs)
+    #      Window.bind(mouse_pos=self.on_mouse_pos)
+     
+    # def on_mouse_pos(self, *args):
+    #     if not self.get_root_window():
+    #         return
+    #     pos = args[1]
+    #     if self.collide_point(*pos):
+    #         Clock.schedule_once(self.mouse_enter_css, 0)
+    #     else:
+    #         Clock.schedule_once(self.mouse_leave_css, 0)
+
+    # def mouse_leave_css(self, *args):
+    #     Window.set_system_cursor('arrow')
+
+    # def mouse_enter_css(self, *args):           
+    #     Window.set_system_cursor('hand')
+
+
+class SizeButton(Button):
+    pass
+    # def __init__(self, **kwargs):
+    #      super(SizeButton, self).__init__(**kwargs)
+    #      Window.bind(mouse_pos=self.on_mouse_pos)
+     
+    # def on_mouse_pos(self, *args):
+    #     if not self.get_root_window():
+    #         return
+    #     pos = args[1]
+    #     if self.collide_point(*pos):
+    #         Clock.schedule_once(self.mouse_enter_css, 0)
+    #     else:
+    #         Clock.schedule_once(self.mouse_leave_css, 0)
+
+    # def mouse_leave_css(self, *args):
+    #     Window.set_system_cursor('arrow')
+
+    # def mouse_enter_css(self, *args):           
+    #     Window.set_system_cursor('hand')
+
+
+class StartStopButton(Button):
+    pass
+    # def __init__(self, **kwargs):
+    #      super(StartStopButton, self).__init__(**kwargs)
+    #      Window.bind(mouse_pos=self.on_mouse_pos)
+     
+    # def on_mouse_pos(self, *args):
+    #     if not self.get_root_window():
+    #         return
+    #     pos = args[1]
+    #     if self.collide_point(*pos):
+    #         Clock.schedule_once(self.mouse_enter_css, 0)
+    #     else:
+    #         Clock.schedule_once(self.mouse_leave_css, 0)
+
+    # def mouse_leave_css(self, *args):
+    #     Window.set_system_cursor('arrow')
+
+    # def mouse_enter_css(self, *args):           
+    #     Window.set_system_cursor('hand')
+
+
+class ClearCanvasButton(Button):
+    pass
+    # def __init__(self, **kwargs):
+    #      super(ClearCanvasButton, self).__init__(**kwargs)
+    #      Window.bind(mouse_pos=self.on_mouse_pos)
+     
+    # def on_mouse_pos(self, *args):
+    #     if not self.get_root_window():
+    #         return
+    #     pos = args[1]
+    #     if self.collide_point(*pos):
+    #         Clock.schedule_once(self.mouse_enter_css, 0)
+    #     else:
+    #         Clock.schedule_once(self.mouse_leave_css, 0)
+
+    # def mouse_leave_css(self, *args):
+    #     Window.set_system_cursor('arrow')
+
+    # def mouse_enter_css(self, *args):           
+    #     Window.set_system_cursor('hand')
+
+
+class AdjustViewButton(Button):
+    pass
+    # def __init__(self, **kwargs):
+    #      super(AdjustViewButton, self).__init__(**kwargs)
+    #      Window.bind(mouse_pos=self.on_mouse_pos)
+     
+    # def on_mouse_pos(self, *args):
+    #     if not self.get_root_window():
+    #         return
+    #     pos = args[1]
+    #     if self.collide_point(*pos):
+    #         Clock.schedule_once(self.mouse_enter_css, 0)
+    #     else:
+    #         Clock.schedule_once(self.mouse_leave_css, 0)
+
+    # def mouse_leave_css(self, *args):
+    #     Window.set_system_cursor('arrow')
+
+    # def mouse_enter_css(self, *args):           
+    #     Window.set_system_cursor('hand')
 
 
 class ButtonWidget(BoxLayout):
@@ -348,7 +486,7 @@ class ButtonWidget(BoxLayout):
             btn.bind(on_release=lambda btn, size=size: self.change_border_size(size))
             dropdown.add_widget(btn)
 
-        size_button = Button(text='Size', size_hint=(None, None))
+        size_button = SizeButton(text='Size', size_hint=(None, None))
 
         size_button.bind(on_release=dropdown.open)
 
@@ -361,12 +499,12 @@ class ButtonWidget(BoxLayout):
         food_colony_layout.add_widget(self.colony_button)
         food_colony_layout.add_widget(size_button)
 
-        self.start_stop_button = Button(
+        self.start_stop_button = StartStopButton(
             text='Start', on_press=self.simulation_widget.toggle_simulation, height=100, size_hint_y=None,
             size_hint_x=None
         )
 
-        clear_canvas_button = Button(
+        clear_canvas_button = ClearCanvasButton(
             text="Clear",
             on_press=self.on_clear_button_press,
             height=100,
@@ -374,7 +512,7 @@ class ButtonWidget(BoxLayout):
             size_hint_x=None
         )
 
-        adjust_view_button = Button(
+        adjust_view_button = AdjustViewButton(
             text="Adjust\n view",
             on_press=lambda instance: simulation_widget.adjust_view(instance),
             height=100,
@@ -413,7 +551,7 @@ class ButtonWidget(BoxLayout):
        
     def on_colony_button_press(self, instance):
         if not self.simulation_widget.is_running:
-            self.simulation_widget.bind(on_touch_down=self.place_colony)
+            self.simulation_widget.bind(on_touch_down=self.place_colony)       
     
     def on_clear_button_press(self, instance):
         if self.simulation_widget.is_running:
