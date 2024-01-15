@@ -75,7 +75,12 @@ class Ant:
         Determines if an ant is within a specified radius of a food or colony source.
 
         Parameters:
-        target_position (tuple): The (x, y) coordinates of the food or colony source.
+        target_position (tuple):
+            The (x, y) coordinates of the food or colony source.
+        center_offset (int):
+            The offset value to adjust the center of the target. Defaults to 45 => offset of source of food.
+        radius (int):
+            The radius of the circular area around the target. Defaults to 20 => radius of source of food.
 
         Returns:
         tuple: The current (x, y) coordinates of the ant if it is within the specified radius; 
@@ -90,13 +95,11 @@ class Ant:
         ant_y = np.round(self.coordinates[1], 2)
         
         #calculation of Euclidean distance
-        distance = np.sqrt((target_center_x - ant_x)**2 + (target_center_y - ant_y)**2)
-        
-        #radius of the circle
-        radius = 20 #maybe radius should be reduced gradually? -> when a part of food has been taken
+        distance = np.sqrt((target_center_x - ant_x)**2 + (target_center_y - ant_y)**2)       
         
         #check whether the ant is inside or on the edge of the circle
-        if distance <= radius:
+        if distance <= radius:#maybe radius should be reduced gradually? -> when a part of food has been taken
+
             return (ant_x, ant_y)
         return None
     
