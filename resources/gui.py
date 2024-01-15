@@ -31,6 +31,12 @@ class GUI(App):
     -------
     build():
         initialize kivy window
+    on_mouse_pos()
+        notice if cursor is over the buttons
+    mouse_leave_css():
+        change cursor back to arrow
+    mouse_enter_css():
+        change cursor to hand icon
     """
     title = "Ant Search Simulation"
 
@@ -66,7 +72,8 @@ class GUI(App):
 
     def on_mouse_pos(self, *args):
         pos = args[1]
-        for button in self.root.children[0].children:
+        buttons = self.root.children[0].children
+        for button in buttons:
             if button.collide_point(*pos):
                 Clock.schedule_once(self.mouse_enter_css, 0)
             else:
