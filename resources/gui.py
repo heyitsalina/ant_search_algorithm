@@ -310,15 +310,19 @@ class ButtonWidget(BoxLayout):
         the food button
     colony_button : ColonyButton()
         the colony button
+    start_stop_button: Button()
+        the start/stop button
     
     Methods
     -------
     change_border_size():
         change the size of the border
-    on_food_press():
+    on_food_button_press():
         executed after pressing the food button
-    on_colony_press():
+    on_colony_button_press():
         executed after pressing the colony button
+    on_clear_button_press():
+        clear the canvas and stop the simulation
     place_food():
         place the food on the canvas
     place_colony():
@@ -358,22 +362,21 @@ class ButtonWidget(BoxLayout):
         food_colony_layout.add_widget(self.colony_button)
         food_colony_layout.add_widget(size_button)
 
-        start_stop_button = Button(
+        self.start_stop_button = Button(
             text='Start', on_press=self.simulation_widget.toggle_simulation, height=100, size_hint_y=None,
             size_hint_x=None
         )
 
         clear_canvas_button = Button(
             text="Clear",
-            on_press=lambda instance: start_stop_button.trigger_action(0),
-            on_release=simulation_widget.clear_canvas,
+            on_press=self.on_clear_button_press,
             height=100,
             size_hint_y=None,
             size_hint_x=None
         )
 
         adjust_view_button = Button(
-            text="Adjust view",
+            text="Adjust\n view",
             on_press=lambda instance: simulation_widget.adjust_view(instance),
             height=100,
             size_hint_x=None,
@@ -383,7 +386,7 @@ class ButtonWidget(BoxLayout):
         clear_start_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         clear_start_layout.add_widget(adjust_view_button)
         clear_start_layout.add_widget(clear_canvas_button)
-        clear_start_layout.add_widget(start_stop_button)
+        clear_start_layout.add_widget(self.start_stop_button)
 
         buttons_layout = BoxLayout(orientation='horizontal', spacing=Window.width-600, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colony_layout)
@@ -412,7 +415,12 @@ class ButtonWidget(BoxLayout):
     def on_colony_button_press(self, instance):
         if not self.simulation_widget.is_running:
             self.simulation_widget.bind(on_touch_down=self.place_colony)
-
+    
+    def on_clear_button_press(self, instance):
+        if self.simulation_widget.is_running:
+            self.start_stop_button.trigger_action(0)
+        self.simulation_widget.clear_canvas(instance)
+        
     def place_food(self, instance, touch):
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
         
