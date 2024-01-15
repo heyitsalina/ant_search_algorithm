@@ -339,8 +339,7 @@ class ButtonWidget(BoxLayout):
         self.food_button.bind(on_press=self.on_food_button_press)
         self.colony_button.bind(on_press=self.on_colony_button_press)
 
-        sizes = [(480, 360), (720, 480), (1080, 720), (1920, 1080), (2560, 1440)]
-        sizes.reverse()
+        sizes = ((2560, 1440), (1920, 1080), (1080, 720), (720, 480), (480, 360))
         dropdown = DropDown()
 
         for size in sizes:
