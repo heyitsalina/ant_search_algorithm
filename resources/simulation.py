@@ -51,7 +51,6 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
-                self.update_pheromone(ant)
                 future_position = ant.move()
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
