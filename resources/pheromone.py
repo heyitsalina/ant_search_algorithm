@@ -48,7 +48,9 @@ class Pheromone:
         #Add pheromones status in the corresponding position
         self.pheromones[depth, pos[1], pos[0]] += pheromone_status
         
-        self.timestamps[depth, pos[1], pos[0]] += round(time.time(), 2)
+        #Check if element is not null / needed for the time deltas in reduce_pheromones
+        if self.pheromones[depth, pos[1], pos[0]] != 0:
+            self.timestamps[depth, pos[1], pos[0]] += round(time.time(), 2)
     
     def get_pheromone_level(self, pos):
         """
@@ -69,9 +71,30 @@ class Pheromone:
         
         return level_of_pheromones
 
-    def reduce_pheromone(self, reducing_factor, k_sec):
+    def reduce_pheromones(self, reducing_factor = 0.5, k_sec = 5):
         """
         reduces the pheromone level by a reduction factor
         """
-        pass
+        non_zero_indices = np.nonzero(self.pheromones)
+        layers, rows, cols = non_zero_indices #richtige reihenfolge der x und y?
+        values = self.pheromones[non_zero_indices]
+
+        for layer, row, col, value in zip(layers, rows, cols, values):
+            current_time = round(time.time(), 2)
+            timestamp_to_compare = self.timestamps[layers, row, col]
+
+            time_delta = current_time - timestamp_to_compare #zb 12
+            multiplier = int(time_delta / k_sec) # zb 2, wenn delta 5
+            remaining_time_delta = time_delta - (multiplier * k_sec)
+
+            if time_delta >= k_sec:
+                 if layer == 0:
+                    self.pheromones[layer, rows, cols] += multiplier * reducing_factor #pheromones coming from colony are negative -> addition
+                 else:
+                     self.pheromones[layer, rows, cols] -= multiplier * reducing_factor #pheromones coming from food are positive -> subtraction
+
+                 if self.pheromones[layer, rows, cols] == 0:
+                     self.timestamps[layer, rows, cols] = 0
+                 else:
+                    self.timestamps[layer, rows, cols] = current_time - remaining_time_delta #set time to current time so that's possible to compare the new lapsed time next time; "add" remaining time (by substracting = greater difference at substraction next time) that could have elapsed but was otherwise not taken into account
     
