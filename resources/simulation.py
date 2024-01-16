@@ -56,12 +56,6 @@ class Simulation:
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
         self.food = list(food for food in self.food if food.amount_of_food > 0)
-
-    def update_pheromone(self, ant):
-        # This will certainly not work, but just to understand the basic idea
-        # if ant.pheromone_status ist 1 or -1
-        x, y = 0, 0 #ant.coordinates
-        self.pheromones[x][y] += ant.pheromone_status
         
     def add_colony(self, colony):
         self.colonies.append(colony)
