@@ -337,7 +337,7 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.icon = "resize"
         self.root_button_anim = True
         self.hint_animation = True
-
+  
 
 class StartStopButton(MDFillRoundFlatButton):
     def __init__(self, *args, **kwargs):
@@ -372,8 +372,6 @@ class ButtonWidget(BoxLayout):
     ---------
     simulation_widget : SimulationWidget()
         instance of the SimulationWidget() to connect both widgets
-    dropdown : DropDown()
-        drop down menu to select the size of the border
     food_button : FoodButton()
         the food button
     colony_button : ColonyButton()
