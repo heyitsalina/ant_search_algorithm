@@ -5,8 +5,10 @@ from resources.ant import Ant
 ant = Ant(coordinates=(100.0, 100.0),
           amount_to_carry=20)
 
-def test_switch_pheromon():
-    pass
+def test_switch_pheromone():
+    assert ant.pheromone_status == -1, "Initial pheromone status should be -1"
+    ant.switch_pheromone()
+    assert ant.pheromone_status == 1, "pheromone switch should be 1 after switch"
 
 def test_move():
     ant.move()
@@ -37,3 +39,4 @@ def test_carry_food():
 if __name__ == "__main__":
     test_move()
     test_is_near_target()
+    test_switch_pheromone()
