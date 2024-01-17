@@ -343,6 +343,7 @@ class StartStopButton(MDFillRoundFlatButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text = 'Start'
+        self.font_size = 40
         self.padding = 30
 
 
@@ -350,6 +351,7 @@ class ClearCanvasButton(MDFillRoundFlatButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text = 'Clear'
+        self.font_size = 40
         self.padding = 30
 
 
@@ -357,7 +359,8 @@ class AdjustViewButton(MDFillRoundFlatButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text="Adjust\n view"
-        self.padding = 21
+        self.font_size = 30
+        self.padding = 20
 
 
 class ButtonWidget(BoxLayout):
