@@ -22,6 +22,7 @@ from kivy.graphics import Line
 from kivymd.uix.button import MDIconButton
 from kivymd.app import MDApp
 from kivymd.uix.button import MDFloatingActionButtonSpeedDial
+from kivymd.uix.button import MDFillRoundFlatButton
 
 sim = Simulation()
 
@@ -335,16 +336,22 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.root_button_anim = True
 
 
-class StartStopButton(Button):
-    pass
+class StartStopButton(MDFillRoundFlatButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.text = 'Start'
 
 
-class ClearCanvasButton(Button):
-    pass
+class ClearCanvasButton(MDFillRoundFlatButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.text = 'Clear'
 
 
-class AdjustViewButton(Button):
-    pass
+class AdjustViewButton(MDFillRoundFlatButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.text="Adjust\n view"
 
 
 class ButtonWidget(BoxLayout):
@@ -404,26 +411,11 @@ class ButtonWidget(BoxLayout):
         food_colony_layout.add_widget(self.food_button)
         food_colony_layout.add_widget(self.colony_button)
 
-        self.start_stop_button = StartStopButton(
-            text='Start', on_press=self.simulation_widget.toggle_simulation, height=100, size_hint_y=None,
-            size_hint_x=None
-        )
+        self.start_stop_button = StartStopButton(on_press=self.simulation_widget.toggle_simulation)
 
-        clear_canvas_button = ClearCanvasButton(
-            text="Clear",
-            on_press=self.on_clear_button_press,
-            height=100,
-            size_hint_y=None,
-            size_hint_x=None
-        )
+        clear_canvas_button = ClearCanvasButton(on_press=self.on_clear_button_press)
 
-        adjust_view_button = AdjustViewButton(
-            text="Adjust\n view",
-            on_press=lambda instance: simulation_widget.adjust_view(instance),
-            height=100,
-            size_hint_x=None,
-            size_hint_y=None
-        )
+        adjust_view_button = AdjustViewButton(on_press=lambda instance: simulation_widget.adjust_view(instance))
 
         clear_start_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         clear_start_layout.add_widget(adjust_view_button)
