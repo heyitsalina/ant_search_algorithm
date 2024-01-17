@@ -19,10 +19,13 @@ from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
 from kivy.graphics import Line
+from kivymd.uix.button import MDIconButton
+from kivymd.app import MDApp
+from kivymd.uix.button import MDFloatingActionButtonSpeedDial
 
 sim = Simulation()
 
-class GUI(App):
+class GUI(MDApp):
     """
     This class is used to create a graphical user interface (GUI) for the simulation.
     ...
@@ -308,16 +311,28 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.pos = (self.width/2, self.height/2)
 
 
-class FoodButton(Button):
-    pass
+class FoodButton(MDIconButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.icon = "../images/apple.png"
+        self.icon_size = 100
+        # self.theme_icon_color = "Custom"
+        # self.icon_color = (0.5, 0.7, 0, 1)
 
 
-class ColonyButton(Button):
-    pass
+class ColonyButton(MDIconButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.icon = "../images/colony.png"
+        self.icon_size = 100
 
 
-class SizeButton(Button):
-    pass
+class SizeButton(MDFloatingActionButtonSpeedDial):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette = "Orange"
+        self.root_button_anim = True
 
 
 class StartStopButton(Button):
@@ -370,33 +385,24 @@ class ButtonWidget(BoxLayout):
         super(ButtonWidget, self).__init__(**kwargs)
         self.simulation_widget = simulation_widget
 
-        self.food_button = FoodButton(text='Food', height=100, size_hint_y=None, size_hint_x=None)
-        self.colony_button = ColonyButton(text='Colony', height=100, size_hint_y=None, size_hint_x=None)
+        self.food_button = FoodButton()
+        self.colony_button = ColonyButton()
 
         self.food_button.bind(on_press=self.on_food_button_press)
         self.colony_button.bind(on_press=self.on_colony_button_press)
 
         sizes = ((2560, 1440), (1920, 1080), (1080, 720), (720, 480), (480, 360))
-        dropdown = DropDown()
 
-        for size in sizes:
-            btn = Button(text=str(size[0]) + 'x' + str(size[1]), size_hint_y=None, height=40)
-            btn.bind(on_release=lambda btn: dropdown.select(btn.text))
-            btn.bind(on_release=lambda btn, size=size: self.change_border_size(size))
-            dropdown.add_widget(btn)
+        size_button = SizeButton()
 
-        size_button = SizeButton(text='Size', size_hint=(None, None))
-
-        size_button.bind(on_release=dropdown.open)
-
-        dropdown.bind(on_select=lambda instance, x: setattr(size_button, 'text', x))
-
-        self.dropdown = dropdown
+        size_button_data = {f"{size[0]}x{size[1]}": ["on_release", lambda btn, size=size: self.change_border_size(size),
+                                                     "text", size] for size in sizes}
+        print(size_button_data)
+        size_button.data = size_button_data
 
         food_colony_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         food_colony_layout.add_widget(self.food_button)
         food_colony_layout.add_widget(self.colony_button)
-        food_colony_layout.add_widget(size_button)
 
         self.start_stop_button = StartStopButton(
             text='Start', on_press=self.simulation_widget.toggle_simulation, height=100, size_hint_y=None,
@@ -427,6 +433,7 @@ class ButtonWidget(BoxLayout):
         buttons_layout = BoxLayout(orientation='horizontal', spacing=Window.width-600, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colony_layout)
         buttons_layout.add_widget(clear_start_layout)
+        buttons_layout.add_widget(size_button)
 
         self.add_widget(buttons_layout)
 
