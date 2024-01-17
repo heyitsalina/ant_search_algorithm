@@ -40,7 +40,7 @@ class Ant:
     
 
 
-    def move(self):
+    def move(self, angle_offset = 0):
 
         position = np.array(self.coordinates)
         
@@ -56,8 +56,11 @@ class Ant:
             self.direction = np.array([x, y]) * self.step_size
 
         else:
-            #Apply a random rotation to the existing direction
-            angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
+            
+            if angle_offset == 0:
+                #Apply a random rotation to the existing direction
+                angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
+                
             rotation_matrix = np.array([[np.cos(angle_offset), -np.sin(angle_offset)],
                                     [np.sin(angle_offset), np.cos(angle_offset)]])
             
@@ -70,33 +73,36 @@ class Ant:
         return tuple(future_position)
 
         
-    def is_near_target(self, target_position):
+    def is_near_target(self, target_position, center_offset = 45, radius = 20):
         """
         Determines if an ant is within a specified radius of a food or colony source.
 
         Parameters:
-        target_position (tuple): The (x, y) coordinates of the food or colony source.
+        target_position (tuple):
+            The (x, y) coordinates of the food or colony source.
+        center_offset (int):
+            The offset value to adjust the center of the target. Defaults to 45 => offset of source of food.
+        radius (int):
+            The radius of the circular area around the target. Defaults to 20 => radius of source of food.
 
         Returns:
         tuple: The current (x, y) coordinates of the ant if it is within the specified radius; 
         otherwise, returns None.
         """
 
-        target_center_x = target_position[0] + 45
-        target_center_y = target_position[1] + 45
+        target_center_x = target_position[0] + center_offset
+        target_center_y = target_position[1] + center_offset
         
         #coordiantes of ant
         ant_x = np.round(self.coordinates[0], 2)
         ant_y = np.round(self.coordinates[1], 2)
         
         #calculation of Euclidean distance
-        distance = np.sqrt((target_center_x - ant_x)**2 + (target_center_y - ant_y)**2)
-        
-        #radius of the circle
-        radius = 20 #maybe radius should be reduced gradually? -> when a part of food has been taken
+        distance = np.sqrt((target_center_x - ant_x)**2 + (target_center_y - ant_y)**2)       
         
         #check whether the ant is inside or on the edge of the circle
-        if distance <= radius:
+        if distance <= radius:#maybe radius should be reduced gradually? -> when a part of food has been taken
+
             return (ant_x, ant_y)
         return None
     

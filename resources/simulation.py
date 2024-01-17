@@ -8,8 +8,8 @@ class Simulation:
 
     Attributes
     ----------
-    pheromones : numpy array
-        A 2D numpy array representing the positions of the pheromones on a grid. 
+    pheromones : list
+        A list containing the pheromone objects. 
     food : list
         A list containing the Food objects.
     colonies : list
@@ -35,17 +35,12 @@ class Simulation:
         Adjusts the given position to ensure it stays within the simulation bounds.
     """
     def __init__(self):
-        self.pheromones = np.zeros((90, 160))
+        self.pheromones = [] #for each colony there is a pheromone object
         self.food = []
         self.colonies = []
         self.running = False
         self.bounds = () #(min_x, max_x, min_y, max_y)
         
-    def start(self):
-        self.running = not self.running
-        while self.running:
-            self.next_epoch()
-
     def next_epoch(self):
         for colony in self.colonies:
             for ant in colony.ants:
@@ -56,16 +51,10 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
-                self.update_pheromone(ant)
                 future_position = ant.move()
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
-
-    def update_pheromone(self, ant):
-        # This will certainly not work, but just to understand the basic idea
-        # if ant.pheromone_status ist 1 or -1
-        x, y = 0, 0 #ant.coordinates
-        self.pheromones[x][y] += ant.pheromone_status
+        self.food = list(food for food in self.food if food.amount_of_food > 0)
         
     def add_colony(self, colony):
         self.colonies.append(colony)
