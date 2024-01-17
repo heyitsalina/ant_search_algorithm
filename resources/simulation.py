@@ -25,8 +25,6 @@ class Simulation:
         Start the simulation.
     next_epoch():
         Calculates the next position of all Ant objects.
-    update_pheromone():
-        Update the array of pheromones.
     add_colony():
         Add a Colony object to the simulation.
     add_food():
@@ -51,16 +49,10 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
-                self.update_pheromone(ant)
                 future_position = ant.move()
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
         self.food = list(food for food in self.food if food.amount_of_food > 0)
-
-    def update_pheromone(self, ant):
-        # This will certainly not work, but just to understand the basic idea
-        # if ant.pheromone_status ist 1 or -1
-        pass
         
     def add_colony(self, colony):
         self.colonies.append(colony)
