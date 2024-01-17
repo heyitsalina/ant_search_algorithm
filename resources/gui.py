@@ -340,18 +340,21 @@ class StartStopButton(MDFillRoundFlatButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text = 'Start'
+        self.padding = 30
 
 
 class ClearCanvasButton(MDFillRoundFlatButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text = 'Clear'
+        self.padding = 30
 
 
 class AdjustViewButton(MDFillRoundFlatButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text="Adjust\n view"
+        self.padding = 21
 
 
 class ButtonWidget(BoxLayout):
@@ -402,7 +405,8 @@ class ButtonWidget(BoxLayout):
 
         size_button = SizeButton()
 
-        size_button_data = {f"{size[0]}x{size[1]}": ["on_release", lambda btn, size=size: self.change_border_size(size),
+        size_button_data = {f"{size[0]}x{size[1]}": ["on_press", lambda btn, size=size: self.change_border_size(size),
+                                                     "on_release", lambda instance: size_button.close_stack(),
                                                      "text", size] for size in sizes}
         print(size_button_data)
         size_button.data = size_button_data
@@ -417,14 +421,11 @@ class ButtonWidget(BoxLayout):
 
         adjust_view_button = AdjustViewButton(on_press=lambda instance: simulation_widget.adjust_view(instance))
 
-        clear_start_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
-        clear_start_layout.add_widget(adjust_view_button)
-        clear_start_layout.add_widget(clear_canvas_button)
-        clear_start_layout.add_widget(self.start_stop_button)
-
-        buttons_layout = BoxLayout(orientation='horizontal', spacing=Window.width-600, padding=0, size_hint_y=None)
+        buttons_layout = BoxLayout(orientation='horizontal', spacing=100, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colony_layout)
-        buttons_layout.add_widget(clear_start_layout)
+        buttons_layout.add_widget(adjust_view_button)
+        buttons_layout.add_widget(clear_canvas_button)
+        buttons_layout.add_widget(self.start_stop_button)
         buttons_layout.add_widget(size_button)
 
         self.add_widget(buttons_layout)
