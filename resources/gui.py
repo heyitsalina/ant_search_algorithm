@@ -44,8 +44,8 @@ class GUI(MDApp):
     title = "Ant Search Simulation"
 
     def build(self):
-        Window.maximize()
         Window.bind(mouse_pos=self.on_mouse_pos)
+        Window.bind(size=self.on_window_resize)
 
         root = MDScreen()
 
@@ -88,6 +88,11 @@ class GUI(MDApp):
     def mouse_enter_css(self, *args):           
         Window.set_system_cursor('hand')
 
+    def on_window_resize(self, *args):
+        Clock.schedule_interval(lambda instance: self.root.children[1].children[0].adjust_view(instance), 0.2)
+        # Clock.schedule_interval(lambda instance: self.root.children[1].children[0].adjust_view(instance), 0.1)
+        # self.root.children[0].children[0].children[3].trigger_action(0)
+        
 
 class ResizableDraggablePicture(Scatter):
     def on_touch_down(self, touch):
