@@ -1,28 +1,28 @@
 import ast
 from resources import config
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
+from kivymd.uix.button import MDIconButton
+from kivymd.uix.button import MDFloatingActionButtonSpeedDial
+from kivymd.uix.button import MDFillRoundFlatButton
 from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.graphics.transformation import Matrix
+from kivy.graphics import Line
 from kivy.core.window import Window
 from kivy.clock import Clock
 from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
-from kivy.graphics import Line
-from kivymd.uix.button import MDIconButton
-from kivymd.app import MDApp
-from kivymd.uix.button import MDFloatingActionButtonSpeedDial
-from kivymd.uix.button import MDFillRoundFlatButton
+from kivymd.uix.button import MDFloatingActionButton
+
 
 sim = Simulation()
 
@@ -182,7 +182,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             ), width=1)
             pos = (min_x, min_y)
             Image(source="../images/background.jpg", pos=pos, size=(max_x-min_x+5, max_y-min_y+5), allow_stretch = True, keep_ratio=False)
-            
+
     def update_canvas(self):
         self.canvas.clear()
         self.draw_bounds()
@@ -312,20 +312,22 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.pos = (self.width/2, self.height/2)
 
 
-class FoodButton(MDIconButton):
+class FoodButton(MDFloatingActionButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.icon = "../images/apple.png"
-        self.icon_size = 100
-        # self.theme_icon_color = "Custom"
-        # self.icon_color = (0.5, 0.7, 0, 1)
+        self.theme_cls.material_style = "M3"
+        self.icon_size = 70
+        self.md_bg_color = (1, 0.6, .11, 1)
 
 
-class ColonyButton(MDIconButton):
+class ColonyButton(MDFloatingActionButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.icon = "../images/colony.png"
-        self.icon_size = 100
+        self.theme_cls.material_style = "M3"
+        self.icon_size = 70
+        self.md_bg_color = (1, 0.6, .11, 1)
 
 
 class SizeButton(MDFloatingActionButtonSpeedDial):
@@ -405,13 +407,11 @@ class ButtonWidget(BoxLayout):
 
         size_button = SizeButton()
 
-        size_button_data = {f"{size[0]}x{size[1]}": ["on_press", lambda btn, size=size: self.change_border_size(size),
+        size_button.data = {f"{size[0]}x{size[1]}": ["on_press", lambda btn, size=size: self.change_border_size(size),
                                                      "on_release", lambda instance: size_button.close_stack(),
                                                      "text", size] for size in sizes}
-        print(size_button_data)
-        size_button.data = size_button_data
 
-        food_colony_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
+        food_colony_layout = BoxLayout(orientation='horizontal', spacing=10, padding=0)
         food_colony_layout.add_widget(self.food_button)
         food_colony_layout.add_widget(self.colony_button)
 
