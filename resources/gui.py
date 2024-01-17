@@ -10,7 +10,7 @@ from kivy.uix.scatter import Scatter
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
-from kivymd.uix.button import MDIconButton
+from kivymd.uix.button import MDFloatingActionButton
 from kivymd.uix.button import MDFloatingActionButtonSpeedDial
 from kivymd.uix.button import MDFillRoundFlatButton
 from kivy.graphics import Rectangle, Color, Ellipse
@@ -21,7 +21,6 @@ from kivy.clock import Clock
 from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
-from kivymd.uix.button import MDFloatingActionButton
 
 
 sim = Simulation()
@@ -315,7 +314,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
 class FoodButton(MDFloatingActionButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.icon = "../images/apple.png"
+        self.icon = "food-apple"
         self.theme_cls.material_style = "M3"
         self.icon_size = 70
         self.md_bg_color = (1, 0.6, .11, 1)
@@ -324,7 +323,7 @@ class FoodButton(MDFloatingActionButton):
 class ColonyButton(MDFloatingActionButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.icon = "../images/colony.png"
+        self.icon = "../images/ant_icon.png"
         self.theme_cls.material_style = "M3"
         self.icon_size = 70
         self.md_bg_color = (1, 0.6, .11, 1)
@@ -336,6 +335,7 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
         self.root_button_anim = True
+        self.hint_animation = True
 
 
 class StartStopButton(MDFillRoundFlatButton):
@@ -403,13 +403,14 @@ class ButtonWidget(BoxLayout):
         self.food_button.bind(on_press=self.on_food_button_press)
         self.colony_button.bind(on_press=self.on_colony_button_press)
 
-        sizes = ((2560, 1440), (1920, 1080), (1080, 720), (720, 480), (480, 360))
+        sizes = {"size-xxl": (2560, 1440), "size-xl": (1920, 1080), "size-l": (1080, 720), "size-m": (720, 480), "size-s": (480, 360)}
 
         size_button = SizeButton()
 
-        size_button.data = {f"{size[0]}x{size[1]}": ["on_press", lambda btn, size=size: self.change_border_size(size),
+        size_button.data = {f"{size[1][0]}x{size[1][1]}": [size[0],
+                                                     "on_press", lambda btn, size=size: self.change_border_size(size[1]),
                                                      "on_release", lambda instance: size_button.close_stack(),
-                                                     "text", size] for size in sizes}
+                                                     "text", size[1]] for size in sizes.items()}
 
         food_colony_layout = BoxLayout(orientation='horizontal', spacing=10, padding=0)
         food_colony_layout.add_widget(self.food_button)
