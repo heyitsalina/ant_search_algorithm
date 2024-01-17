@@ -40,7 +40,10 @@ class GUI(MDApp):
         change cursor back to arrow
     mouse_enter_css():
         change cursor to hand icon
+    on_window_resize():
+        adjust the view when the size of the window is changed
     """
+    
     title = "Ant Search Simulation"
 
     def build(self):
@@ -90,8 +93,6 @@ class GUI(MDApp):
 
     def on_window_resize(self, *args):
         Clock.schedule_interval(lambda instance: self.root.children[1].children[0].adjust_view(instance), 0.2)
-        # Clock.schedule_interval(lambda instance: self.root.children[1].children[0].adjust_view(instance), 0.1)
-        # self.root.children[0].children[0].children[3].trigger_action(0)
         
 
 class ResizableDraggablePicture(Scatter):
