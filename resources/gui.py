@@ -4,7 +4,7 @@ from kivymd.app import MDApp
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.floatlayout import FloatLayout
+from kivymd.uix.screen import MDScreen
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
 from kivy.uix.popup import Popup
@@ -47,7 +47,7 @@ class GUI(MDApp):
         Window.maximize()
         Window.bind(mouse_pos=self.on_mouse_pos)
 
-        root = FloatLayout()
+        root = MDScreen()
 
         background = BoxLayout()
        
@@ -323,7 +323,7 @@ class FoodButton(MDFloatingActionButton):
 class ColonyButton(MDFloatingActionButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.icon = "../images/ant_icon.png"
+        self.icon = "spider"
         self.theme_cls.material_style = "M3"
         self.icon_size = 70
         self.md_bg_color = (1, 0.6, .11, 1)
@@ -334,6 +334,7 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         super().__init__(*args, **kwargs)
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
+        self.icon = "resize"
         self.root_button_anim = True
         self.hint_animation = True
 
