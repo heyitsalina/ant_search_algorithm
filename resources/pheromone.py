@@ -1,5 +1,4 @@
 import numpy as np
-import time
 
 class Pheromone:
     def __init__(self, grid_shape):
@@ -22,10 +21,9 @@ class Pheromone:
                 Determines the pheromone level at a specific location in the tensor.
 
             reduce_pheromone(reducing_factor: float, timeframe: float):
-                Reduces the pheromone strength in the tensor after a certain timeframe by a specific factor.
+                Reduces the pheromone strength in the tensor after each epoch.
         """
         self.pheromones = np.zeros((2, grid_shape[1], grid_shape[0]))
-        self.timestamps = np.zeros((2, grid_shape[1], grid_shape[0]))
 
     def leave_pheromone(self, pos, pheromone_status):
         """
@@ -47,10 +45,6 @@ class Pheromone:
         
         #Add pheromones status in the corresponding position
         self.pheromones[depth, pos[1], pos[0]] += pheromone_status
-        
-        #Check if element is not null / needed for the time deltas in reduce_pheromones
-        if self.pheromones[depth, pos[1], pos[0]] != 0:
-            self.timestamps[depth, pos[1], pos[0]] += round(time.time(), 2)
     
     def get_pheromone_level(self, pos):
         """
