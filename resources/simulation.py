@@ -25,8 +25,6 @@ class Simulation:
         Start the simulation.
     next_epoch():
         Calculates the next position of all Ant objects.
-    update_pheromone():
-        Update the array of pheromones.
     add_colony():
         Add a Colony object to the simulation.
     add_food():
