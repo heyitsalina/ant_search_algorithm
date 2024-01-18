@@ -76,6 +76,9 @@ class GUI(MDApp):
 
         return root
 
+    def on_start(self):
+        self.fps_monitor_start()
+
     def on_mouse_pos(self, *args):
         pos = args[1]
         buttons = self.root.children[0].children
@@ -342,8 +345,8 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.theme_cls.primary_palette = "Orange"
         self.icon = "resize"
         self.root_button_anim = True
-        self.hint_animation = True
-  
+        # self.hint_animation = True
+
 
 class StartStopButton(MDFillRoundFlatButton):
     def __init__(self, *args, **kwargs):
