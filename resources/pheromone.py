@@ -20,7 +20,7 @@ class Pheromone:
             get_pheromone_level():
                 Determines the pheromone level at a specific location in the tensor.
 
-            reduce_pheromone(reducing_factor: float, timeframe: float):
+            reduce_pheromone(reducing_factor: float, zero_threshold: float):
                 Reduces the pheromone strength in the tensor after each epoch.
         """
         self.pheromones = np.zeros((2, grid_shape[1], grid_shape[0]))
@@ -67,8 +67,18 @@ class Pheromone:
 
     def reduce_pheromones(self, reducing_factor = 0.5, zero_threshold = 0.01):
         """
-        reduces the pheromone level by a reduction factor
+        Reduces the pheromone level by a reduction factor every epoch.
+        By the multiplication these will be reduced weighted by their amount, higher amount of pheromones results in higher reduction.
+
+        Args:
+            reduction_factor (float): The factor by which the pheromones should be reduced each epoch.
+            zero_threshold (float): The value at which the pheromone value is so low that it should be considered 0.
+
+        Returns:
+            None. This method modifies the internal state of the pheromone tensor.
+        
         """
+
         self.pheromones *= reducing_factor
         self.pheromones[0][self.pheromones[0] > - zero_threshold] = 0
         self.pheromones[1][self.pheromones[1] < zero_threshold] = 0
