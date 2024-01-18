@@ -70,5 +70,6 @@ class Pheromone:
         reduces the pheromone level by a reduction factor
         """
         self.pheromones *= reducing_factor
-        self.pheromones[self.pheromones < zero_threshold] = 0
+        self.pheromones[0][self.pheromones[0] > - zero_threshold] = 0
+        self.pheromones[1][self.pheromones[1] < zero_threshold] = 0
     
