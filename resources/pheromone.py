@@ -23,6 +23,7 @@ class Pheromone:
             reduce_pheromone(reducing_factor: float, zero_threshold: float):
                 Reduces the pheromone strength in the tensor after each epoch.
         """
+
         self.pheromone_array = np.zeros((2, grid_shape[1], grid_shape[0]))
 
 
@@ -45,6 +46,7 @@ class Pheromone:
             depth = 1
         
         #Add pheromones status in the corresponding position
+
         self.pheromone_array[depth, pos[1], pos[0]] += pheromone_status
 
     
@@ -80,6 +82,7 @@ class Pheromone:
             None. This method modifies the internal state of the pheromone tensor.
         
         """
+
 
         self.pheromone_array *= reducing_factor
         self.pheromone_array[0][self.pheromone_array[0] > - zero_threshold] = 0
