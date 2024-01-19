@@ -486,7 +486,8 @@ class ButtonWidget(BoxLayout):
             with self.simulation_widget.canvas:
                 Image(source="../images/colony.png", pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
             self.simulation_widget.unbind(on_touch_down=self.place_colony)
-            sim.add_colony(Colony(grid_pheromone_shape=(100, 100), amount=100, size=(100, 100),
+            n_row, n_col = int(sim.bounds[3]-sim.bounds[2]), int(sim.bounds[1]-sim.bounds[0])
+            sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=100, size=(100, 100),
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
 
 
