@@ -49,6 +49,12 @@ class Simulation:
                 future_position = ant.move()
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
+                
+                idx_row, idx_col = self.map_ant_coordinates_to_pheromone_index(ant_coordinates = ant.coordinates,
+                                                                               colony = colony)
+                colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
+                                                 pheromone_status = ant.pheromone_status)
+                
         self.food = list(food for food in self.food if food.amount_of_food > 0)
         
     def add_colony(self, colony):
