@@ -63,7 +63,7 @@ class GUI(MDApp):
         )
 
         with background.canvas:
-            Color(0.6, 0.38, 0.27, 1)
+            Color(0.64, 0.43, 0.25, 1)
             Rectangle(pos=(0, 0), size=(1920, 1080))
 
         simulation_widget = SimulationWidget()
