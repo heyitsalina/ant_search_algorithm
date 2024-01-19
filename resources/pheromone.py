@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import random
 
 class Pheromone:
     def __init__(self, grid_shape):
@@ -74,4 +75,73 @@ class Pheromone:
         reduces the pheromone level by a reduction factor
         """
         pass
-    
+
+    def find_pheromone_target(self, step_size, ant_array_position, pheromone_status):
+        """
+        Searches for the strongest or weakest (depending on the goal=pheromone-status) pheromone-value in the pheromone array 
+        in a range of a given step size.
+        After the value is found, the ant-movement will be directed in this direction.
+
+        Args:
+            step_size (int): Steps the ant does in one epoch. Affects which pheromones (array-elements) will be considered.
+            ant_array_position (Tuple[float, float]): The (x, y) coordinates in the grid for the current ant-position.
+            pheromone_status (int): The pheromone that the ant is currently placing and therefore looking for.
+
+        Returns:
+            float: An angle for the ant.move-method to do the movement in the direction of the calculated angle.
+        """
+        # Note: ant_array_position are the determined indices in the pheromone-array by the mapping-method
+        # To fit the coordinates correctly from x, y to y, x
+        ant_array_position = (ant_array_position[1], ant_array_position[0])
+
+        if pheromone_status == -1:
+            pheromones = -pheromones
+        print(pheromones)  
+
+        def check_and_store_values(array, center, step_size):
+            found_values = []
+            original_indices = []
+
+            for i in range(-1, 2):
+                for j in range(-1, 2):
+                    if i == 0 and j == 0:
+                        continue
+
+                    row = center[0] + i * step_size
+                    col = center[1] + j * step_size
+
+                    if 0 <= row < array.shape[0] and 0 <= col < array.shape[1]:
+                        element = array[row, col]
+                        found_values.append(element)
+                        original_indices.append((row, col))
+
+            return found_values, original_indices
+
+        # Collect values and indices
+        found_values, original_indices = check_and_store_values(pheromones, ant_array_position, step_size)
+
+
+        # Check if any pheromone-levels are found
+        if found_values:
+            
+            # Check if all pheromone-levels are equal or not
+            if np.all(found_values == np.max(found_values)):
+                movement_angle = 0
+                # If angle_offset = 0 (ant.move) will determine the next position randomly
+                
+            else:
+                # Find index of highest value
+                # There could be more than one value of highest pheromones but all values must not be the same
+                # Therefor pick a random one from them
+                max_indices = np.where(found_values == np.max(found_values))[0]
+                index_max_value = random.choice(max_indices)
+                
+                original_index_max_value = original_indices[index_max_value]
+
+                # Calculate new angle_offset
+                movement_angle = round(np.rad2deg(np.arctan(original_index_max_value[0] / original_index_max_value[1])), 2) 
+        else:
+            # If there is no pheromone in step_size reach, perform an random step (ant.move does this by angle_offset = 0)
+            movement_angle = 0
+
+        return movement_angle
