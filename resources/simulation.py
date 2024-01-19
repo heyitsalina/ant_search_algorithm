@@ -87,4 +87,5 @@ class Simulation:
         width_board = self.bounds[1] - self.bounds[0] 
         height_board = self.bounds[3] - self.bounds[2]
         
-        
+        n_row = colony.pheromone.pheromone_array.shape[1] #y
+        n_col = colony.pheromone.pheromone_array.shape[2] #x
