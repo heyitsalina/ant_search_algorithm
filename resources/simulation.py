@@ -92,3 +92,8 @@ class Simulation:
         
         width_spot = width_board / n_col
         height_spot = height_board / n_row
+        
+        idx_row = int(ant_coordinates[1] / height_spot)
+        idx_col = int(ant_coordinates[0] / width_spot)
+        
+        return idx_row, idx_col
