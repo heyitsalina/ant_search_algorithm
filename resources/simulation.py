@@ -89,3 +89,6 @@ class Simulation:
         
         n_row = colony.pheromone.pheromone_array.shape[1] #y
         n_col = colony.pheromone.pheromone_array.shape[2] #x
+        
+        width_spot = width_board / n_col
+        height_spot = height_board / n_row
