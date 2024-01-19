@@ -81,3 +81,6 @@ class Simulation:
         elif y > max_y:
             y = max_y
         return np.array([x, y])   
+
+    def map_ant_coordinates_to_pheromone_index(self, ant_coordinates, colony):
+        pass
