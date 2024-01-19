@@ -92,7 +92,7 @@ class GUI(MDApp):
     def mouse_leave_css(self, *args):
         Window.set_system_cursor('arrow')
 
-    def mouse_enter_css(self, *args):           
+    def mouse_enter_css(self, *args):
         Window.set_system_cursor('hand')
 
     def on_window_resize(self, *args):
@@ -302,13 +302,12 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                       size_hint=(None, None), size=(400, 300))
         self.popup.open()
     
-    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_pheromone_grid):   
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_pheromone_grid):
         new_ant_count = int(new_ant_count)
         new_amount_to_carry = int(new_amount_to_carry)
         new_step_size = int(new_step_size)
         new_color = ast.literal_eval(new_color)
         new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
-        new_pheromone_grid = tuple([new_pheromone_grid[i] for i in (1, 0)])
         if new_ant_count >= 0:
             colony.amount = new_ant_count
             colony.ants = []
