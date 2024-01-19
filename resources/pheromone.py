@@ -25,6 +25,7 @@ class Pheromone:
         """
         self.pheromone_array = np.zeros((2, grid_shape[1], grid_shape[0]))
 
+
     def leave_pheromone(self, pos, pheromone_status):
         """
         Leaves pheromone at a given position based on the pheromone status. This method is typically
@@ -45,6 +46,7 @@ class Pheromone:
         
         #Add pheromones status in the corresponding position
         self.pheromone_array[depth, pos[1], pos[0]] += pheromone_status
+
     
     def get_pheromone_level(self, pos):
         """
@@ -82,4 +84,3 @@ class Pheromone:
         self.pheromone_array *= reducing_factor
         self.pheromone_array[0][self.pheromone_array[0] > - zero_threshold] = 0
         self.pheromone_array[1][self.pheromone_array[1] < zero_threshold] = 0
-    
