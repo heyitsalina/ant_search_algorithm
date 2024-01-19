@@ -55,8 +55,7 @@ def test_reduce_pheromones():
     assert levels == {'coming from colony': - 0.25, 'coming from food': 0.25}
 
     # Further reductions
-    for _ in range(5):
-        pheromone.reduce_pheromones(reducing_factor = 0.5)
+    pheromone.reduce_pheromones(reducing_factor = 0.5**5)
     levels = pheromone.get_pheromone_level(pos)
     assert levels == {'coming from colony': 0, 'coming from food': 0}
 
