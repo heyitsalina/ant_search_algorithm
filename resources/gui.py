@@ -332,7 +332,7 @@ class FoodButton(MDFloatingActionButton):
 class ColonyButton(MDFloatingActionButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.icon = "spider"
+        self.icon = "../images/ant_icon.png"
         self.theme_cls.material_style = "M3"
         self.icon_size = 70
         self.md_bg_color = (1, 0.6, .11, 1)
