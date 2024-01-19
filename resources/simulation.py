@@ -83,4 +83,8 @@ class Simulation:
         return np.array([x, y])   
 
     def map_ant_coordinates_to_pheromone_index(self, ant_coordinates, colony):
-        pass
+        
+        width_board = self.bounds[1] - self.bounds[0] 
+        height_board = self.bounds[3] - self.bounds[2]
+        
+        
