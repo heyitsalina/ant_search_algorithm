@@ -40,7 +40,7 @@ class Ant:
     
 
 
-    def move(self):
+    def move(self, angle_offset = 0):
 
         position = np.array(self.coordinates)
         
@@ -56,8 +56,11 @@ class Ant:
             self.direction = np.array([x, y]) * self.step_size
 
         else:
-            #Apply a random rotation to the existing direction
-            angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
+            
+            if angle_offset == 0:
+                #Apply a random rotation to the existing direction
+                angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
+                
             rotation_matrix = np.array([[np.cos(angle_offset), -np.sin(angle_offset)],
                                     [np.sin(angle_offset), np.cos(angle_offset)]])
             
