@@ -186,7 +186,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             Line(rectangle=(
                 min_x,
                 min_y,
-                max_x - min_x + 5, #5 is diameter of Ellipse
+                max_x - min_x + 5,
                 max_y - min_y + 5
             ), width=1)
             pos = (min_x, min_y)

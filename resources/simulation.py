@@ -80,10 +80,10 @@ class Simulation:
         x, y = future_position
         if x < min_x:
             x = min_x
-        elif x > max_x:
-            x = max_x
-        if y < min_y:
-            y = min_y
+        elif x >= max_x:
+            x = max_x - 1
+        if y <= min_y:
+            y = min_y + 1
         elif y > max_y:
             y = max_y
         return np.array([x, y])
@@ -106,7 +106,7 @@ class Simulation:
             pheromone grid that correspond to the ant's position.
         """
         
-        width_board = self.bounds[1] - self.bounds[0] 
+        width_board = self.bounds[1] - self.bounds[0]
         height_board = self.bounds[3] - self.bounds[2]
         
         n_row = colony.pheromone.pheromone_array.shape[1] #y
@@ -115,7 +115,7 @@ class Simulation:
         width_spot = width_board / n_col
         height_spot = height_board / n_row
         
-        idx_row = -int(ant_coordinates[1] / height_spot) - 1
-        idx_col = int(ant_coordinates[0] / width_spot) - 1
+        idx_row = -int(ant_coordinates[1] / height_spot)
+        idx_col = int(ant_coordinates[0] / width_spot)
 
         return idx_row, idx_col
