@@ -270,12 +270,18 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         color_input = TextInput(text=str(colony.color), multiline=False)
         content.add_widget(color_input)
 
+        pheromone_grid_label = Label(text="Pheromone grid:")
+        content.add_widget(pheromone_grid_label)
+
+        pheromone_grid_input = TextInput(text=str(colony.pheromone.pheromone_array[0].shape), multiline=False)
+        content.add_widget(pheromone_grid_input)
+
         apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text, steps_input.text, carry_input.text, color_input.text))
         content.add_widget(apply_button)
 
-        self.popup = Popup(title='Colony Information',
+        self.popup = Popup(title='Colony Settings',
                       content=content,
-                      size_hint=(None, None), size=(400, 600))
+                      size_hint=(None, None), size=(400, 700))
         self.popup.open()
     
     def show_food_popup(self, food):
@@ -290,7 +296,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_food_changes(food, food_input.text))
         content.add_widget(apply_button)
 
-        self.popup = Popup(title='Food Information',
+        self.popup = Popup(title='Food Settings',
                       content=content,
                       size_hint=(None, None), size=(400, 300))
         self.popup.open()
