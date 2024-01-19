@@ -55,10 +55,10 @@ class GUI(MDApp):
         background = BoxLayout()
        
         sim.bounds = (
-            - 720 / 2,
-            720 / 2,
-            -480 / 2,
-            480 / 2 
+            0,
+            720,
+            -480,
+            0 
         )
 
         with background.canvas:
@@ -211,7 +211,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         if self.is_running:
             sim.next_epoch()
             self.update_canvas()
-            
+           
     def transform_array(self, array):
         return array[array.shape[0]-1::-1, :].T
 
@@ -314,10 +314,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.popup.dismiss()
     
     def adjust_view(self, instance):
-        if self.scale == 1 and self.pos == (self.width/2, self.height/2):
+        if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2):
             return False
         self.scale = 1
-        self.pos = (self.width/2, self.height/2)
+        self.pos = ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2)
 
 
 class FoodButton(MDFloatingActionButton):
@@ -447,14 +447,15 @@ class ButtonWidget(BoxLayout):
 
     def change_border_size(self, new_border_size):
         sim.bounds = (
-            - new_border_size[0] / 2,
-            new_border_size[0] / 2,
-            - new_border_size[1] / 2,
-            new_border_size[1] / 2 
+            0,
+            new_border_size[0],
+            - new_border_size[1],
+            0 
         )
 
         self.simulation_widget.clear_canvas(0)
         self.simulation_widget.draw_bounds()
+        self.simulation_widget.adjust_view(0)
 
     def on_food_button_press(self, instance):
         if not self.simulation_widget.is_running:
