@@ -21,6 +21,7 @@ from kivy.clock import Clock
 from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
+from resources.pheromone import Pheromone
 
 
 sim = Simulation()
@@ -55,14 +56,14 @@ class GUI(MDApp):
         background = BoxLayout()
        
         sim.bounds = (
-            - 720 / 2,
-            720 / 2,
-            -480 / 2,
-            480 / 2 
+            0,
+            720,
+            -480,
+            0 
         )
 
         with background.canvas:
-            Color(0.6, 0.38, 0.27, 1)
+            Color(0.64, 0.43, 0.25, 1)
             Rectangle(pos=(0, 0), size=(1920, 1080))
 
         simulation_widget = SimulationWidget()
@@ -91,7 +92,7 @@ class GUI(MDApp):
     def mouse_leave_css(self, *args):
         Window.set_system_cursor('arrow')
 
-    def mouse_enter_css(self, *args):           
+    def mouse_enter_css(self, *args):
         Window.set_system_cursor('hand')
 
     def on_window_resize(self, *args):
@@ -185,7 +186,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             Line(rectangle=(
                 min_x,
                 min_y,
-                max_x - min_x + 5, #5 is diameter of Ellipse
+                max_x - min_x + 5,
                 max_y - min_y + 5
             ), width=1)
             pos = (min_x, min_y)
@@ -211,7 +212,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         if self.is_running:
             sim.next_epoch()
             self.update_canvas()
-            
+           
     def transform_array(self, array):
         return array[array.shape[0]-1::-1, :].T
 
@@ -270,12 +271,18 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         color_input = TextInput(text=str(colony.color), multiline=False)
         content.add_widget(color_input)
 
-        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text, steps_input.text, carry_input.text, color_input.text))
+        pheromone_grid_label = Label(text="Pheromone grid:")
+        content.add_widget(pheromone_grid_label)
+
+        pheromone_grid_input = TextInput(text=str(colony.pheromone.pheromone_array[0].shape), multiline=False)
+        content.add_widget(pheromone_grid_input)
+
+        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text, steps_input.text, carry_input.text, color_input.text, pheromone_grid_input.text))
         content.add_widget(apply_button)
 
-        self.popup = Popup(title='Colony Information',
+        self.popup = Popup(title='Colony Settings',
                       content=content,
-                      size_hint=(None, None), size=(400, 600))
+                      size_hint=(None, None), size=(400, 700))
         self.popup.open()
     
     def show_food_popup(self, food):
@@ -290,21 +297,23 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_food_changes(food, food_input.text))
         content.add_widget(apply_button)
 
-        self.popup = Popup(title='Food Information',
+        self.popup = Popup(title='Food Settings',
                       content=content,
                       size_hint=(None, None), size=(400, 300))
         self.popup.open()
     
-    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color):   
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_pheromone_grid):
         new_ant_count = int(new_ant_count)
         new_amount_to_carry = int(new_amount_to_carry)
         new_step_size = int(new_step_size)
         new_color = ast.literal_eval(new_color)
+        new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
         if new_ant_count >= 0:
             colony.amount = new_ant_count
             colony.ants = []
             colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry)
             colony.color = new_color
+            colony.pheromone = Pheromone(grid_shape=new_pheromone_grid)
             self.popup.dismiss()
 
     def apply_food_changes(self, food, new_food_amount):
@@ -314,16 +323,16 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.popup.dismiss()
     
     def adjust_view(self, instance):
-        if self.scale == 1 and self.pos == (self.width/2, self.height/2):
+        if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2):
             return False
         self.scale = 1
-        self.pos = (self.width/2, self.height/2)
+        self.pos = ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2)
 
 
 class FoodButton(MDFloatingActionButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.icon = "food-apple"
+        self.icon = "food-apple-outline"
         self.theme_cls.material_style = "M3"
         self.icon_size = 70
         self.md_bg_color = (1, 0.6, .11, 1)
@@ -332,7 +341,7 @@ class FoodButton(MDFloatingActionButton):
 class ColonyButton(MDFloatingActionButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.icon = "spider"
+        self.icon = "../images/ant_icon.png"
         self.theme_cls.material_style = "M3"
         self.icon_size = 70
         self.md_bg_color = (1, 0.6, .11, 1)
@@ -447,14 +456,15 @@ class ButtonWidget(BoxLayout):
 
     def change_border_size(self, new_border_size):
         sim.bounds = (
-            - new_border_size[0] / 2,
-            new_border_size[0] / 2,
-            - new_border_size[1] / 2,
-            new_border_size[1] / 2 
+            0,
+            new_border_size[0],
+            - new_border_size[1],
+            0 
         )
 
         self.simulation_widget.clear_canvas(0)
         self.simulation_widget.draw_bounds()
+        self.simulation_widget.adjust_view(0)
 
     def on_food_button_press(self, instance):
         if not self.simulation_widget.is_running:
