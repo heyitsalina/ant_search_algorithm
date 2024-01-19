@@ -80,9 +80,25 @@ class Simulation:
             y = min_y
         elif y > max_y:
             y = max_y
-        return np.array([x, y])   
+        return np.array([x, y])
+    
 
     def map_ant_coordinates_to_pheromone_index(self, ant_coordinates, colony):
+        """
+        This method takes the coordinates of an ant and maps them to the
+        corresponding index in the pheromone grid based on the simulation bounds
+        and the shape of the pheromone grid.
+
+        Args
+        -------
+            ant_coordinates (tuple): The x and y coordinates of the ant's position.
+            colony (Colony): The colony object containing the pheromone grid.
+
+        Returns
+        -------
+            tuple: A tuple containing the row and column indices in the
+            pheromone grid that correspond to the ant's position.
+        """
         
         width_board = self.bounds[1] - self.bounds[0] 
         height_board = self.bounds[3] - self.bounds[2]
