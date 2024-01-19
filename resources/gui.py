@@ -21,6 +21,7 @@ from kivy.clock import Clock
 from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
+from resources.pheromone import Pheromone
 
 
 sim = Simulation()
@@ -276,7 +277,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         pheromone_grid_input = TextInput(text=str(colony.pheromone.pheromone_array[0].shape), multiline=False)
         content.add_widget(pheromone_grid_input)
 
-        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text, steps_input.text, carry_input.text, color_input.text))
+        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text, steps_input.text, carry_input.text, color_input.text, pheromone_grid_input.text))
         content.add_widget(apply_button)
 
         self.popup = Popup(title='Colony Settings',
@@ -301,16 +302,19 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                       size_hint=(None, None), size=(400, 300))
         self.popup.open()
     
-    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color):   
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_pheromone_grid):   
         new_ant_count = int(new_ant_count)
         new_amount_to_carry = int(new_amount_to_carry)
         new_step_size = int(new_step_size)
         new_color = ast.literal_eval(new_color)
+        new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
+        new_pheromone_grid = tuple([new_pheromone_grid[i] for i in (1, 0)])
         if new_ant_count >= 0:
             colony.amount = new_ant_count
             colony.ants = []
             colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry)
             colony.color = new_color
+            colony.pheromone = Pheromone(grid_shape=new_pheromone_grid)
             self.popup.dismiss()
 
     def apply_food_changes(self, food, new_food_amount):
