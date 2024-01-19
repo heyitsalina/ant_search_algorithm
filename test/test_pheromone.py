@@ -7,8 +7,10 @@ def test_initialization():
     grid_shape = (10, 10)
     pheromone = Pheromone(grid_shape)
 
+
     assert pheromone.pheromone_array.shape == (2, grid_shape[1], grid_shape[0])
     assert np.all(pheromone.pheromone_array == 0)
+
     
 def test_leave_pheromone():
     grid_shape = (10, 10)
@@ -55,9 +57,6 @@ def test_reduce_pheromones():
     assert levels == {'coming from colony': - 0.25, 'coming from food': 0.25}
 
     # Further reductions
-    for _ in range(5):
-        pheromone.reduce_pheromones(reducing_factor = 0.5)
+    pheromone.reduce_pheromones(reducing_factor = 0.5**5)
     levels = pheromone.get_pheromone_level(pos)
     assert levels == {'coming from colony': 0, 'coming from food': 0}
-
-    
