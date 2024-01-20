@@ -199,15 +199,17 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
 
             for colony in sim.colonies:
                 pheromone_shape = colony.pheromone.pheromone_array[0].shape
+                scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
+                print(scale)
                 for pheromone_array in (0, 1):
                     array_values = colony.pheromone.pheromone_array[pheromone_array]
                     # print(array_values)
                     for row in range(pheromone_shape[0]):
                         for col in range(pheromone_shape[1]):
-                            alpha = array_values[row, col] / (255.0*10)
+                            alpha = array_values[row, col] / (255.0*5)
                             color = (0, 0, 0.7, -alpha) if pheromone_array == 0 else (0.7, 0, 0, alpha)
                             Color(*color)
-                            Ellipse(pos=(col*40, -row*(40)-50), size=(50, 50))
+                            Ellipse(pos=(col*scale[0], -row*(scale[1]) - scale[1]), size=(scale[0], scale[1]))
     
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
@@ -217,45 +219,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 Color(*colony.color)
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
-                            size=(5, 5))
-            
-            # Color(0.5, 0, 0, 0.2)
-            # Ellipse(pos=(5, 5), size=(20, 20))
-                    
-        # with self.canvas:
-        #     for colony in sim.colonies:
-        #         pheromone_shape = colony.pheromone.pheromone_array[0].shape
-        #         max_vertices = 65535  # Maximum vertices supported by unsigned short indices
-
-        #         vertices = []
-        #         indices = []
-        #         colors = []
-
-        #         for pheromone_array in (0, 1):
-                    
-        #             array_values = colony.pheromone.pheromone_array[pheromone_array]
-
-        #             for row in range(pheromone_shape[0]):
-        #                 for col in range(pheromone_shape[1]):
-        #                     x = col *2# Adjust for the size of Ellipse
-        #                     y = row  *2# Adjust for the size of Ellipse
-        #                     vertices.extend([x, -y])
-
-        #                     # Only add an index if it's within the allowed range
-        #                     if len(vertices) // 2 - 1 < max_vertices:
-        #                         indices.append(len(vertices) // 2 - 1)
-
-        #                     # Calculate alpha based on cell values
-        #                     alpha = array_values[row, col] / 255.0
-        #                     color = (0, 0, 0.7, alpha) if pheromone_array == 0 else (0.7, 0, 0, alpha)  # Assuming values in the range [0, 255]
-        #                     colors.extend(color)  # Set alpha value in color
-                            
-
-        #         Mesh(vertices=vertices, indices=indices, colors=colors, mode='points')
-                    
-        
-            
-                    
+                            size=(5, 5))                
 
     def update_world(self, dt):
         if self.is_running:
@@ -544,7 +508,7 @@ class ButtonWidget(BoxLayout):
             with self.simulation_widget.canvas:
                 Image(source="../images/colony.png", pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
             self.simulation_widget.unbind(on_touch_down=self.place_colony)
-            n_row, n_col = int(sim.bounds[3]-sim.bounds[2]), int(sim.bounds[1]-sim.bounds[0])
+            n_row, n_col = int(sim.bounds[3]-sim.bounds[2])//40, int(sim.bounds[1]-sim.bounds[0])//40   ### /40 for pheromone grid
             sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=100, size=(100, 100),
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
 
