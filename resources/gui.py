@@ -13,7 +13,7 @@ from kivy.uix.textinput import TextInput
 from kivymd.uix.button import MDFloatingActionButton
 from kivymd.uix.button import MDFloatingActionButtonSpeedDial
 from kivymd.uix.button import MDFillRoundFlatButton
-from kivy.graphics import Rectangle, Color, Ellipse
+from kivy.graphics import Rectangle, Color, Ellipse, Mesh
 from kivy.graphics.transformation import Matrix
 from kivy.graphics import Line
 from kivy.core.window import Window
@@ -196,17 +196,66 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.canvas.clear()
         self.draw_bounds()
         with self.canvas:
-            for colony in sim.colonies:
-                Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
 
+            for colony in sim.colonies:
+                pheromone_shape = colony.pheromone.pheromone_array[0].shape
+                for pheromone_array in (0, 1):
+                    array_values = colony.pheromone.pheromone_array[pheromone_array]
+                    # print(array_values)
+                    for row in range(pheromone_shape[0]):
+                        for col in range(pheromone_shape[1]):
+                            alpha = array_values[row, col] / (255.0*10)
+                            color = (0, 0, 0.7, -alpha) if pheromone_array == 0 else (0.7, 0, 0, alpha)
+                            Color(*color)
+                            Ellipse(pos=(col*40, -row*(40)-50), size=(50, 50))
+    
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
             
             for colony in sim.colonies:
+                Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
                 Color(*colony.color)
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
                             size=(5, 5))
+            
+            # Color(0.5, 0, 0, 0.2)
+            # Ellipse(pos=(5, 5), size=(20, 20))
+                    
+        # with self.canvas:
+        #     for colony in sim.colonies:
+        #         pheromone_shape = colony.pheromone.pheromone_array[0].shape
+        #         max_vertices = 65535  # Maximum vertices supported by unsigned short indices
+
+        #         vertices = []
+        #         indices = []
+        #         colors = []
+
+        #         for pheromone_array in (0, 1):
+                    
+        #             array_values = colony.pheromone.pheromone_array[pheromone_array]
+
+        #             for row in range(pheromone_shape[0]):
+        #                 for col in range(pheromone_shape[1]):
+        #                     x = col *2# Adjust for the size of Ellipse
+        #                     y = row  *2# Adjust for the size of Ellipse
+        #                     vertices.extend([x, -y])
+
+        #                     # Only add an index if it's within the allowed range
+        #                     if len(vertices) // 2 - 1 < max_vertices:
+        #                         indices.append(len(vertices) // 2 - 1)
+
+        #                     # Calculate alpha based on cell values
+        #                     alpha = array_values[row, col] / 255.0
+        #                     color = (0, 0, 0.7, alpha) if pheromone_array == 0 else (0.7, 0, 0, alpha)  # Assuming values in the range [0, 255]
+        #                     colors.extend(color)  # Set alpha value in color
+                            
+
+        #         Mesh(vertices=vertices, indices=indices, colors=colors, mode='points')
+                    
+        
+            
+                    
 
     def update_world(self, dt):
         if self.is_running:
