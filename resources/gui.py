@@ -200,16 +200,14 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             for colony in sim.colonies:
                 pheromone_shape = colony.pheromone.pheromone_array[0].shape
                 scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
-                print(scale)
                 for pheromone_array in (0, 1):
                     array_values = colony.pheromone.pheromone_array[pheromone_array]
-                    # print(array_values)
                     for row in range(pheromone_shape[0]):
                         for col in range(pheromone_shape[1]):
-                            alpha = array_values[row, col] / (255.0*5)
+                            alpha = array_values[row, col] / (255.0)
                             color = (0, 0, 0.7, -alpha) if pheromone_array == 0 else (0.7, 0, 0, alpha)
                             Color(*color)
-                            Ellipse(pos=(col*scale[0], -row*(scale[1]) - scale[1]), size=(scale[0], scale[1]))
+                            Rectangle(pos=(col*scale[0], -row*(scale[1]) - scale[1]), size=(scale[0], scale[1]))
     
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
