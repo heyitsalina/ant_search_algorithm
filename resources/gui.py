@@ -196,7 +196,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.canvas.clear()
         self.draw_bounds()
         with self.canvas:
-
+            for food in sim.food:
+                Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
+            
             for colony in sim.colonies:
                 pheromone_shape = colony.pheromone.pheromone_array[0].shape
                 scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
@@ -208,11 +210,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                             color = (0, 0, 0.7, -alpha) if pheromone_array == 0 else (0.7, 0, 0, alpha)
                             Color(*color)
                             Rectangle(pos=(col*scale[0], -row*(scale[1]) - scale[1]), size=(scale[0], scale[1]))
-    
-            for food in sim.food:
-                Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
-            
-            for colony in sim.colonies:
+
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
                 Color(*colony.color)
                 for ant in colony.ants:
