@@ -1,4 +1,5 @@
 import ast
+import numpy as np
 from resources import config
 from kivymd.app import MDApp
 from kivy.uix.widget import Widget
@@ -190,7 +191,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 max_y - min_y + 5
             ), width=1)
             pos = (min_x, min_y)
-            Image(source="../images/background.jpg", pos=pos, size=(max_x-min_x+5, max_y-min_y+5), allow_stretch = True, keep_ratio=False)
+            self.img = Image(source="../images/background.jpg", pos=pos, size=(max_x-min_x+5, max_y-min_y+5), allow_stretch = True, keep_ratio=False)
 
     def update_canvas(self):
         self.canvas.clear()
@@ -206,8 +207,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     array_values = colony.pheromone.pheromone_array[pheromone_array]
                     for row in range(pheromone_shape[0]):
                         for col in range(pheromone_shape[1]):
-                            alpha = array_values[row, col] / (255.0)
-                            color = (0, 0, 0.7, -alpha) if pheromone_array == 0 else (0.7, 0, 0, alpha)
+                            alpha = array_values[row, col] / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values[row, col] / (np.max(array_values)*1.7+1)
+                            color = (0, 0, 0.7, alpha) if pheromone_array == 0 else (0.7, 0, 0, alpha)
                             Color(*color)
                             Rectangle(pos=(col*scale[0], -row*(scale[1]) - scale[1]), size=(scale[0], scale[1]))
 
