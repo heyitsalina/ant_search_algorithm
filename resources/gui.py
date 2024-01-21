@@ -210,7 +210,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                             alpha = array_values[row, col] / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values[row, col] / (np.max(array_values)*1.7+1)
                             color = (0, 0, 0.7, alpha) if pheromone_array == 0 else (0.7, 0, 0, alpha)
                             Color(*color)
-                            Rectangle(pos=(col*scale[0], -row*(scale[1]) - scale[1]), size=(scale[0], scale[1]))
+                            Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
 
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
                 Color(*colony.color)
