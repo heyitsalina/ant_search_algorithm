@@ -205,11 +205,11 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
                 for pheromone_array in (0, 1):
                     array_values = colony.pheromone.pheromone_array[pheromone_array]
+                    alpha = array_values / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values / (np.max(array_values)*1.7+1)
+                    color = (0, 0, 0.7) if pheromone_array == 0 else (0.7, 0, 0)
                     for row in range(pheromone_shape[0]):
                         for col in range(pheromone_shape[1]):
-                            alpha = array_values[row, col] / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values[row, col] / (np.max(array_values)*1.7+1)
-                            color = (0, 0, 0.7, alpha) if pheromone_array == 0 else (0.7, 0, 0, alpha)
-                            Color(*color)
+                            Color(*color, alpha[row][col])
                             Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
 
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
