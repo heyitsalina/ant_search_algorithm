@@ -191,7 +191,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 max_y - min_y + 5
             ), width=1)
             pos = (min_x, min_y)
-            self.img = Image(source="../images/background.jpg", pos=pos, size=(max_x-min_x+5, max_y-min_y+5), allow_stretch = True, keep_ratio=False)
+            Image(source="../images/background.jpg", pos=pos, size=(max_x-min_x+5, max_y-min_y+5), allow_stretch = True, keep_ratio=False)
 
     def update_canvas(self):
         self.canvas.clear()
@@ -503,7 +503,7 @@ class ButtonWidget(BoxLayout):
             with self.simulation_widget.canvas:
                 Image(source="../images/colony.png", pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
             self.simulation_widget.unbind(on_touch_down=self.place_colony)
-            n_row, n_col = int(sim.bounds[3]-sim.bounds[2])//40, int(sim.bounds[1]-sim.bounds[0])//40   ### /40 for pheromone grid
+            n_row, n_col = int(sim.bounds[3]-sim.bounds[2])//40, int(sim.bounds[1]-sim.bounds[0])//40
             sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=100, size=(100, 100),
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
 
