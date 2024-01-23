@@ -96,7 +96,7 @@ class Pheromone:
 
         # Convert pheromone-levels to positive to represent all cases
         if pheromone_status == -1:
-            pheromones = -pheromones
+            self.pheromones = -self.pheromones
         
         def check_and_store_values(array, center, step_size):
             found_values = []
@@ -118,7 +118,7 @@ class Pheromone:
             return found_values, original_indices
 
         # Collect values and indices
-        found_values, original_indices = check_and_store_values(pheromones, ant_array_position, step_size)
+        found_values, original_indices = check_and_store_values(self.pheromones, ant_array_position, step_size)
 
 
         # Check if any pheromone-levels are found
