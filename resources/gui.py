@@ -2,6 +2,7 @@ import ast
 import numpy as np
 from resources import config
 from kivymd.app import MDApp
+from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.screen import MDScreen
@@ -14,6 +15,7 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
+from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.graphics.transformation import Matrix
 from kivy.graphics import Line
@@ -98,7 +100,7 @@ class GUI(MDApp):
 
     def on_window_resize(self, *args):
         Clock.schedule_interval(lambda instance: self.root.children[1].children[0].adjust_view(instance), 0.2)
-        
+
 
 class ResizableDraggablePicture(Scatter):
     def on_touch_down(self, touch):
@@ -196,6 +198,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def update_canvas(self):
         self.canvas.clear()
         self.draw_bounds()
+        self.update_pheromone_checkbox()
         with self.canvas:
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
@@ -211,6 +214,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                         for col in range(pheromone_shape[1]):
                             Color(*color, alpha[row][col])
                             Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
+                            ## maybe numpy array Rectangle objects, oder Liste
+                            ## pheromone drawing check box neben Canvas
 
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
                 Color(*colony.color)
@@ -229,7 +234,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
-
+        if self.is_running:
+            self.update_pheromone_checkbox()
+            
     def clear_canvas(self, instance):
         sim.food = []
         sim.colonies= []
@@ -335,7 +342,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             return False
         self.scale = 1
         self.pos = ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2)
-
+    
+    def update_pheromone_checkbox(self, *args):
+        checkboxes = MDBoxLayout(id="checkboxes", orientation="vertical", pos=(sim.bounds[1] + 50, sim.bounds[2]//2), spacing="25dp")
+        checkboxes.add_widget(Label(text="Show\npheromone grid"))
+        for colony in sim.colonies:
+            checkboxes.add_widget(CheckBox(size=(100, 100), active=True, pos_hint={'center_x': .5, 'center_y': 0.5}))
+        self.add_widget(checkboxes)
 
 class FoodButton(MDFloatingActionButton):
     def __init__(self, *args, **kwargs):
