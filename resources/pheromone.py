@@ -94,10 +94,10 @@ class Pheromone:
         # To fit the coordinates correctly from x, y to y, x
         ant_array_position = (ant_array_position[1], ant_array_position[0])
 
+        # Convert pheromone-levels to positive to represent all cases
         if pheromone_status == -1:
             pheromones = -pheromones
-        print(pheromones)  
-
+        
         def check_and_store_values(array, center, step_size):
             found_values = []
             original_indices = []
