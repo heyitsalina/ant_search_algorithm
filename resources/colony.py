@@ -3,7 +3,7 @@ from resources.pheromone import Pheromone
 
 
 class Colony:
-    def __init__(self, grid_pheromone_shape, amount, size, coordinates, color):
+    def __init__(self, grid_pheromone_shape, amount, size, coordinates, color, show_pheromone=False):
         """
         This class represents the Ant-colony.
 
@@ -22,6 +22,7 @@ class Colony:
         self.size = size
         self.coordinates = coordinates
         self.color = color
+        self.show_pheromone = show_pheromone
         self.ants = []
         self.add_ants()
         self.food_counter = 0
