@@ -2,7 +2,6 @@ import ast
 import numpy as np
 from resources import config
 from kivymd.app import MDApp
-from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.screen import MDScreen
@@ -15,7 +14,7 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
-from kivy.uix.checkbox import CheckBox
+from kivymd.uix.selectioncontrol import MDSwitch
 from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.graphics.transformation import Matrix
 from kivy.graphics import Line
@@ -198,24 +197,24 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def update_canvas(self):
         self.canvas.clear()
         self.draw_bounds()
-        self.update_pheromone_checkbox()
         with self.canvas:
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
             
             for colony in sim.colonies:
                 pheromone_shape = colony.pheromone.pheromone_array[0].shape
-                scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
-                for pheromone_array in (0, 1):
-                    array_values = colony.pheromone.pheromone_array[pheromone_array]
-                    alpha = array_values / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values / (np.max(array_values)*1.7+1)
-                    color = (0, 0, 0.7) if pheromone_array == 0 else (0.7, 0, 0)
-                    for row in range(pheromone_shape[0]):
-                        for col in range(pheromone_shape[1]):
-                            Color(*color, alpha[row][col])
-                            Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
-                            ## maybe numpy array Rectangle objects, oder Liste
-                            ## pheromone drawing check box neben Canvas
+                if colony.show_pheromone:
+                    scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
+                    for pheromone_array in (0, 1):
+                        array_values = colony.pheromone.pheromone_array[pheromone_array]
+                        alpha = array_values / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values / (np.max(array_values)*1.7+1)
+                        color = (0, 0, 0.7) if pheromone_array == 0 else (0.7, 0, 0)
+                        for row in range(pheromone_shape[0]):
+                            for col in range(pheromone_shape[1]):
+                                Color(*color, alpha[row][col])
+                                Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
+                                ## maybe numpy array Rectangle objects, oder Liste
+                                ## pheromone drawing check box neben Canvas
 
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
                 Color(*colony.color)
@@ -234,8 +233,6 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
-        if self.is_running:
-            self.update_pheromone_checkbox()
             
     def clear_canvas(self, instance):
         sim.food = []
@@ -266,7 +263,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             ant_settings_label = MDTextField(hint_text="Step size", text=str(colony.ants[0].step_size))
             carry_label = MDTextField(hint_text="Amount to carry", text=str(colony.ants[0].amount_to_carry))
             color_label = MDTextField(hint_text="Color", text=str(colony.color))
+            show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(.5, .5))
             pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
+            show_pheromone_label.add_widget(pheromone_grid_label)
+            show_pheromone_label.add_widget(MDSwitch(icon_active="check"))
 
             self.dialog = MDDialog(
                 title='Colony Settings',
@@ -275,11 +275,12 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                                         ant_settings_label,
                                         carry_label,
                                         color_label,
-                                        pheromone_grid_label,
+                                        show_pheromone_label,
                                         orientation="vertical",
                                         spacing="12dp",
                                         size_hint_y=None,
-                                        height="350dp"),
+                                        height="350dp",
+                                        width="100dp"),
                 buttons=[
                     MDFlatButton(
                         text="Cancel",
@@ -342,13 +343,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             return False
         self.scale = 1
         self.pos = ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2)
-    
-    def update_pheromone_checkbox(self, *args):
-        checkboxes = MDBoxLayout(id="checkboxes", orientation="vertical", pos=(sim.bounds[1] + 50, sim.bounds[2]//2), spacing="25dp")
-        checkboxes.add_widget(Label(text="Show\npheromone grid"))
-        for colony in sim.colonies:
-            checkboxes.add_widget(CheckBox(size=(100, 100), active=True, pos_hint={'center_x': .5, 'center_y': 0.5}))
-        self.add_widget(checkboxes)
+
 
 class FoodButton(MDFloatingActionButton):
     def __init__(self, *args, **kwargs):
