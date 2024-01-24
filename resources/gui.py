@@ -1,23 +1,27 @@
 import ast
+import numpy as np
 from resources import config
 from kivymd.app import MDApp
 from kivy.uix.widget import Widget
-from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.screen import MDScreen
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
-from kivy.uix.textinput import TextInput
 from kivymd.uix.button import MDFloatingActionButton
 from kivymd.uix.button import MDFloatingActionButtonSpeedDial
 from kivymd.uix.button import MDFillRoundFlatButton
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.textfield import MDTextField
+from kivymd.uix.selectioncontrol import MDSwitch
+from kivy.animation import Animation
 from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.graphics.transformation import Matrix
 from kivy.graphics import Line
 from kivy.core.window import Window
 from kivy.clock import Clock
+from kivy.metrics import dp
 from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
@@ -97,7 +101,7 @@ class GUI(MDApp):
 
     def on_window_resize(self, *args):
         Clock.schedule_interval(lambda instance: self.root.children[1].children[0].adjust_view(instance), 0.2)
-        
+
 
 class ResizableDraggablePicture(Scatter):
     def on_touch_down(self, touch):
@@ -196,17 +200,29 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.canvas.clear()
         self.draw_bounds()
         with self.canvas:
-            for colony in sim.colonies:
-                Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
-
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
             
             for colony in sim.colonies:
+                pheromone_shape = colony.pheromone.pheromone_array[0].shape
+                if colony.show_pheromone:
+                    scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
+                    for pheromone_array in (0, 1):
+                        array_values = colony.pheromone.pheromone_array[pheromone_array]
+                        alpha = array_values / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values / (np.max(array_values)*1.7+1)
+                        color = (0, 0, 0.7) if pheromone_array == 0 else (0.7, 0, 0)
+                        for row in range(pheromone_shape[0]):
+                            for col in range(pheromone_shape[1]):
+                                Color(*color, alpha[row][col])
+                                Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
+                                ## maybe numpy array Rectangle objects, oder Liste
+                                ## pheromone drawing check box neben Canvas
+
+                Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
                 Color(*colony.color)
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
-                            size=(5, 5))
+                            size=(5, 5))                
 
     def update_world(self, dt):
         if self.is_running:
@@ -219,7 +235,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
-
+            
     def clear_canvas(self, instance):
         sim.food = []
         sim.colonies= []
@@ -245,64 +261,67 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         return super(SimulationWidget, self).on_touch_down(touch)
 
     def show_colony_popup(self, colony):
-        content = BoxLayout(orientation='vertical', spacing=10, padding=10)
+            ants_label = MDTextField(hint_text="Number of ants", text=str(len(colony.ants)))
+            ant_settings_label = MDTextField(hint_text="Step size", text=str(colony.ants[0].step_size))
+            carry_label = MDTextField(hint_text="Amount to carry", text=str(colony.ants[0].amount_to_carry))
+            color_label = MDTextField(hint_text="Color", text=str(colony.color))
+            show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(.75, .75))
+            pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
+            pheromone_switch = PheromoneSwitch(active=colony.show_pheromone)
+            show_pheromone_label.add_widget(pheromone_grid_label)
+            show_pheromone_label.add_widget(pheromone_switch)
 
-        ants_label = Label(text="Number of ants:")
-        content.add_widget(ants_label)
-
-        ants_input = TextInput(text=str(len(colony.ants)), multiline=False)
-        content.add_widget(ants_input)
-
-        ant_settings_label = Label(text="Step size:")
-        content.add_widget(ant_settings_label)
-
-        steps_input = TextInput(text=str(colony.ants[0].step_size), multiline=False)
-        content.add_widget(steps_input)
-
-        carry_label = Label(text="Amount to carry:")
-        content.add_widget(carry_label)
-
-        carry_input = TextInput(text=str(colony.ants[0].amount_to_carry), multiline=False)
-        content.add_widget(carry_input)
-
-        color_label = Label(text="Color:")
-        content.add_widget(color_label)
-
-        color_input = TextInput(text=str(colony.color), multiline=False)
-        content.add_widget(color_input)
-
-        pheromone_grid_label = Label(text="Pheromone grid:")
-        content.add_widget(pheromone_grid_label)
-
-        pheromone_grid_input = TextInput(text=str(colony.pheromone.pheromone_array[0].shape), multiline=False)
-        content.add_widget(pheromone_grid_input)
-
-        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_ant_changes(colony, ants_input.text, steps_input.text, carry_input.text, color_input.text, pheromone_grid_input.text))
-        content.add_widget(apply_button)
-
-        self.popup = Popup(title='Colony Settings',
-                      content=content,
-                      size_hint=(None, None), size=(400, 700))
-        self.popup.open()
+            self.dialog = MDDialog(
+                title='Colony Settings',
+                type="custom",
+                content_cls=MDBoxLayout(ants_label,
+                                        ant_settings_label,
+                                        carry_label,
+                                        color_label,
+                                        show_pheromone_label,
+                                        orientation="vertical",
+                                        spacing="12dp",
+                                        size_hint_y=None,
+                                        height="350dp",
+                                        width="100dp"),
+                buttons=[
+                    MDFlatButton(
+                        text="Cancel",
+                        on_release=lambda *args: self.dialog.dismiss()
+                    ),
+                    MDFlatButton(
+                        text="Apply Changes",
+                        on_release=lambda *args: self.apply_ant_changes(colony, ants_label.text, ant_settings_label.text, carry_label.text, color_label.text, pheromone_grid_label.text, pheromone_switch.active)
+                    ),
+                ],
+            )
+            self.dialog.open()
     
     def show_food_popup(self, food):
-        content = BoxLayout(orientation='vertical', spacing=10, padding=10)
+        food_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
 
-        food_label = Label(text="Amount of food:")
-        content.add_widget(food_label)
-
-        food_input = TextInput(text=str(food.amount_of_food), multiline=False)
-        content.add_widget(food_input)
-
-        apply_button = Button(text='Apply Changes', on_press=lambda btn: self.apply_food_changes(food, food_input.text))
-        content.add_widget(apply_button)
-
-        self.popup = Popup(title='Food Settings',
-                      content=content,
-                      size_hint=(None, None), size=(400, 300))
-        self.popup.open()
+        self.dialog = MDDialog(
+            title='Food Settings',
+            type="custom",
+            content_cls=MDBoxLayout(food_label,
+                                    orientation="vertical",
+                                    spacing="12dp",
+                                    size_hint_y=None,
+                                    height="50dp"),
+            buttons=[
+                MDFlatButton(
+                    text="Cancel",
+                    on_release=lambda *args: self.dialog.dismiss()
+                ),
+                MDFlatButton(
+                    text="Apply Changes",
+                    on_release=lambda *args: self.apply_food_changes(food, food_label.text)
+                ),
+                ],
+        )
+        self.dialog.open()
     
-    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_pheromone_grid):
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_pheromone_grid, new_pheromone_state):
         new_ant_count = int(new_ant_count)
         new_amount_to_carry = int(new_amount_to_carry)
         new_step_size = int(new_step_size)
@@ -314,19 +333,65 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry)
             colony.color = new_color
             colony.pheromone = Pheromone(grid_shape=new_pheromone_grid)
-            self.popup.dismiss()
+            colony.show_pheromone = new_pheromone_state
+            self.dialog.dismiss()
 
     def apply_food_changes(self, food, new_food_amount):
         new_food_amount = int(new_food_amount)
         if new_food_amount >= 0:
             food.amount_of_food = new_food_amount
-            self.popup.dismiss()
+            self.dialog.dismiss()
     
     def adjust_view(self, instance):
         if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2):
             return False
         self.scale = 1
         self.pos = ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2)
+
+
+class PheromoneSwitch(MDSwitch):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.icon_active = "check"
+
+    def on_active(self, instance_switch, active_value: bool) -> None:
+        if self.theme_cls.material_style == "M3" and self.widget_style != "ios":
+            size = (
+                (
+                    (dp(16), dp(16))
+                    if not self.icon_inactive
+                    else (dp(24), dp(24))
+                )
+                if not active_value
+                else (dp(24), dp(24))
+            )
+            icon = "blank"
+            color = (0, 0, 0, 0)
+
+            if self.icon_active and active_value:
+                icon = self.icon_active
+                color = (
+                    self.icon_active_color
+                    if self.icon_active_color
+                    else self.theme_cls.text_color
+                )
+            elif self.icon_inactive and not active_value:
+                icon = self.icon_inactive
+                color = (
+                    self.icon_inactive_color
+                    if self.icon_inactive_color
+                    else self.theme_cls.text_color
+                )
+
+            if not self.active:
+                Animation(size=size, t="out_quad", d=0.2).start(self.ids.thumb)
+                Animation(color=color, t="out_quad", d=0.2).start(
+                    self.ids.thumb.ids.icon
+                )
+            
+            self.set_icon(self, icon)
+
+        self._update_thumb_pos()
 
 
 class FoodButton(MDFloatingActionButton):
@@ -495,7 +560,7 @@ class ButtonWidget(BoxLayout):
             with self.simulation_widget.canvas:
                 Image(source="../images/colony.png", pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
             self.simulation_widget.unbind(on_touch_down=self.place_colony)
-            n_row, n_col = int(sim.bounds[3]-sim.bounds[2]), int(sim.bounds[1]-sim.bounds[0])
+            n_row, n_col = int(sim.bounds[3]-sim.bounds[2])//40, int(sim.bounds[1]-sim.bounds[0])//40
             sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=100, size=(100, 100),
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
 
