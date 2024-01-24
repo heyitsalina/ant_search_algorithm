@@ -15,11 +15,13 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.selectioncontrol import MDSwitch
+from kivy.animation import Animation
 from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.graphics.transformation import Matrix
 from kivy.graphics import Line
 from kivy.core.window import Window
 from kivy.clock import Clock
+from kivy.metrics import dp
 from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
@@ -265,7 +267,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             color_label = MDTextField(hint_text="Color", text=str(colony.color))
             show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(.75, .75))
             pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
-            pheromone_switch = MDSwitch(icon_active="check")
+            pheromone_switch = PheromoneSwitch(active=colony.show_pheromone)
             show_pheromone_label.add_widget(pheromone_grid_label)
             show_pheromone_label.add_widget(pheromone_switch)
 
@@ -345,6 +347,51 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             return False
         self.scale = 1
         self.pos = ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2)
+
+
+class PheromoneSwitch(MDSwitch):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.icon_active = "check"
+
+    def on_active(self, instance_switch, active_value: bool) -> None:
+        if self.theme_cls.material_style == "M3" and self.widget_style != "ios":
+            size = (
+                (
+                    (dp(16), dp(16))
+                    if not self.icon_inactive
+                    else (dp(24), dp(24))
+                )
+                if not active_value
+                else (dp(24), dp(24))
+            )
+            icon = "blank"
+            color = (0, 0, 0, 0)
+
+            if self.icon_active and active_value:
+                icon = self.icon_active
+                color = (
+                    self.icon_active_color
+                    if self.icon_active_color
+                    else self.theme_cls.text_color
+                )
+            elif self.icon_inactive and not active_value:
+                icon = self.icon_inactive
+                color = (
+                    self.icon_inactive_color
+                    if self.icon_inactive_color
+                    else self.theme_cls.text_color
+                )
+
+            if not self.active:
+                Animation(size=size, t="out_quad", d=0.2).start(self.ids.thumb)
+                Animation(color=color, t="out_quad", d=0.2).start(
+                    self.ids.thumb.ids.icon
+                )
+            
+            self.set_icon(self, icon)
+
+        self._update_thumb_pos()
 
 
 class FoodButton(MDFloatingActionButton):
