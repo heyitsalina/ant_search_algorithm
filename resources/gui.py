@@ -263,7 +263,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             ant_settings_label = MDTextField(hint_text="Step size", text=str(colony.ants[0].step_size))
             carry_label = MDTextField(hint_text="Amount to carry", text=str(colony.ants[0].amount_to_carry))
             color_label = MDTextField(hint_text="Color", text=str(colony.color))
-            show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(.5, .5))
+            show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(.75, .75))
             pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
             pheromone_switch = MDSwitch(icon_active="check")
             show_pheromone_label.add_widget(pheromone_grid_label)
