@@ -2,7 +2,7 @@ from resources.colony import Colony
 import pytest
 import numpy as np
 
-colony = Colony(amount=10, size=10, coordinates=(100.0, 100.0), color=(1, 1, 1, 1))
+colony = Colony(grid_pheromone_shape=(100, 100), amount=10, size=10, coordinates=(100.0, 100.0), color=(1, 1, 1, 1))
 
 def test_add_ants():
     assert colony.amount == len(colony.ants)

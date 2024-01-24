@@ -1,5 +1,4 @@
 import numpy as np
-import time
 import random
 
 class Pheromone:
@@ -22,11 +21,12 @@ class Pheromone:
             get_pheromone_level():
                 Determines the pheromone level at a specific location in the tensor.
 
-            reduce_pheromone(reducing_factor: float, timeframe: float):
-                Reduces the pheromone strength in the tensor after a certain timeframe by a specific factor.
+            reduce_pheromone(reducing_factor: float, zero_threshold: float):
+                Reduces the pheromone strength in the tensor after each epoch.
         """
-        self.pheromones = np.zeros((2, grid_shape[1], grid_shape[0]))
-        self.timestamps = np.zeros((2, grid_shape[1], grid_shape[0]))
+
+        self.pheromone_array = np.zeros((2, grid_shape[0], grid_shape[1]))
+
 
     def leave_pheromone(self, pos, pheromone_status):
         """
@@ -47,9 +47,9 @@ class Pheromone:
             depth = 1
         
         #Add pheromones status in the corresponding position
-        self.pheromones[depth, pos[1], pos[0]] += pheromone_status
-        
-        self.timestamps[depth, pos[1], pos[0]] += round(time.time(), 2)
+
+        self.pheromone_array[depth, pos[0], pos[1]] += pheromone_status
+
     
     def get_pheromone_level(self, pos):
         """
@@ -64,17 +64,30 @@ class Pheromone:
         """
         
         level_of_pheromones = {
-        'coming from colony': self.pheromones[0, pos[1], pos[0]],
-        'coming from food': self.pheromones[1, pos[1], pos[0]]
+        'coming from colony': self.pheromone_array[0, pos[1], pos[0]],
+        'coming from food': self.pheromone_array[1, pos[1], pos[0]]
         }
         
         return level_of_pheromones
 
-    def reduce_pheromone(self, reducing_factor, k_sec):
+
+    def reduce_pheromones(self, reducing_factor = 0.5, zero_threshold = 0.01):
         """
-        reduces the pheromone level by a reduction factor
+        Reduces the pheromone level by a reduction factor every epoch.
+        By the multiplication these will be reduced weighted by their amount, higher amount of pheromones results in higher reduction.
+
+        Args:
+            reduction_factor (float): The factor by which the pheromones should be reduced each epoch.
+            zero_threshold (float): The value at which the pheromone value is so low that it should be considered 0.
+
+        Returns:
+            None. This method modifies the internal state of the pheromone tensor.
+        
         """
-        pass
+        self.pheromone_array *= reducing_factor
+        self.pheromone_array[0][self.pheromone_array[0] > - zero_threshold] = 0
+        self.pheromone_array[1][self.pheromone_array[1] < zero_threshold] = 0
+
 
     def find_pheromone_target(self, step_size, ant_array_position, pheromone_status):
         """
@@ -101,7 +114,7 @@ class Pheromone:
             depth = 1
         else:
             # Convert pheromone-levels to positive to represent all cases (at pheromone-level -1 means depth = 0)
-            self.pheromones[0] = -self.pheromones[0]
+            self.pheromone_array[0] = -self.pheromone_array[0]
             
         
         def check_and_store_values(array, center, step_size):
@@ -131,7 +144,7 @@ class Pheromone:
             return found_values, original_indices
 
         # Collect values and indices
-        found_values, original_indices = check_and_store_values(self.pheromones[depth], ant_array_position, step_size)
+        found_values, original_indices = check_and_store_values(self.pheromone_array[depth], ant_array_position, step_size)
 
 
         # Check if any pheromone-levels are found
@@ -156,11 +169,11 @@ class Pheromone:
             # then pick a random one of them
             
             # Loop is performed until original_indices isn't empty anymore
-            while not check_and_store_values(self.pheromones[depth], ant_array_position, step_size)[1]:
+            while not check_and_store_values(self.pheromone_array[depth], ant_array_position, step_size)[1]:
                 step_size = max(step_size - 1, 1)
             
             # Get the new positions within the new possible step size
-            found_values, original_indices = check_and_store_values(self.pheromones[depth], ant_array_position, step_size)
+            found_values, original_indices = check_and_store_values(self.pheromone_array[depth], ant_array_position, step_size)
             original_index_max_value = random.choice(original_indices)
 
         # Convert back from (y, x) to (x, y)
@@ -168,7 +181,6 @@ class Pheromone:
 
         #Convert pheromone-level back to normal
         if pheromone_status == -1:
-            self.pheromones[0] = -self.pheromones[0]
+            self.pheromone_array[0] = -self.pheromone_array[0]
 
         return original_index_max_value
-    

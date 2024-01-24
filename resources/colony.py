@@ -1,18 +1,23 @@
 from resources.ant import Ant
+from resources.pheromone import Pheromone
+
 
 class Colony:
-    def __init__(self, amount, size, coordinates, color):
+    def __init__(self, grid_pheromone_shape, amount, size, coordinates, color):
         """
         This class represents the Ant-colony.
 
         Args:
+        grid_pheromone_shape(tuple):
+            number of rows and columns of pheromone array
         amount (float):
             amount of Ants per colony
         size (float):
-            size of the colonys nest?
+            size of the colonys nest
         coordinates (tuple):
-            The (x,y) coordinates of the ants nest?
+            The (x,y) coordinates of the ants nest
         """
+        self.pheromone = Pheromone(grid_shape=grid_pheromone_shape)
         self.amount = amount
         self.size = size
         self.coordinates = coordinates
