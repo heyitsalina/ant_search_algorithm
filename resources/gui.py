@@ -265,8 +265,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             color_label = MDTextField(hint_text="Color", text=str(colony.color))
             show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(.5, .5))
             pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
+            pheromone_switch = MDSwitch(icon_active="check")
             show_pheromone_label.add_widget(pheromone_grid_label)
-            show_pheromone_label.add_widget(MDSwitch(icon_active="check"))
+            show_pheromone_label.add_widget(pheromone_switch)
 
             self.dialog = MDDialog(
                 title='Colony Settings',
@@ -288,7 +289,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     ),
                     MDFlatButton(
                         text="Apply Changes",
-                        on_release=lambda *args: self.apply_ant_changes(colony, ants_label.text, ant_settings_label.text, carry_label.text, color_label.text, pheromone_grid_label.text)
+                        on_release=lambda *args: self.apply_ant_changes(colony, ants_label.text, ant_settings_label.text, carry_label.text, color_label.text, pheromone_grid_label.text, pheromone_switch.active)
                     ),
                 ],
             )
@@ -318,7 +319,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         )
         self.dialog.open()
     
-    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_pheromone_grid):
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_pheromone_grid, new_pheromone_state):
         new_ant_count = int(new_ant_count)
         new_amount_to_carry = int(new_amount_to_carry)
         new_step_size = int(new_step_size)
@@ -330,6 +331,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry)
             colony.color = new_color
             colony.pheromone = Pheromone(grid_shape=new_pheromone_grid)
+            colony.show_pheromone = new_pheromone_state
             self.dialog.dismiss()
 
     def apply_food_changes(self, food, new_food_amount):
