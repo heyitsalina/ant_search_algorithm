@@ -72,38 +72,38 @@ def test_find_pheromone_target():
     pheromone.pheromone_array[1] = np.arange(1, pheromone.pheromone_array[1].size + 1).reshape(pheromone.pheromone_array.shape[1:])
     
     # Step_size
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (2,2), pheromone_status = 1) == (3,3)
-    assert pheromone.find_pheromone_target(step_size = 2, pos = (2,2), pheromone_status = 1) == (4,4)
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (2,2), pheromone_status = 1) == (3,3)
+    assert pheromone.find_pheromone_target(step_size = 2, ant_array_position = (2,2), pheromone_status = 1) == (4,4)
 
     # Only one position possible
-    assert pheromone.find_pheromone_target(step_size = 3, pos = (2,1), pheromone_status = 1) == (2, 4)
+    assert pheromone.find_pheromone_target(step_size = 3, ant_array_position = (2,1), pheromone_status = 1) == (2, 4)
 
     # Three positions possible
-    assert pheromone.find_pheromone_target(step_size = 4, pos = (4,4), pheromone_status = 1) == (0, 4)
+    assert pheromone.find_pheromone_target(step_size = 4, ant_array_position = (4,4), pheromone_status = 1) == (0, 4)
     
     # Step_size need to be reduced to pick a random position (while-loop)
     # (Step_size out of bounds of the array)
     expected_results = [(0, 0), (4, 0), (0, 4)]
-    assert pheromone.find_pheromone_target(step_size = 6, pos = (4,4), pheromone_status = 1) in expected_results
+    assert pheromone.find_pheromone_target(step_size = 6, ant_array_position = (4,4), pheromone_status = 1) in expected_results
 
     expected_results = [(0, 0), (2, 0), (4, 0), (0, 2), (4, 2), (0, 4), (2, 4), (4, 4)]
-    assert pheromone.find_pheromone_target(step_size = 3, pos = (2,2), pheromone_status = 1) in expected_results
-    assert pheromone.find_pheromone_target(step_size = 5, pos = (2,2), pheromone_status = 1) in expected_results
+    assert pheromone.find_pheromone_target(step_size = 3, ant_array_position = (2,2), pheromone_status = 1) in expected_results
+    assert pheromone.find_pheromone_target(step_size = 5, ant_array_position = (2,2), pheromone_status = 1) in expected_results
 
     # Array with negatives
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (2,2), pheromone_status = -1) == (3, 3)
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (2,2), pheromone_status = -1) == (3, 3)
 
     # Ant position at edges
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (0,2), pheromone_status = 1) == (1, 3)
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (2,0), pheromone_status = 1) == (3, 1)
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (4,2), pheromone_status = 1) == (4, 3)
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (2,4), pheromone_status = 1) == (3, 4)
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (0,2), pheromone_status = 1) == (1, 3)
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (2,0), pheromone_status = 1) == (3, 1)
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (4,2), pheromone_status = 1) == (4, 3)
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (2,4), pheromone_status = 1) == (3, 4)
 
     # Ant position at corners
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (0,0), pheromone_status = 1) == (1, 1)
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (4,0), pheromone_status = 1) == (4, 1)
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (4,4), pheromone_status = 1) == (3, 4)
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (0,4), pheromone_status = 1) == (1, 4)
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (0,0), pheromone_status = 1) == (1, 1)
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (4,0), pheromone_status = 1) == (4, 1)
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (4,4), pheromone_status = 1) == (3, 4)
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (0,4), pheromone_status = 1) == (1, 4)
 
     # Positive values array, same values (10's)
     pheromone.pheromone_array[1] = np.array([[0, 10, 10, 10, 0],
@@ -113,7 +113,7 @@ def test_find_pheromone_target():
                                         [0, 0, 0, 0, 0]])
     
     expected_results = [(1, 0), (2, 0), (3, 0), (1, 1), (3, 1), (1, 2), (2, 2), (3, 2)]
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (2,1), pheromone_status = 1) in expected_results
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (2,1), pheromone_status = 1) in expected_results
 
     # Positive values array, same values (0's)
     pheromone.pheromone_array[1] = np.array([[0, 0, 0, 0, 0],
@@ -122,7 +122,7 @@ def test_find_pheromone_target():
                                         [0, 0, 0, 0, 0],
                                         [0, 0, 0, 0, 0]])
     
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (2,1), pheromone_status = 1) in expected_results
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (2,1), pheromone_status = 1) in expected_results
 
     # Positive values array, two values have the same pheromone-level
     pheromone.pheromone_array[1] = np.array([[0, 0, 10, 10, 0],
@@ -132,4 +132,4 @@ def test_find_pheromone_target():
                                         [0, 0, 0, 0, 0]])
     
     expected_results = [(2, 0), (3, 0)]
-    assert pheromone.find_pheromone_target(step_size = 1, pos = (2,1), pheromone_status = 1) in expected_results
+    assert pheromone.find_pheromone_target(step_size = 1, ant_array_position = (2,1), pheromone_status = 1) in expected_results
