@@ -200,29 +200,28 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.canvas.clear()
         self.draw_bounds()
         with self.canvas:
+            for colony in sim.colonies:
+                if colony.show_pheromone:
+                        pheromone_shape = colony.pheromone.pheromone_array[0].shape
+                        scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
+                        for pheromone_array in (0, 1):
+                            array_values = colony.pheromone.pheromone_array[pheromone_array]
+                            alpha = array_values / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values / (np.max(array_values)*1.7+1)
+                            color = (0, 0, 0.7) if pheromone_array == 0 else (0.7, 0, 0)
+                            for row in range(pheromone_shape[0]):
+                                for col in range(pheromone_shape[1]):
+                                    Color(*color, alpha[row][col])
+                                    Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
+
             for food in sim.food:
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
             
             for colony in sim.colonies:
-                pheromone_shape = colony.pheromone.pheromone_array[0].shape
-                if colony.show_pheromone:
-                    scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
-                    for pheromone_array in (0, 1):
-                        array_values = colony.pheromone.pheromone_array[pheromone_array]
-                        alpha = array_values / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values / (np.max(array_values)*1.7+1)
-                        color = (0, 0, 0.7) if pheromone_array == 0 else (0.7, 0, 0)
-                        for row in range(pheromone_shape[0]):
-                            for col in range(pheromone_shape[1]):
-                                Color(*color, alpha[row][col])
-                                Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
-                                ## maybe numpy array Rectangle objects, oder Liste
-                                ## pheromone drawing check box neben Canvas
-
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
                 Color(*colony.color)
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
-                            size=(5, 5))                
+                            size=(5, 5))          
 
     def update_world(self, dt):
         if self.is_running:
