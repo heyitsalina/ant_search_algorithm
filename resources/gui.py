@@ -418,7 +418,41 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.theme_cls.primary_palette = "Orange"
         self.icon = "resize"
         self.root_button_anim = True
-        # self.hint_animation = True
+        self.hint_animation = True
+ 
+    def on_enter(self, instance_button) -> None:
+        """Called when the mouse cursor is over a button from the stack."""
+        if self.state == "open":
+            for widget in self.children:
+                if self.hint_animation:
+                    Animation.cancel_all(widget)
+                    for item in self.data.items():
+                        if widget.text in item:
+                            Animation(
+                                _canvas_width=widget.width + dp(24),
+                                _padding_right=self.right_pad_value
+                                if self.right_pad
+                                else 0,
+                                d=self.opening_time,
+                                t=self.opening_transition,
+                            ).start(instance_button)
+                            if (
+                                instance_button.icon
+                                == self.data[f"{widget.text}"]
+                                or instance_button.icon
+                                == self.data[f"{widget.text}"][0]
+                            ):
+                                Animation(
+                                    opacity=1,
+                                    d=self.opening_time,
+                                    t=self.opening_transition,
+                                ).start(widget)
+                            else:
+                                Animation(
+                                    opacity=0, d=0.1, t=self.opening_transition
+                                ).start(widget)
+                    Animation.cancel_all(widget)
+        self.close_stack()
 
 
 class StartStopButton(MDFillRoundFlatButton):
@@ -494,6 +528,7 @@ class ButtonWidget(BoxLayout):
         size_button.data = {f"{size[1][0]}x{size[1][1]}": [size[0],
                                                      "on_press", lambda btn, size=size: self.change_border_size(size[1]),
                                                      "on_release", lambda instance: size_button.close_stack(),
+                                                     "on_mouse_over", size_button.on_enter,
                                                      "text", size[1]] for size in sizes.items()}
 
         food_colony_layout = BoxLayout(orientation='horizontal', spacing=10, padding=0)
