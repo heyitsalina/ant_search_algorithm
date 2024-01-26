@@ -242,6 +242,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         with self.canvas:
             for colony in sim.colonies:
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
+                MDLabel(text=str(colony.food_counter), pos=(colony.coordinates[0]+35, colony.coordinates[1]+40), size=(50, 20))
                 for ant in colony.ants:
                     Color(*colony.color)
                     Ellipse(pos=ant.coordinates, size=(5, 5))
