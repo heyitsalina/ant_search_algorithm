@@ -409,7 +409,7 @@ class CustomSwitch(MDSwitch):
                 if not active_value
                 else (dp(24), dp(24))
             )
-            icon = "blank"
+            icon = "check"
             color = (0, 0, 0, 0)
 
             if self.icon_active and active_value:
@@ -427,11 +427,13 @@ class CustomSwitch(MDSwitch):
                     else self.theme_cls.text_color
                 )
 
-            if not self.active:
+            try:
                 Animation(size=size, t="out_quad", d=0.2).start(self.ids.thumb)
                 Animation(color=color, t="out_quad", d=0.2).start(
                     self.ids.thumb.ids.icon
                 )
+            except Exception:
+                pass
             
             self.set_icon(self, icon)
 
