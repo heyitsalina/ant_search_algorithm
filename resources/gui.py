@@ -285,7 +285,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             color_label = MDTextField(hint_text="Color", text=str(colony.color))
             show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(.75, .75))
             pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
-            pheromone_switch = PheromoneSwitch(active=colony.show_pheromone)
+            pheromone_switch = CustomSwitch(active=colony.show_pheromone)
             show_pheromone_label.add_widget(pheromone_grid_label)
             show_pheromone_label.add_widget(pheromone_switch)
 
@@ -318,7 +318,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def show_food_popup(self, food):
         food_label = MDBoxLayout(orientation="horizontal", size_hint=(.75, .75))
         amount_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
-        life_bar_switch = PheromoneSwitch(active=food.show_life_bar)
+        life_bar_switch = CustomSwitch(active=food.show_life_bar)
         food_label.add_widget(amount_label)
         food_label.add_widget(life_bar_switch)
 
@@ -372,7 +372,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.pos = ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2)
 
 
-class PheromoneSwitch(MDSwitch):
+class CustomSwitch(MDSwitch):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.icon_active = "check"
