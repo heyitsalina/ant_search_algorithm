@@ -242,10 +242,12 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         with self.canvas:
             for colony in sim.colonies:
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
-                Color(*colony.color)
                 for ant in colony.ants:
-                    Ellipse(pos=ant.coordinates,
-                            size=(5, 5)) 
+                    Color(*colony.color)
+                    Ellipse(pos=ant.coordinates, size=(5, 5))
+                    if ant.pheromone_status == 1:
+                        Color(1, 0, 0, 1)
+                        Ellipse(pos=(ant.coordinates[0]+1.5, ant.coordinates[1]+1.5), size=(2, 2))
     
     def draw_food_life_bar(self):
         with self.canvas:
