@@ -13,6 +13,7 @@ from kivymd.uix.button import MDFillRoundFlatButton
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.label import MDLabel
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.selectioncontrol import MDSwitch
 from kivy.animation import Animation
@@ -316,20 +317,23 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.dialog.open()
     
     def show_food_popup(self, food):
-        food_label = MDBoxLayout(orientation="horizontal", size_hint=(.75, .75))
+        food_label = MDBoxLayout(orientation="horizontal", size_hint=(1.2, .9), spacing="30dp")
         amount_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
+        switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
         life_bar_switch = CustomSwitch(active=food.show_life_bar)
+        life_bar_text = MDLabel(text="Show Life Bar", pos_hint={"center_x": 1.5, "center_y": .4})
+        switch_label.add_widget(life_bar_switch)
+        switch_label.add_widget(life_bar_text)
         food_label.add_widget(amount_label)
-        food_label.add_widget(life_bar_switch)
+        food_label.add_widget(switch_label)
 
         self.dialog = MDDialog(
             title='Food Settings',
             type="custom",
             content_cls=MDBoxLayout(food_label,
                                     orientation="vertical",
-                                    spacing="12dp",
                                     size_hint_y=None,
-                                    height="100dp"),
+                                    height="80dp"),
             buttons=[
                 MDFlatButton(
                     text="Cancel",
