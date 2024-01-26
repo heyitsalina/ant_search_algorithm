@@ -201,7 +201,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.draw_bounds()
         self.draw_pheromone()
         self.draw_food()
-        self.draw_ants()        
+        self.draw_ants()
+        self.draw_food_life_bar()      
 
     def update_world(self, dt):
         if self.is_running:
@@ -226,10 +227,6 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def draw_food(self):
         with self.canvas:
             for food in sim.food:
-                Color(0.5, 0.5, 0.5, 1)
-                Rectangle(pos=(food.coordinates[0]+13, food.coordinates[1]+80-2), size=(74, 14))
-                Color(0, 1, 0.2, 1)
-                Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/100, 10))
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
 
     def draw_ants(self):
@@ -240,7 +237,16 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
                             size=(5, 5)) 
-        
+    
+    def draw_food_life_bar(self):
+        with self.canvas:
+            for food in sim.food:
+                if food.show_life_bar:
+                    Color(0.5, 0.5, 0.5, 1)
+                    Rectangle(pos=(food.coordinates[0]+13, food.coordinates[1]+80-2), size=(74, 14))
+                    Color(0, 1, 0.2, 1)
+                    Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/100, 10))
+
     def transform_array(self, array):
         return array[array.shape[0]-1::-1, :].T
 
