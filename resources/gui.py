@@ -310,7 +310,11 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.dialog.open()
     
     def show_food_popup(self, food):
-        food_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
+        food_label = MDBoxLayout(orientation="horizontal", size_hint=(.75, .75))
+        amount_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
+        life_bar_switch = PheromoneSwitch(active=food.show_life_bar)
+        food_label.add_widget(amount_label)
+        food_label.add_widget(life_bar_switch)
 
         self.dialog = MDDialog(
             title='Food Settings',
@@ -319,7 +323,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                                     orientation="vertical",
                                     spacing="12dp",
                                     size_hint_y=None,
-                                    height="50dp"),
+                                    height="100dp"),
             buttons=[
                 MDFlatButton(
                     text="Cancel",
@@ -327,7 +331,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 ),
                 MDFlatButton(
                     text="Apply Changes",
-                    on_release=lambda *args: self.apply_food_changes(food, food_label.text)
+                    on_release=lambda *args: self.apply_food_changes(food, amount_label.text, life_bar_switch.active)
                 ),
                 ],
         )
@@ -348,10 +352,11 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             colony.show_pheromone = new_pheromone_state
             self.dialog.dismiss()
 
-    def apply_food_changes(self, food, new_food_amount):
+    def apply_food_changes(self, food, new_food_amount, new_life_bar_state):
         new_food_amount = int(new_food_amount)
         if new_food_amount >= 0:
             food.amount_of_food = new_food_amount
+            food.show_life_bar = new_life_bar_state
             self.dialog.dismiss()
     
     def adjust_view(self, instance):

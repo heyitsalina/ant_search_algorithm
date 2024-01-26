@@ -1,6 +1,6 @@
 
 class Food:
-    def __init__(self, size, coordinates, amount_of_food):
+    def __init__(self, size, coordinates, amount_of_food, show_life_bar=True):
         """
         This class represents a food source in the Ant Search Algorithm.
 
@@ -16,5 +16,5 @@ class Food:
         self.coordinates = coordinates
         self.size = size
         self.amount_of_food = amount_of_food
-    
+        self.show_life_bar = show_life_bar
 
