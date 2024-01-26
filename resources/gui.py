@@ -199,6 +199,16 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def update_canvas(self):
         self.canvas.clear()
         self.draw_bounds()
+        self.draw_pheromone()
+        self.draw_food()
+        self.draw_ants()        
+
+    def update_world(self, dt):
+        if self.is_running:
+            sim.next_epoch()
+            self.update_canvas()
+    
+    def draw_pheromone(self):
         with self.canvas:
             for colony in sim.colonies:
                 if colony.show_pheromone:
@@ -213,25 +223,24 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                                     Color(*color, alpha[row][col])
                                     Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
 
+    def draw_food(self):
+        with self.canvas:
             for food in sim.food:
                 Color(0.5, 0.5, 0.5, 1)
                 Rectangle(pos=(food.coordinates[0]+13, food.coordinates[1]+80-2), size=(74, 14))
                 Color(0, 1, 0.2, 1)
                 Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/100, 10))
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
-            
+
+    def draw_ants(self):
+        with self.canvas:
             for colony in sim.colonies:
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
                 Color(*colony.color)
                 for ant in colony.ants:
                     Ellipse(pos=ant.coordinates,
-                            size=(5, 5))          
-
-    def update_world(self, dt):
-        if self.is_running:
-            sim.next_epoch()
-            self.update_canvas()
-           
+                            size=(5, 5)) 
+        
     def transform_array(self, array):
         return array[array.shape[0]-1::-1, :].T
 
