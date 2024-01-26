@@ -284,11 +284,16 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             ant_settings_label = MDTextField(hint_text="Step size", text=str(colony.ants[0].step_size))
             carry_label = MDTextField(hint_text="Amount to carry", text=str(colony.ants[0].amount_to_carry))
             color_label = MDTextField(hint_text="Color", text=str(colony.color))
-            show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(.75, .75))
+            show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(1.1, .9))
             pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
+            switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
             pheromone_switch = CustomSwitch(active=colony.show_pheromone)
+            pheromone_text = MDLabel(text="Show Pheromone Grid", pos_hint={"center_x": 1.5, "center_y": .65})
+            switch_label.add_widget(pheromone_switch)
+            switch_label.add_widget(pheromone_text)
+
             show_pheromone_label.add_widget(pheromone_grid_label)
-            show_pheromone_label.add_widget(pheromone_switch)
+            show_pheromone_label.add_widget(switch_label)
 
             self.dialog = MDDialog(
                 title='Colony Settings',
@@ -333,7 +338,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             content_cls=MDBoxLayout(food_label,
                                     orientation="vertical",
                                     size_hint_y=None,
-                                    height="80dp"),
+                                    height="80dp",
+                                    width="100dp"),
             buttons=[
                 MDFlatButton(
                     text="Cancel",
