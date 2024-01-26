@@ -214,6 +214,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                                     Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
 
             for food in sim.food:
+                Color(0.5, 0.5, 0.5, 1)
+                Rectangle(pos=(food.coordinates[0]+13, food.coordinates[1]+80-2), size=(74, 14))
+                Color(0, 1, 0.2, 1)
+                Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/1000, 10))
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
             
             for colony in sim.colonies:
