@@ -217,7 +217,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 Color(0.5, 0.5, 0.5, 1)
                 Rectangle(pos=(food.coordinates[0]+13, food.coordinates[1]+80-2), size=(74, 14))
                 Color(0, 1, 0.2, 1)
-                Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/1000, 10))
+                Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/100, 10))
                 Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
             
             for colony in sim.colonies:
@@ -589,7 +589,7 @@ class ButtonWidget(BoxLayout):
             with self.simulation_widget.canvas:
                 Image(source="../images/apple.png", pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
             self.simulation_widget.unbind(on_touch_down=self.place_food)
-            sim.add_food(Food(size=(100, 100), coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), amount_of_food=1000))
+            sim.add_food(Food(size=(100, 100), coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), amount_of_food=100))
 
     def place_colony(self, instance, touch):
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
