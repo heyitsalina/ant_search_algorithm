@@ -141,6 +141,14 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         calculate the next epoch and update canvas
     update_canvas():
         update the canvas
+    draw_pheromone():
+        draw the pheromone grid
+    draw_food():
+        draw the Food objects
+    draw_ants():
+        draw the Colony objects and their ants
+    draw_food_life_bar():
+        draw a life bar of the Food object above them
     transform_array():
         transform the array to get show it right on the screen
     toggle_simulation():
