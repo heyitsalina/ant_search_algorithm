@@ -13,6 +13,7 @@ from kivymd.uix.button import MDFillRoundFlatButton
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.label import MDLabel
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.selectioncontrol import MDSwitch
 from kivy.animation import Animation
@@ -140,6 +141,14 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         calculate the next epoch and update canvas
     update_canvas():
         update the canvas
+    draw_pheromone():
+        draw the pheromone grid
+    draw_food():
+        draw the Food objects
+    draw_ants():
+        draw the Colony objects and their ants
+    draw_food_life_bar():
+        draw a life bar of the Food object above them
     transform_array():
         transform the array to get show it right on the screen
     toggle_simulation():
@@ -199,36 +208,57 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def update_canvas(self):
         self.canvas.clear()
         self.draw_bounds()
-        with self.canvas:
-            for food in sim.food:
-                Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
-            
-            for colony in sim.colonies:
-                pheromone_shape = colony.pheromone.pheromone_array[0].shape
-                if colony.show_pheromone:
-                    scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
-                    for pheromone_array in (0, 1):
-                        array_values = colony.pheromone.pheromone_array[pheromone_array]
-                        alpha = array_values / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values / (np.max(array_values)*1.7+1)
-                        color = (0, 0, 0.7) if pheromone_array == 0 else (0.7, 0, 0)
-                        for row in range(pheromone_shape[0]):
-                            for col in range(pheromone_shape[1]):
-                                Color(*color, alpha[row][col])
-                                Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
-                                ## maybe numpy array Rectangle objects, oder Liste
-                                ## pheromone drawing check box neben Canvas
-
-                Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
-                Color(*colony.color)
-                for ant in colony.ants:
-                    Ellipse(pos=ant.coordinates,
-                            size=(5, 5))                
+        self.draw_pheromone()
+        self.draw_food()
+        self.draw_ants()
+        self.draw_food_life_bar()      
 
     def update_world(self, dt):
         if self.is_running:
             sim.next_epoch()
             self.update_canvas()
-           
+    
+    def draw_pheromone(self):
+        with self.canvas:
+            for colony in sim.colonies:
+                if colony.show_pheromone:
+                        pheromone_shape = colony.pheromone.pheromone_array[0].shape
+                        scale = (sim.bounds[1]//pheromone_shape[1], -sim.bounds[2]//pheromone_shape[0])
+                        for pheromone_array in (0, 1):
+                            array_values = colony.pheromone.pheromone_array[pheromone_array]
+                            alpha = array_values / (np.min(array_values)*1.7+1) if pheromone_array == 0 else array_values / (np.max(array_values)*1.7+1)
+                            color = (0, 0, 0.7) if pheromone_array == 0 else (0.7, 0, 0)
+                            for row in range(pheromone_shape[0]):
+                                for col in range(pheromone_shape[1]):
+                                    Color(*color, alpha[row][col])
+                                    Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
+
+    def draw_food(self):
+        with self.canvas:
+            for food in sim.food:
+                Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
+
+    def draw_ants(self):
+        with self.canvas:
+            for colony in sim.colonies:
+                Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
+                MDLabel(text=str(colony.food_counter), pos=(colony.coordinates[0]+35, colony.coordinates[1]+40), size=(50, 20))
+                for ant in colony.ants:
+                    Color(*colony.color)
+                    Ellipse(pos=ant.coordinates, size=(5, 5))
+                    if ant.pheromone_status == 1:
+                        Color(1, 0, 0, 1)
+                        Ellipse(pos=(ant.coordinates[0]+1.5, ant.coordinates[1]+1.5), size=(2, 2))
+    
+    def draw_food_life_bar(self):
+        with self.canvas:
+            for food in sim.food:
+                if food.show_life_bar:
+                    Color(0.5, 0.5, 0.5, 1)
+                    Rectangle(pos=(food.coordinates[0]+13, food.coordinates[1]+80-2), size=(74, 14))
+                    Color(0, 1, 0.2, 1)
+                    Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/100, 10))
+
     def transform_array(self, array):
         return array[array.shape[0]-1::-1, :].T
 
@@ -265,11 +295,16 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             ant_settings_label = MDTextField(hint_text="Step size", text=str(colony.ants[0].step_size))
             carry_label = MDTextField(hint_text="Amount to carry", text=str(colony.ants[0].amount_to_carry))
             color_label = MDTextField(hint_text="Color", text=str(colony.color))
-            show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(.75, .75))
+            show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(1.1, .9))
             pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
-            pheromone_switch = PheromoneSwitch(active=colony.show_pheromone)
+            switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
+            pheromone_switch = CustomSwitch(active=colony.show_pheromone)
+            pheromone_text = MDLabel(text="Show Pheromone Grid", pos_hint={"center_x": 1.5, "center_y": .65})
+            switch_label.add_widget(pheromone_switch)
+            switch_label.add_widget(pheromone_text)
+
             show_pheromone_label.add_widget(pheromone_grid_label)
-            show_pheromone_label.add_widget(pheromone_switch)
+            show_pheromone_label.add_widget(switch_label)
 
             self.dialog = MDDialog(
                 title='Colony Settings',
@@ -298,16 +333,24 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.dialog.open()
     
     def show_food_popup(self, food):
-        food_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
+        food_label = MDBoxLayout(orientation="horizontal", size_hint=(1.2, .9), spacing="30dp")
+        amount_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
+        switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
+        life_bar_switch = CustomSwitch(active=food.show_life_bar)
+        life_bar_text = MDLabel(text="Show Life Bar", pos_hint={"center_x": 1.5, "center_y": .4})
+        switch_label.add_widget(life_bar_switch)
+        switch_label.add_widget(life_bar_text)
+        food_label.add_widget(amount_label)
+        food_label.add_widget(switch_label)
 
         self.dialog = MDDialog(
             title='Food Settings',
             type="custom",
             content_cls=MDBoxLayout(food_label,
                                     orientation="vertical",
-                                    spacing="12dp",
                                     size_hint_y=None,
-                                    height="50dp"),
+                                    height="80dp",
+                                    width="100dp"),
             buttons=[
                 MDFlatButton(
                     text="Cancel",
@@ -315,7 +358,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 ),
                 MDFlatButton(
                     text="Apply Changes",
-                    on_release=lambda *args: self.apply_food_changes(food, food_label.text)
+                    on_release=lambda *args: self.apply_food_changes(food, amount_label.text, life_bar_switch.active)
                 ),
                 ],
         )
@@ -336,10 +379,11 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             colony.show_pheromone = new_pheromone_state
             self.dialog.dismiss()
 
-    def apply_food_changes(self, food, new_food_amount):
+    def apply_food_changes(self, food, new_food_amount, new_life_bar_state):
         new_food_amount = int(new_food_amount)
         if new_food_amount >= 0:
             food.amount_of_food = new_food_amount
+            food.show_life_bar = new_life_bar_state
             self.dialog.dismiss()
     
     def adjust_view(self, instance):
@@ -349,7 +393,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.pos = ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2)
 
 
-class PheromoneSwitch(MDSwitch):
+class CustomSwitch(MDSwitch):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.icon_active = "check"
@@ -365,7 +409,7 @@ class PheromoneSwitch(MDSwitch):
                 if not active_value
                 else (dp(24), dp(24))
             )
-            icon = "blank"
+            icon = "check"
             color = (0, 0, 0, 0)
 
             if self.icon_active and active_value:
@@ -383,11 +427,13 @@ class PheromoneSwitch(MDSwitch):
                     else self.theme_cls.text_color
                 )
 
-            if not self.active:
+            try:
                 Animation(size=size, t="out_quad", d=0.2).start(self.ids.thumb)
                 Animation(color=color, t="out_quad", d=0.2).start(
                     self.ids.thumb.ids.icon
                 )
+            except Exception:
+                pass
             
             self.set_icon(self, icon)
 
@@ -419,7 +465,41 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.theme_cls.primary_palette = "Orange"
         self.icon = "resize"
         self.root_button_anim = True
-        # self.hint_animation = True
+        self.hint_animation = True
+ 
+    def on_enter(self, instance_button) -> None:
+        """Called when the mouse cursor is over a button from the stack."""
+        if self.state == "open":
+            for widget in self.children:
+                if self.hint_animation:
+                    Animation.cancel_all(widget)
+                    for item in self.data.items():
+                        if widget.text in item:
+                            Animation(
+                                _canvas_width=widget.width + dp(24),
+                                _padding_right=self.right_pad_value
+                                if self.right_pad
+                                else 0,
+                                d=self.opening_time,
+                                t=self.opening_transition,
+                            ).start(instance_button)
+                            if (
+                                instance_button.icon
+                                == self.data[f"{widget.text}"]
+                                or instance_button.icon
+                                == self.data[f"{widget.text}"][0]
+                            ):
+                                Animation(
+                                    opacity=1,
+                                    d=self.opening_time,
+                                    t=self.opening_transition,
+                                ).start(widget)
+                            else:
+                                Animation(
+                                    opacity=0, d=0.1, t=self.opening_transition
+                                ).start(widget)
+                    Animation.cancel_all(widget)
+        self.close_stack()
 
 
 class StartStopButton(MDFillRoundFlatButton):
@@ -495,6 +575,7 @@ class ButtonWidget(BoxLayout):
         size_button.data = {f"{size[1][0]}x{size[1][1]}": [size[0],
                                                      "on_press", lambda btn, size=size: self.change_border_size(size[1]),
                                                      "on_release", lambda instance: size_button.close_stack(),
+                                                     "on_mouse_over", size_button.on_enter,
                                                      "text", size[1]] for size in sizes.items()}
 
         food_colony_layout = BoxLayout(orientation='horizontal', spacing=10, padding=0)
@@ -551,7 +632,7 @@ class ButtonWidget(BoxLayout):
             with self.simulation_widget.canvas:
                 Image(source="../images/apple.png", pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
             self.simulation_widget.unbind(on_touch_down=self.place_food)
-            sim.add_food(Food(size=(100, 100), coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), amount_of_food=1000))
+            sim.add_food(Food(size=(100, 100), coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), amount_of_food=100))
 
     def place_colony(self, instance, touch):
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
