@@ -380,12 +380,34 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.dialog.dismiss()
 
     def apply_food_changes(self, food, new_food_amount, new_life_bar_state):
-        new_food_amount = int(new_food_amount)
-        if new_food_amount >= 0:
-            food.amount_of_food = new_food_amount
-            food.show_life_bar = new_life_bar_state
-            self.dialog.dismiss()
-    
+        try:
+            new_food_amount = int(new_food_amount)
+            if new_food_amount >= 0:
+                food.amount_of_food = new_food_amount
+                food.show_life_bar = new_life_bar_state
+                self.dialog.dismiss()
+            else:
+                self.show_error_dialog("Please enter a valid integer for food amount.\nThe amount of food must be >= 0.")
+        except ValueError:
+                self.show_error_dialog("Please enter a valid integer for food amount.")
+
+    def show_error_dialog(self, error_message):
+        error_layout = MDBoxLayout(orientation="vertical", spacing="12dp", size_hint_y=None)
+        error_layout.add_widget(MDLabel(text=error_message))
+
+        error_dialog = MDDialog(
+            title="Error",
+            type="custom",
+            content_cls=error_layout,
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    on_release=lambda *args: error_dialog.dismiss()
+                ),
+            ],
+        )
+        error_dialog.open()
+
     def adjust_view(self, instance):
         if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2):
             return False
