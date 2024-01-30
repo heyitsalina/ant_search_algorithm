@@ -365,12 +365,17 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.dialog.open()
     
     def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_pheromone_grid, new_pheromone_state):
-        new_ant_count = int(new_ant_count)
-        new_amount_to_carry = int(new_amount_to_carry)
-        new_step_size = int(new_step_size)
-        new_color = ast.literal_eval(new_color)
-        new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
-        if new_ant_count >= 0:
+        try:
+            new_ant_count = int(new_ant_count)
+            new_amount_to_carry = int(new_amount_to_carry)
+            new_step_size = int(new_step_size)
+            new_color = ast.literal_eval(new_color)
+            new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
+
+            if new_ant_count < 0:
+                self.show_error_dialog("Number of ants must be non-negative!")
+                return
+
             colony.amount = new_ant_count
             colony.ants = []
             colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry)
@@ -378,6 +383,12 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             colony.pheromone = Pheromone(grid_shape=new_pheromone_grid)
             colony.show_pheromone = new_pheromone_state
             self.dialog.dismiss()
+
+        except ValueError:
+            self.show_error_dialog("Please enter valid integer values.")
+
+        except Exception as e:
+            self.show_error_dialog(f"Error: {str(e)}")
 
     def apply_food_changes(self, food, new_food_amount, new_life_bar_state):
         try:
