@@ -414,7 +414,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         if sound:
             sound.play()
         error_layout = MDBoxLayout(orientation="vertical", spacing="12dp", size_hint_y=None)
-        error_layout.add_widget(MDLabel(text=error_message))
+        error_layout.add_widget(MDLabel(text=error_message, theme_text_color="Error"))
 
         error_dialog = MDDialog(
             title="Error",
