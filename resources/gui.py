@@ -606,11 +606,8 @@ class ButtonWidget(BoxLayout):
         super(ButtonWidget, self).__init__(**kwargs)
         self.simulation_widget = simulation_widget
 
-        self.food_button = FoodButton()
-        self.colony_button = ColonyButton()
-
-        self.food_button.bind(on_press=self.on_food_button_press)
-        self.colony_button.bind(on_press=self.on_colony_button_press)
+        self.food_button = FoodButton(on_press=self.play_button_sound, on_release=self.on_food_button_press)
+        self.colony_button = ColonyButton(on_press=self.play_button_sound, on_release=self.on_colony_button_press)
 
         sizes = {"size-xxl": (2560, 1440), "size-xl": (1920, 1080), "size-l": (1080, 720), "size-m": (720, 480), "size-s": (480, 360)}
 
@@ -626,11 +623,11 @@ class ButtonWidget(BoxLayout):
         food_colony_layout.add_widget(self.food_button)
         food_colony_layout.add_widget(self.colony_button)
 
-        self.start_stop_button = StartStopButton(on_press=self.simulation_widget.toggle_simulation)
+        self.start_stop_button = StartStopButton(on_press=self.play_button_sound, on_release=self.simulation_widget.toggle_simulation)
 
-        clear_canvas_button = ClearCanvasButton(on_press=self.on_clear_button_press)
+        clear_canvas_button = ClearCanvasButton(on_press=self.play_button_sound, on_release=self.on_clear_button_press)
 
-        adjust_view_button = AdjustViewButton(on_press=lambda instance: simulation_widget.adjust_view(instance))
+        adjust_view_button = AdjustViewButton(on_press=self.play_button_sound, on_release=lambda instance: simulation_widget.adjust_view(instance))
 
         buttons_layout = BoxLayout(orientation='horizontal', spacing=100, padding=0, size_hint_y=None)
         buttons_layout.add_widget(food_colony_layout)
@@ -689,6 +686,10 @@ class ButtonWidget(BoxLayout):
             sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=100, size=(100, 100),
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
 
+    def play_button_sound(self, *args):
+        sound = SoundLoader.load("../sounds/click.mp3")
+        if sound:
+            sound.play()
 
 if __name__ == "__main__":
     config
