@@ -21,6 +21,7 @@ from kivy.graphics import Rectangle, Color, Ellipse
 from kivy.graphics.transformation import Matrix
 from kivy.graphics import Line
 from kivy.core.window import Window
+from kivy.core.audio import SoundLoader
 from kivy.clock import Clock
 from kivy.metrics import dp
 from resources.simulation import Simulation
@@ -409,6 +410,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 self.show_error_dialog("Please enter a valid integer for food amount.")
 
     def show_error_dialog(self, error_message):
+        sound = SoundLoader.load("../sounds/error.mp3")
+        if sound:
+            sound.play()
         error_layout = MDBoxLayout(orientation="vertical", spacing="12dp", size_hint_y=None)
         error_layout.add_widget(MDLabel(text=error_message))
 
