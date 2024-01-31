@@ -373,7 +373,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
 
             if new_ant_count < 0:
-                self.show_error_dialog("Number of ants must be non-negative!")
+                self.show_error_dialog("Number of ants must be non-negative.")
+                return
+            if new_step_size < 0: 
+                self.show_error_dialog("Step size must be non-negative.")
+                return
+            if new_amount_to_carry < 0:
+                self.show_error_dialog("Amount to carry must be non-negative.")
                 return
 
             colony.amount = new_ant_count
