@@ -642,6 +642,9 @@ class ButtonWidget(BoxLayout):
         self.colony_button_pressed = False
 
     def change_border_size(self, new_border_size):
+        if self.simulation_widget.is_running:
+            self.start_stop_button.trigger_action(0)
+            
         sim.bounds = (
             0,
             new_border_size[0],
