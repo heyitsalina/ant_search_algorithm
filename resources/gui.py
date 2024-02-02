@@ -7,6 +7,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.screen import MDScreen
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
+from kivymd.uix.button import MDIconButton
 from kivymd.uix.button import MDFloatingActionButton
 from kivymd.uix.button import MDFloatingActionButtonSpeedDial
 from kivymd.uix.button import MDFillRoundFlatButton
@@ -76,6 +77,7 @@ class GUI(MDApp):
         button_widget = ButtonWidget(simulation_widget)
         
         background.add_widget(simulation_widget)
+        background.add_widget(MDIconButton(icon="cog-outline", pos_hint={"right": 1, "top": 0.98}, theme_text_color="Custom", text_color=(0, 0, 0, 1), icon_size=60))
         root.add_widget(background)
         root.add_widget(button_widget)
 
@@ -102,7 +104,7 @@ class GUI(MDApp):
         Window.set_system_cursor('hand')
 
     def on_window_resize(self, *args):
-        Clock.schedule_interval(lambda instance: self.root.children[1].children[0].adjust_view(instance), 0.2)
+        Clock.schedule_interval(lambda instance: self.root.children[1].children[1].adjust_view(instance), 0.2)
 
 
 class ResizableDraggablePicture(Scatter):
@@ -434,7 +436,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2):
             return False
         self.scale = 1
-        self.pos = ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2)
+        self.pos = ((self.width - sim.bounds[1])//2 + 60, (self.height - sim.bounds[2])//2)
 
 
 class CustomSwitch(MDSwitch):
@@ -693,6 +695,7 @@ class ButtonWidget(BoxLayout):
         sound = SoundLoader.load("../sounds/click.mp3")
         if sound:
             sound.play()
+
 
 if __name__ == "__main__":
     config
