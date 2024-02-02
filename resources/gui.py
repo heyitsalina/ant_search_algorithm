@@ -77,7 +77,7 @@ class GUI(MDApp):
         button_widget = ButtonWidget(simulation_widget)
         
         background.add_widget(simulation_widget)
-        background.add_widget(MDIconButton(icon="cog-outline", pos_hint={"right": 1, "top": 0.98}, theme_text_color="Custom", text_color=(0, 0, 0, 1), icon_size=60))
+        background.add_widget(SettingsButton())
         root.add_widget(background)
         root.add_widget(button_widget)
 
@@ -105,6 +105,16 @@ class GUI(MDApp):
 
     def on_window_resize(self, *args):
         Clock.schedule_interval(lambda instance: self.root.children[1].children[1].adjust_view(instance), 0.2)
+
+
+class SettingsButton(MDIconButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.icon = "cog-outline"
+        self.pos_hint = {"right": 1, "top": 0.98}
+        self.theme_text_color = "Custom"
+        self.text_color = (0, 0, 0, 1)
+        self.icon_size = 60
 
 
 class ResizableDraggablePicture(Scatter):
