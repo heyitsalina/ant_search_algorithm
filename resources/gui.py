@@ -118,7 +118,7 @@ class SettingsButton(MDIconButton):
         self.icon_size = 60
     
     def on_press(self, *args):
-        settings_content = SettingsContent(orientation="vertical", spacing="8dp", size_hint_y=None)
+        settings_content = MDBoxLayout(orientation="vertical", spacing="8dp", size_hint_y=None)
         sound_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
         sound_layout.add_widget(MDLabel(text="Sound"))
         sound_switch = CustomSwitch(active=self.parent.sound, pos_hint={"center_x": 1.5, "center_y": 0.4})
@@ -143,8 +143,6 @@ class SettingsButton(MDIconButton):
         self.parent.sound = new_sound_status
         self.settings_dialog.dismiss()
 
-class SettingsContent(MDBoxLayout):
-    pass
 
 class ResizableDraggablePicture(Scatter):
     def on_touch_down(self, touch):
@@ -351,6 +349,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.dialog = MDDialog(
                 title='Colony Settings',
                 type="custom",
+                size_hint=[0.35, None],
                 content_cls=MDBoxLayout(ants_label,
                                         ant_settings_label,
                                         carry_label,
@@ -359,8 +358,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                                         orientation="vertical",
                                         spacing="12dp",
                                         size_hint_y=None,
-                                        height="350dp",
-                                        width="100dp"),
+                                        height="350dp"),
                 buttons=[
                     MDFlatButton(
                         text="Cancel",
@@ -388,11 +386,11 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.dialog = MDDialog(
             title='Food Settings',
             type="custom",
+            size_hint=[0.35, None],
             content_cls=MDBoxLayout(food_label,
                                     orientation="vertical",
                                     size_hint_y=None,
-                                    height="80dp",
-                                    width="100dp"),
+                                    height="80dp"),
             buttons=[
                 MDFlatButton(
                     text="Cancel",
