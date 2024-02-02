@@ -470,10 +470,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         error_dialog.open()
 
     def adjust_view(self, instance):
-        if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2, (self.height - sim.bounds[2])//2):
+        if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2 + 45, (self.height - sim.bounds[2])//2):
             return False
         self.scale = 1
-        self.pos = ((self.width - sim.bounds[1])//2 + 60, (self.height - sim.bounds[2])//2)
+        self.pos = ((self.width - sim.bounds[1])//2 + 45, (self.height - sim.bounds[2])//2)
 
 
 class CustomSwitch(MDSwitch):
