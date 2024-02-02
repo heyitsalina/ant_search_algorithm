@@ -726,7 +726,6 @@ class ButtonWidget(BoxLayout):
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
 
     def play_button_sound(self, *args):
-        print(self.parent.children)
         if self.parent.children[1].sound:
             sound = SoundLoader.load("../sounds/click.mp3")
             if sound:
