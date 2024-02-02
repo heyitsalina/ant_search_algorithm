@@ -118,15 +118,18 @@ class SettingsButton(MDIconButton):
         self.icon_size = 60
     
     def on_press(self, *args):
-        sound_layout = MDBoxLayout(orientation="horizontal", spacing=12, size_hint_y=None)
+        settings_content = SettingsContent(orientation="vertical", spacing="8dp", size_hint_y=None)
+        sound_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
         sound_layout.add_widget(MDLabel(text="Sound"))
-        sound_switch = CustomSwitch(active=self.parent.sound, pos_hint={"center_x": .5, "center_y": .4})
+        sound_switch = CustomSwitch(active=self.parent.sound, pos_hint={"center_x": 1.5, "center_y": 0.4})
         sound_layout.add_widget(sound_switch)
+        settings_content.add_widget(sound_layout)
 
         self.settings_dialog = MDDialog(
             title="Settings",
             type="custom",
-            content_cls=sound_layout,
+            size_hint=[0.2, 0.1],
+            content_cls=settings_content,
             buttons=[
                 MDFlatButton(
                     text="Apply Changes",
@@ -140,6 +143,8 @@ class SettingsButton(MDIconButton):
         self.parent.sound = new_sound_status
         self.settings_dialog.dismiss()
 
+class SettingsContent(MDBoxLayout):
+    pass
 
 class ResizableDraggablePicture(Scatter):
     def on_touch_down(self, touch):
