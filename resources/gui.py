@@ -72,6 +72,7 @@ class GUI(MDApp):
         with background.canvas:
             Color(0.64, 0.43, 0.25, 1)
             Rectangle(pos=(0, 0), size=(1920, 1080))
+        background.sound = True
 
         simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
@@ -115,6 +116,29 @@ class SettingsButton(MDIconButton):
         self.theme_text_color = "Custom"
         self.text_color = (0, 0, 0, 1)
         self.icon_size = 60
+    
+    def on_press(self, *args):
+        sound_layout = MDBoxLayout(orientation="horizontal", spacing=12, size_hint_y=None)
+        sound_layout.add_widget(MDLabel(text="Sound"))
+        sound_switch = CustomSwitch(active=self.parent.sound, pos_hint={"center_x": .5, "center_y": .4})
+        sound_layout.add_widget(sound_switch)
+
+        self.settings_dialog = MDDialog(
+            title="Settings",
+            type="custom",
+            content_cls=sound_layout,
+            buttons=[
+                MDFlatButton(
+                    text="Apply Changes",
+                    on_release=lambda *args: self.apply_changes(sound_switch.active)
+                ),
+            ],
+        )
+        self.settings_dialog.open()
+
+    def apply_changes(self, new_sound_status):
+        self.parent.sound = new_sound_status
+        self.settings_dialog.dismiss()
 
 
 class ResizableDraggablePicture(Scatter):
@@ -702,9 +726,11 @@ class ButtonWidget(BoxLayout):
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
 
     def play_button_sound(self, *args):
-        sound = SoundLoader.load("../sounds/click.mp3")
-        if sound:
-            sound.play()
+        print(self.parent.children)
+        if self.parent.children[1].sound:
+            sound = SoundLoader.load("../sounds/click.mp3")
+            if sound:
+                sound.play()
 
 
 if __name__ == "__main__":
