@@ -668,7 +668,7 @@ class ButtonWidget(BoxLayout):
 
         self.start_stop_button = StartStopButton(on_press=self.play_button_sound, on_release=self.simulation_widget.toggle_simulation)
 
-        clear_canvas_button = ClearCanvasButton(on_press=self.play_button_sound, on_release=self.on_clear_button_press)
+        clear_canvas_button = ClearCanvasButton(on_release=self.on_clear_button_press)
 
         adjust_view_button = AdjustViewButton(on_press=self.play_button_sound, on_release=lambda instance: simulation_widget.adjust_view(instance))
 
@@ -710,6 +710,8 @@ class ButtonWidget(BoxLayout):
     def on_clear_button_press(self, instance):
         if self.simulation_widget.is_running:
             self.start_stop_button.trigger_action(0)
+        else:
+            self.play_button_sound()
         self.simulation_widget.clear_canvas(instance)
         
     def place_food(self, instance, touch):
