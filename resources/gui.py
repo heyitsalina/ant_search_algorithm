@@ -125,23 +125,27 @@ class SettingsButton(MDIconButton):
         sound_layout.add_widget(sound_switch)
         settings_content.add_widget(sound_layout)
 
-        self.settings_dialog = MDDialog(
+        self.dialog = MDDialog(
             title="Settings",
             type="custom",
-            size_hint=[0.2, 0.1],
+            size_hint=[0.2, None],
             content_cls=settings_content,
             buttons=[
+                MDFlatButton(
+                    text="Cancel",
+                    on_release=lambda *args: self.dialog.dismiss()
+                ),
                 MDFlatButton(
                     text="Apply Changes",
                     on_release=lambda *args: self.apply_changes(sound_switch.active)
                 ),
             ],
         )
-        self.settings_dialog.open()
+        self.dialog.open()
 
     def apply_changes(self, new_sound_status):
         self.parent.sound = new_sound_status
-        self.settings_dialog.dismiss()
+        self.dialog.dismiss()
 
 
 class ResizableDraggablePicture(Scatter):
