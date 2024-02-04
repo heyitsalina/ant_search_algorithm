@@ -377,7 +377,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.dialog.open()
     
     def show_food_popup(self, food):
-        food_label = MDBoxLayout(orientation="horizontal", size_hint=(1.2, .9), spacing="30dp")
+        food_label = MDBoxLayout(orientation="horizontal", size_hint=(1, .9), spacing="30dp")
         amount_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
         switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
         life_bar_switch = CustomSwitch(active=food.show_life_bar)
