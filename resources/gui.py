@@ -713,6 +713,7 @@ class ButtonWidget(BoxLayout):
         self.simulation_widget.clear_canvas(instance)
         
     def place_food(self, instance, touch):
+        self.play_place_sound()
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
         
         if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
@@ -722,6 +723,7 @@ class ButtonWidget(BoxLayout):
             sim.add_food(Food(size=(100, 100), coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), amount_of_food=100))
 
     def place_colony(self, instance, touch):
+        self.play_place_sound()
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
 
         if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
@@ -735,6 +737,12 @@ class ButtonWidget(BoxLayout):
     def play_button_sound(self, *args):
         if self.parent.children[1].sound:
             sound = SoundLoader.load("../sounds/click.mp3")
+            if sound:
+                sound.play()
+    
+    def play_place_sound(self, *args):
+        if self.parent.children[1].sound:
+            sound = SoundLoader.load("../sounds/place.mp3")
             if sound:
                 sound.play()
 
