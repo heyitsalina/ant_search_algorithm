@@ -35,12 +35,18 @@ def test_is_near_target():
 
 def test_try_carry_food():
     food = Food(size=10, coordinates=(150, 150), amount_of_food=100)
-    ant = Ant(coordinates=(140, 140), amount_to_carry=20)  # Near the food
+    ant = Ant(coordinates=(150+45, 150+45), amount_to_carry=20)  # Near the food
     assert ant.try_carry_food(food), "Ant should be able to try to carry food when near it and food is available"
 
-def test_carry_food():
 
-    pass
+def test_carry_food():
+    food = Food(size=10, coordinates=(150, 150), amount_of_food=100)
+    ant = Ant(coordinates=(150+45, 150+45), amount_to_carry=20)
+    ant.try_carry_food(food)  
+    ant.carry_food(food)
+    assert ant.pheromone_status == 1, "Ant's pheromone status should be 1 after carrying food"
+    assert food.amount_of_food < 100, "Food amount should decrease after ant carries food"
+    assert ant.ant_carries > 0, "Ant should be carrying some amount of food"
 
 def test_try_drop_food():
 
@@ -55,3 +61,5 @@ if __name__ == "__main__":
     test_move()
     test_is_near_target()
     test_switch_pheromone()
+    test_try_carry_food()
+    test_carry_food()
