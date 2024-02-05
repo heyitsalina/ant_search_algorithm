@@ -8,5 +8,5 @@ def test_food_initialization():
     assert food.size == 10 
     assert food.coordinates == (100, 100)
     assert food.amount_of_food == 100
-    assert food.show_life_bar == True
+    assert food.show_life_bar is True
 
