@@ -553,8 +553,11 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
         self.icon = "resize"
+        self.label_text_color = "black"
+        self.label_bg_color = "orange"
+        self.label_radius = 12
         self.root_button_anim = True
-        self.hint_animation = True
+        # self.hint_animation = True
  
     def on_enter(self, instance_button) -> None:
         """Called when the mouse cursor is over a button from the stack."""
@@ -658,11 +661,10 @@ class ButtonWidget(BoxLayout):
 
         size_button = SizeButton()
 
-        size_button.data = {f"{size[1][0]}x{size[1][1]}": [size[0],
+        size_button.data = {f"  {size[1][0]}x{size[1][1]}   ": [size[0],
                                                      "on_press", lambda btn, size=size: self.change_border_size(size[1]),
                                                      "on_release", lambda instance: size_button.close_stack(),
-                                                     "on_mouse_over", size_button.on_enter,
-                                                     "text", size[1]] for size in sizes.items()}
+                                                     "on_mouse_over", size_button.on_enter,] for size in sizes.items()}
 
         food_colony_layout = BoxLayout(orientation='horizontal', spacing=10, padding=0)
         food_colony_layout.add_widget(self.food_button)
