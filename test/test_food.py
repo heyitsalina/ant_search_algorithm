@@ -3,7 +3,7 @@ from resources.food import *
 
 
 def test_food_initialization():
-    food = Food(size=10, coordinates=(100,100), amount_of_food=100, show_life_bar= True)
+    food = Food(size=10, coordinates=(100,100), amount_of_food=100)
 
     assert food.size == 10 
     assert food.coordinates == (100, 100)
