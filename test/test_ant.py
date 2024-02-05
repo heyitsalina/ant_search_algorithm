@@ -42,7 +42,7 @@ def test_try_carry_food():
 
 def test_carry_food():
     food = Food(size=10, coordinates=(150, 150), amount_of_food=100)
-    ant = Ant(coordinates=(150+45, 150+45), amount_to_carry=20)
+    ant = Ant(coordinates=(150, 150), amount_to_carry=20)
     ant.try_carry_food(food)  
     ant.carry_food(food)
     assert ant.pheromone_status == 1, "Ant's pheromone status should be 1 after carrying food"
@@ -57,7 +57,15 @@ def test_try_drop_food():
 
 
 def test_drop_food():
-    pass
+    colony = Colony(grid_pheromone_shape=(100, 100), amount=1, size=10, coordinates=(100, 100), color="red")
+    ant = Ant(coordinates=(100, 100), amount_to_carry=20)  
+    ant.pheromone_status = 1  # Assume ant is carrying food
+    ant.ant_carries = 5  # Assume ant is carrying a maximum load of food
+    ant.drop_food(colony)
+    assert colony.food_counter == 5, "Colony's food counter should increase after ant drops food"
+    assert ant.pheromone_status == -1, "Ant's pheromone status should be -1 after dropping food"
+    assert ant.ant_carries == 0, "Ant should not be carrying food after dropping it at the colony"
+
 
 
 if __name__ == "__main__":
@@ -66,3 +74,5 @@ if __name__ == "__main__":
     test_switch_pheromone()
     test_try_carry_food()
     test_carry_food()
+    test_try_drop_food()
+    test_drop_food()
