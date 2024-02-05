@@ -32,7 +32,20 @@ def test_is_near_target():
     result = ant.is_near_target((100, 100))
     assert result is None, "Should return None when ant is outside radius"
 
+def test_try_carry_food():
+
+    pass
+
 def test_carry_food():
+
+    pass
+
+def test_try_drop_food():
+
+    pass
+
+def test_drop_food():
+
     pass
 
 
