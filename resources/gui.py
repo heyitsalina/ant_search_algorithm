@@ -249,7 +249,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 max_y - min_y + 5
             ), width=1)
             pos = (min_x, min_y)
-            Image(source="../images/background.jpg", pos=pos, size=(max_x-min_x+5, max_y-min_y+5), allow_stretch = True, keep_ratio=False)
+            Image(source="../images/background.jpg", pos=pos, size=(max_x-min_x+5, max_y-min_y+5), allow_stretch=True, keep_ratio=False)
 
     def update_canvas(self):
         self.canvas.clear()
@@ -557,7 +557,6 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.label_bg_color = "orange"
         self.label_radius = 12
         self.root_button_anim = True
-        # self.hint_animation = True
  
     def on_enter(self, instance_button) -> None:
         """Called when the mouse cursor is over a button from the stack."""
