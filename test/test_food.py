@@ -10,3 +10,7 @@ def test_food_initialization():
     assert food.amount_of_food == 100
     assert food.show_life_bar is True
 
+
+
+if __name__ == "__main__":
+    test_food_initialization()
