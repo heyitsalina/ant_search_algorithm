@@ -1,4 +1,4 @@
-![ant_matrix](ant_matrix1.jpeg)
+![ant_matrix](images/ant_matrix1.jpeg)
 
 # Ant Simulation Project
 
