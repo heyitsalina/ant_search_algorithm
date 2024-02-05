@@ -2,25 +2,27 @@
 
 # Ant Simulation Project
 
-![GitHub repo size](https://img.shields.io/github/repo-size/heyitsalina/ant_search_algorithm)![GitHub License](https://img.shields.io/github/license/heyitsalina/ant_search_algorithm)![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/heyitsalina/ant_search_algorithm/main.yml)
+![GitHub repo size](https://img.shields.io/github/repo-size/heyitsalina/ant_search_algorithm) ![GitHub License](https://img.shields.io/github/license/heyitsalina/ant_search_algorithm) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/heyitsalina/ant_search_algorithm/main.yml)
 
-Welcome to our Ant-Simulation-Project. Here you can learn more about ants and how they find food. We give you a easy-to-follow instruction on how to run a simulation yourself.
+Welcome to our Ant-Simulation-Project, an interactive simulation of an ants food search. This project uses algorithms to simulate how ants find food and navigate through their environment. Whether you're a biology enthusiast, an educator, or just curious, our easy-to-follow instructions will help you run your own simulations and discover the intricacies of ant behavior.
 
 ## Installation
 
-1. Firstly, you need to clone this repository
+To get started, follow these steps:
+
+1. Clone the repository
 
 ```bash
 git clone https://github.com/heyitsalina/ant_search_algorithm.git
 ```
 
-2. Secondly navigate to the Project directory
+2. Navigate to the Project directory
 
 ```bash
 cd ant_search_algorithm/
 ```
 
-3. Thirdly, you need to install the dependencies
+3. Install the dependencies
 
 ```bash
 pip install .
@@ -28,7 +30,7 @@ pip install .
 
 ## Run Locally
 
-Run the simulation from the Project directory
+To run the simulation from the Project directory, execute:
 
 ```bash
 python resouces/gui.py
@@ -36,14 +38,17 @@ python resouces/gui.py
 
 ## Demo
 
-If you started the Simulation there should be a GUI like this.
+If you started the Simulation the GUI should look like this
 
-LINK TO PICTURE
+PUT A PICTURE OF GUI HERE?
 
-You can place the Food and the Ant-Colonies on the map by clicking the food/colony and placing it at the desired location.
-Double Clicking the placed Food or Colony Object you get additional Parameters to change. Explore :)
+- **Interactivity:** Place food and ant colonies on the map with simple clicks, and adjust their parameters with a double-click to tailor the simulation to your curiosity. Explore :)
+- **Control:** Use the **start** and **stop** buttons to run and stop the simulation.
+- **Reset:** Clear your current simulation with the **Clear** button to start fresh anytime.
 
-With Start you can Run the simulation and Stop it. If you had enough you can delete you current simulation on clear.
+## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details.
 
 ## Authors
 
