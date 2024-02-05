@@ -2,6 +2,7 @@ import pytest
 import numpy as np
 from resources.ant import Ant
 from resources.food import Food
+from resources.colony import Colony
 
 ant = Ant(coordinates=(100.0, 100.0),
           amount_to_carry=20)
@@ -49,11 +50,13 @@ def test_carry_food():
     assert ant.ant_carries > 0, "Ant should be carrying some amount of food"
 
 def test_try_drop_food():
+    colony = Colony(grid_pheromone_shape=(100, 100), amount=1, size=10, coordinates=(100, 100), color="red")
+    ant = Ant(coordinates=(100+45, 100+45), amount_to_carry=20)  # Ant is near the colony
+    ant.pheromone_status = 1  # Assume ant is carrying food
+    assert ant.try_drop_food(colony), "Ant should be able to try to drop food when near the colony"
 
-    pass
 
 def test_drop_food():
-
     pass
 
 
