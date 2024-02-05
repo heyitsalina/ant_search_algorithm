@@ -51,7 +51,7 @@ def test_carry_food():
 
 def test_try_drop_food():
     colony = Colony(grid_pheromone_shape=(100, 100), amount=1, size=10, coordinates=(100, 100), color="red")
-    ant = Ant(coordinates=(100+45, 100+45), amount_to_carry=20)  # Ant is near the colony
+    ant = Ant(coordinates=(100 +45, 100+45), amount_to_carry=20)  # Ant is near the colony
     ant.pheromone_status = 1  # Assume ant is carrying food
     assert ant.try_drop_food(colony), "Ant should be able to try to drop food when near the colony"
 
