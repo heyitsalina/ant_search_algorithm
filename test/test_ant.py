@@ -1,6 +1,7 @@
 import pytest
 import numpy as np
 from resources.ant import Ant
+from resources.food import Food
 
 ant = Ant(coordinates=(100.0, 100.0),
           amount_to_carry=20)
@@ -33,8 +34,9 @@ def test_is_near_target():
     assert result is None, "Should return None when ant is outside radius"
 
 def test_try_carry_food():
-
-    pass
+    food = Food(size=10, coordinates=(150, 150), amount_of_food=100)
+    ant = Ant(coordinates=(140, 140), amount_to_carry=20)  # Near the food
+    assert ant.try_carry_food(food), "Ant should be able to try to carry food when near it and food is available"
 
 def test_carry_food():
 
