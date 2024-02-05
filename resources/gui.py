@@ -176,8 +176,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         size of the simulation canvas
     pos : tuple
         position of the canvas
-    popup : Popup()
-        a simple Kivy popup that shows settings about an object when it's double clicked
+    dialog : MDDialog()
+        a dialog window that shows settings about an object when it's double clicked
 
     Methods
     -------
@@ -211,6 +211,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         apply changes made in the ant popup to the ants
     apply_food_changes():
         apply changes made in the food popup to the food objects
+    show_error_dialog():
+        show the error dialog
     adjust_view():
         change the view back to the original
     """
