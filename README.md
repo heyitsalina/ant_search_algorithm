@@ -40,7 +40,7 @@ python resouces/gui.py
 
 If you started the Simulation the GUI should look like this
 
-PUT A PICTURE OF GUI HERE?
+![image](https://github.com/heyitsalina/ant_search_algorithm/assets/119052351/802b5841-10d0-41eb-a50d-93b439a854bc)
 
 - **Interactivity:** Place food and ant colonies on the map with simple clicks, and adjust their parameters with a double-click to tailor the simulation to your curiosity. Explore :)
 - **Control:** Use the **start** and **stop** buttons to run and stop the simulation.
