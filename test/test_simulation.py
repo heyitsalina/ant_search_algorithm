@@ -8,11 +8,11 @@ def test_next_epoch():
     for _ in range(5):
         sim.next_epoch()
 
-# test initialization
+
 def test_simulation_initialisation():
     sim = Simulation()
 
-    assert sim.food == [] 
+    assert sim.food == []
     assert sim.colonies == []
     assert sim.running is False
     assert sim.bounds == ()

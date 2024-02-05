@@ -1,5 +1,5 @@
 import pytest
-from resources.food import *
+from resources.food import Food
 
 
 def test_food_initialization():
