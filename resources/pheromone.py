@@ -24,7 +24,7 @@ class Pheromone:
                 Reduces the pheromone strength in the tensor after each epoch.
         """
 
-        self.pheromone_array = np.zeros((2, grid_shape[1], grid_shape[0]))
+        self.pheromone_array = np.zeros((2, grid_shape[0], grid_shape[1]))
 
 
     def leave_pheromone(self, pos, pheromone_status):
@@ -47,7 +47,7 @@ class Pheromone:
         
         #Add pheromones status in the corresponding position
 
-        self.pheromone_array[depth, pos[1], pos[0]] += pheromone_status
+        self.pheromone_array[depth, pos[0], pos[1]] += pheromone_status
 
     
     def get_pheromone_level(self, pos):
