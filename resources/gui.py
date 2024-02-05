@@ -203,14 +203,14 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         clear the canvas
     on_touch_down():
         notice double clicks
-    show_colony_popup():
-        show a popup to change the colony settings
-    show_food_popup():
-        show a popup to change the food settings
+    show_colony_dialog():
+        show a dialog to change the colony settings
+    show_food_dialog():
+        show a dialog to change the food settings
     apply_ant_changes():
-        apply changes made in the ant popup to the ants
+        apply changes made in the ant dialog to the ants
     apply_food_changes():
-        apply changes made in the food popup to the food objects
+        apply changes made in the food dialog to the food objects
     show_error_dialog():
         show the error dialog
     adjust_view():
@@ -324,19 +324,19 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 colony_x, colony_y = colony.coordinates
                 if colony_x < transformed_touch[0] < colony_x + 100 and \
                    colony_y < transformed_touch[1] < colony_y + 100:
-                    self.show_colony_popup(colony)
+                    self.show_colony_dialog(colony)
                     return True 
 
             for food in sim.food:
                 food_x, food_y = food.coordinates
                 if food_x < transformed_touch[0] < food_x + 100 and \
                    food_y < transformed_touch[1] < food_y + 100:
-                    self.show_food_popup(food)
+                    self.show_food_dialog(food)
                     return True  
 
         return super(SimulationWidget, self).on_touch_down(touch)
 
-    def show_colony_popup(self, colony):
+    def show_colony_dialog(self, colony):
             ants_label = MDTextField(hint_text="Number of ants", text=str(len(colony.ants)))
             ant_settings_label = MDTextField(hint_text="Step size", text=str(colony.ants[0].step_size))
             carry_label = MDTextField(hint_text="Amount to carry", text=str(colony.ants[0].amount_to_carry))
@@ -378,7 +378,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             )
             self.dialog.open()
     
-    def show_food_popup(self, food):
+    def show_food_dialog(self, food):
         food_label = MDBoxLayout(orientation="horizontal", size_hint=(1, .9), spacing="30dp")
         amount_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
         switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
