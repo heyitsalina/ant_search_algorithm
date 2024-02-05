@@ -30,10 +30,10 @@ pip install .
 
 ## Run Locally
 
-To run the simulation from the Project directory, execute:
+To run the simulation from the project directory, execute:
 
 ```bash
-python resouces/gui.py
+python resources/gui.py
 ```
 
 ## Demo
