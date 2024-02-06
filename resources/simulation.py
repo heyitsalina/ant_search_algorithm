@@ -8,13 +8,13 @@ class Simulation:
 
     Attributes
     ----------
-    food : list
+    food(list):
         A list containing the Food objects.
-    colonies : list
+    colonies(list):
         A list containing the colonie objects.
-    running : bool
+    running(bool):
         Indicates if the simulation in running.
-    bounds: Tuple
+    bounds(tuple):
         defines the spatial boundaries of the simulation area (min_x, max_x, min_y, max_y)
     
     Methods
@@ -30,6 +30,7 @@ class Simulation:
     check_future_position():    
         Adjusts the given position to ensure it stays within the simulation bounds.
     """
+    
     def __init__(self):
         self.food = []
         self.colonies = []
@@ -74,7 +75,8 @@ class Simulation:
 
         Returns
         -------
-        np.array: The adjusted position within the simulation bounds.
+        np.array:
+            The adjusted position within the simulation bounds.
         """
         min_x, max_x, min_y, max_y = self.bounds
         x, y = future_position
@@ -97,13 +99,15 @@ class Simulation:
 
         Args
         -------
-            ant_coordinates (tuple): The x and y coordinates of the ant's position.
-            colony (Colony): The colony object containing the pheromone grid.
+            ant_coordinates (tuple):
+                The x and y coordinates of the ant's position.
+            colony (Colony):
+                The colony object containing the pheromone grid.
 
         Returns
         -------
-            tuple: A tuple containing the row and column indices in the
-            pheromone grid that correspond to the ant's position.
+            tuple:  
+                A tuple containing the row and column indices in the pheromone grid that correspond to the ant's position.
         """
         
         width_board = self.bounds[1] - self.bounds[0]
