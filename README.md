@@ -33,7 +33,7 @@ pip install .
 To run the simulation from the project directory, execute:
 
 ```bash
-python resources/gui.py
+python -m resources.gui
 ```
 
 ## Demo
