@@ -170,13 +170,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
 
     Attributes
     ----------
-    is_running : bool
+    is_running(bool):
         indicates whether the simulation is running
-    size : tuple
+    size(tuple):
         size of the simulation canvas
-    pos : tuple
+    pos(tuple):
         position of the canvas
-    dialog : MDDialog()
+    dialog(MDDialog):
         a dialog window that shows settings about an object when it's double clicked
 
     Methods
@@ -559,7 +559,9 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.root_button_anim = True
  
     def on_enter(self, instance_button) -> None:
-        """Called when the mouse cursor is over a button from the stack."""
+        """
+        Called when the mouse cursor is over a button from the stack.
+        """
         if self.state == "open":
             for widget in self.children:
                 if self.hint_animation:
@@ -622,7 +624,7 @@ class ButtonWidget(BoxLayout):
     This class is the widget for all the buttons.
     ...
     
-    Attributs
+    Attributes
     ---------
     simulation_widget : SimulationWidget()
         instance of the SimulationWidget() to connect both widgets

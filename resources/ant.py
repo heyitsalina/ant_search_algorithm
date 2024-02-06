@@ -3,28 +3,47 @@ import numpy as np
 class Ant:
     def __init__(self, coordinates, amount_to_carry, step_size=1):
         """
-        This class represents an ant in the Ant search algorithm.
-        
+        This class provides the needed information about ants in our Ant Search Algorithm.
+        ... 
+
         Args:
-        coordinates (tuple):
-            The (x, y) current coordinates of the ant in the search space.
-        amount_to_carry (float):
-            The maximum amount that the ant can carry during its search.
-        step_size (float):
-            The distance covered by the ant in each step during its movement within the search space.
         ---------
+            coordinates (tuple):
+                The (x, y) current coordinates of the ant in the search space.
+            amount_to_carry (float):
+                The maximum amount that the ant can carry during its search.
+            step_size (float):
+                The distance covered by the ant in each step during its movement within the search space.
         
         Attributes:
-        pheromone_status (int): 
-            The current status of pheromone by the ant.
+        ---------
+            pheromone_status (int): 
+                The current status of pheromone by the ant. 
                 - -1 indicates the ant is searching for food and not carrying any.
                 -  1 indicates the ant has found food and is carrying it back to the nest.
-        direction (numpy array):
-            The current direction vector of the ant.
-        epoch (int):
-            Represents the current epoch or step in the movement of the ant.
+            direction (numpy array):
+                The current direction vector of the ant.
+            epoch (int):
+                Represents the current epoch or step in the movement of the ant.
+
+        Methods:
+        ---------
+            def switch_pheromone():
+                 Switches the pheromone status of the ant.
+            def move(): 
+                 Moves the ant in the search space.
+            def is_near_target():
+                 Determines if an ant is within a specified radius of a food or colony source.
+            def try_carry_food ():
+                 Determine if the ant can pick up food from a specified source.
+            def carry_food()
+                 Have the ant pick up food from the specified source and update its status.
+            def try_drop_food():
+                 Determine if the ant can drop food at its colony.
+            def drop_food():
+                 Have the ant drop food at its colony and update its status.
         """
-        
+
         self.pheromone_status = -1
         self.coordinates = coordinates
         self.amount_to_carry = amount_to_carry
@@ -33,14 +52,31 @@ class Ant:
         self.epoch = 0
         self.ant_carries = 0
 
-        
+
     def switch_pheromone(self):
-        """Switches the pheromone status of the ant."""
+        """ 
+        Switches the pheromone status of the ant.
+
+        Returns: 
+            None
+        """
+
         self.pheromone_status *= -1
     
 
-
     def move(self, angle_offset = 0):
+        """
+        Moves the ant in the search space.
+
+        Args:
+            angle_offset (float): 
+                Optional angle offset for the ant's movement.
+        ---------
+
+        Returns:
+            tuple: 
+                The future position of the ant after movement.
+        """
 
         position = np.array(self.coordinates)
         
@@ -77,17 +113,19 @@ class Ant:
         """
         Determines if an ant is within a specified radius of a food or colony source.
 
-        Parameters:
-        target_position (tuple):
-            The (x, y) coordinates of the food or colony source.
-        center_offset (int):
-            The offset value to adjust the center of the target. Defaults to 45 => offset of source of food.
-        radius (int):
-            The radius of the circular area around the target. Defaults to 20 => radius of source of food.
+        Args:
+            target_position (tuple):
+                The (x, y) coordinates of the food or colony source.
+            center_offset (int):
+                The offset value to adjust the center of the target. Defaults to 45 => offset of source of food.
+            radius (int):
+                The radius of the circular area around the target. Defaults to 20 => radius of source of food.
+        ---------
 
         Returns:
-        tuple: The current (x, y) coordinates of the ant if it is within the specified radius; 
-        otherwise, returns None.
+            tuple:
+                The current (x, y) coordinates of the ant if it is within the specified radius; 
+                otherwise, returns None.
         """
 
         target_center_x = target_position[0] + center_offset
@@ -112,11 +150,15 @@ class Ant:
         Determine if the ant can pick up food from a specified source.
         
         Args:
-            food (Food): The food source to potentially pick up food from.
+            food (Food):
+                The food source to potentially pick up food from.
+        ---------
 
         Returns:
-            bool: True if the ant can carry food, False otherwise.
+            bool:   
+                True if the ant can carry food, False otherwise.
         """
+
         return self.pheromone_status == -1 and  self.is_near_target(food.coordinates) and food.amount_of_food > 0
 
         
@@ -125,28 +167,36 @@ class Ant:
         Have the ant pick up food from the specified source and update its status.
 
         Args:
-            food (Food): The food source to pick up food from.
+            food (Food): 
+                The food source to pick up food from.
+        ---------
+
+        Returns:
+            None
         """
-        
+
         amount_taken = min(food.amount_of_food, self.amount_to_carry)
         food.amount_of_food -= amount_taken
         # differenciate if ant takes less food because there is not enough food left
         self.ant_carries = amount_taken 
         self.switch_pheromone()
 
+
     def try_drop_food(self, colony):
         """
         Determine if the ant can drop food at its colony.
 
         Args:
-            colony (Colony): The colony to potentially drop food at.
+            colony (Colony):
+                The colony to potentially drop food at.
+        ---------
 
         Returns:
-            bool: True if the ant can drop food, False otherwise.
+            bool:
+                True if the ant can drop food, False otherwise.
         """
 
         return self.pheromone_status == 1 and self.is_near_target(colony.coordinates) 
-
 
 
     def drop_food(self, colony):
@@ -154,7 +204,12 @@ class Ant:
         Have the ant drop food at its colony and update its status.
 
         Args:
-            colony (Colony): The colony to drop food at.
+            colony (Colony):
+                The colony to drop food at.
+        ---------
+
+        Returns:
+            None
         """
 
         colony.food_counter += self.ant_carries
