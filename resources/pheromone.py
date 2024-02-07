@@ -87,3 +87,17 @@ class Pheromone:
         self.pheromone_array *= reducing_factor
         self.pheromone_array[0][self.pheromone_array[0] > - zero_threshold] = 0
         self.pheromone_array[1][self.pheromone_array[1] < zero_threshold] = 0
+        
+        
+    def find_target_pheromone_idx(self, idx_ant_pos, pheromone_status):
+        """
+        Identifies the index of the neighboring cell with the optimal pheromone value based on the ant's status.
+
+        Args:
+            idx_ant_pos (tuple): The current grid position of the ant (row, column).
+            pheromone_status (int): The status of the ant (-1 for seeking food, 1 for returning to colony).
+
+        Returns:
+            tuple: The grid index of the target cell with the highest (when seeking food) or lowest (when returning) pheromone value.
+        """
+        pass
