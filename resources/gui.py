@@ -71,7 +71,7 @@ class GUI(MDApp):
 
         with background.canvas:
             Color(0.64, 0.43, 0.25, 1)
-            Rectangle(pos=(0, 0), size=(1920, 1080))
+            Rectangle(pos=(0, 0), size=(Window.size[0], Window.size[1]))
         background.sound = True
 
         simulation_widget = SimulationWidget()
