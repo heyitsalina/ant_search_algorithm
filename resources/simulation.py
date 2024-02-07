@@ -132,7 +132,7 @@ class Simulation:
         if pheromone_cell is None or pheromone_cell == ant_postion:
             return
 
-        pheromone_position = (pheromone_cell[1] * scale[0], -pheromone_cell[0]*scale[1])
+        pheromone_position = (pheromone_cell[1]*scale[0]+pheromone_shape[0]/2, -pheromone_cell[0]*scale[1]-pheromone_shape[1]/2 )
         pheromone_direction = np.array(pheromone_position) - coordinates
 
         return pheromone_direction
