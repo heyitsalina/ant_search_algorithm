@@ -1,7 +1,7 @@
 import numpy as np
 
 class Ant:
-    def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=1):
+    def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=3):
         """
         This class represents an ant in the Ant search algorithm.
         
