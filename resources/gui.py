@@ -343,9 +343,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             color_label = MDTextField(hint_text="Color", text=str(colony.color))
             show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(1.1, .9))
             pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
+            search_radius_label = MDTextField(hint_text="Search radius of the ants", text=str(colony.ants[0].search_radius))
             switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
             pheromone_switch = CustomSwitch(active=colony.show_pheromone)
-            pheromone_text = MDLabel(text="Show Pheromone Grid", pos_hint={"center_x": 1.5, "center_y": .65})
+            pheromone_text = MDLabel(text="Show Pheromone Grid", pos_hint={"center_x": 1.5, "center_y": .35}) #.65
             switch_label.add_widget(pheromone_switch)
             switch_label.add_widget(pheromone_text)
 
@@ -360,11 +361,12 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                                         ant_settings_label,
                                         carry_label,
                                         color_label,
+                                        search_radius_label,
                                         show_pheromone_label,
                                         orientation="vertical",
-                                        spacing="12dp",
+                                        # spacing="12dp",
                                         size_hint_y=None,
-                                        height="350dp"),
+                                        height="400dp"),
                 buttons=[
                     MDFlatButton(
                         text="Cancel",
