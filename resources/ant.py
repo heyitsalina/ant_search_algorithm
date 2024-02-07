@@ -40,7 +40,7 @@ class Ant:
     
 
 
-    def move(self, angle_offset = 0):
+    def move(self, angle_offset = 0, pheromone_direction=None):
 
         position = np.array(self.coordinates)
         
