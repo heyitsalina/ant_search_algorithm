@@ -128,7 +128,7 @@ class Simulation:
         ant_postion = self.map_ant_coordinates_to_pheromone_index(coordinates, colony)
         pheromone_cell = self.find_pheromone_target(*ant_postion, -pheromone_status*pheromone_grid[depth], search_radius)
 
-        if pheromone_cell is None:
+        if pheromone_cell is None or pheromone_cell == ant_postion:
             return
 
         pheromone_position = (pheromone_cell[1] * scale[0], -pheromone_cell[0]*scale[1])
