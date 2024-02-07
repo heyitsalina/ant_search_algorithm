@@ -121,13 +121,13 @@ class Simulation:
 
         return idx_row, idx_col
     
-    def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_grid, colony, search_radius):
+    def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_array, colony, search_radius):
         depth = 0 if pheromone_status == 1 else 1
-        pheromone_shape = pheromone_grid[0].shape
+        pheromone_shape = pheromone_array[0].shape
         scale = (self.bounds[1]//pheromone_shape[1], -self.bounds[2]//pheromone_shape[0])
 
         ant_postion = self.map_ant_coordinates_to_pheromone_index(coordinates, colony)
-        pheromone_cell = self.find_pheromone_target(*ant_postion, -pheromone_status*pheromone_grid[depth], search_radius)
+        pheromone_cell = self.get_pheromone_position(*ant_postion, -pheromone_status*pheromone_array[depth], search_radius)
 
         if pheromone_cell is None or pheromone_cell == ant_postion:
             return
@@ -137,7 +137,7 @@ class Simulation:
 
         return pheromone_direction
 
-    def find_pheromone_target(self, row, col, arr, search_radius):
+    def get_pheromone_position(self, row, col, arr, search_radius):
         start_row = max(0, row - search_radius)
         end_row = min(arr.shape[0], row + search_radius + 1)
         start_col = max(0, col - search_radius)
