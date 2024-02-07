@@ -46,7 +46,7 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
-                pheromone_direction = self.find_pheromone_trace(ant.coordinates, ant.pheromone_status, colony.pheromone.pheromone_array, colony)
+                pheromone_direction = self.find_pheromone_trace(ant.coordinates, ant.pheromone_status, colony.pheromone.pheromone_array, colony, ant.search_radius)
                 future_position = ant.move(pheromone_direction=pheromone_direction)
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
@@ -120,31 +120,27 @@ class Simulation:
 
         return idx_row, idx_col
     
-    def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_grid, colony):
+    def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_grid, colony, search_radius):
         depth = 0 if pheromone_status == 1 else 1
         pheromone_shape = pheromone_grid[0].shape
         scale = (self.bounds[1]//pheromone_shape[1], -self.bounds[2]//pheromone_shape[0])
 
-        # ant_postion = (coordinates[0] * scale[0],  coordinates[1] * scale[1])
         ant_postion = self.map_ant_coordinates_to_pheromone_index(coordinates, colony)
-        # print(ant_postion)
-        pheromone_cell = self.find_pheromone_target(*ant_postion, -pheromone_status*pheromone_grid[depth])
+        pheromone_cell = self.find_pheromone_target(*ant_postion, -pheromone_status*pheromone_grid[depth], search_radius)
 
         if pheromone_cell is None:
             return
-        # print("Cell: ", pheromone_cell)
+
         pheromone_position = (pheromone_cell[1] * scale[0], -pheromone_cell[0]*scale[1])
-        # print("Position: ", pheromone_position)
         pheromone_direction = np.array(pheromone_position) - coordinates
-        # print(pheromone_direction)
 
         return pheromone_direction
 
-    def find_pheromone_target(self, row, col, arr, radius=5):
-        start_row = max(0, row - radius)
-        end_row = min(arr.shape[0], row + radius + 1)
-        start_col = max(0, col - radius)
-        end_col = min(arr.shape[1], col + radius + 1)
+    def find_pheromone_target(self, row, col, arr, search_radius):
+        start_row = max(0, row - search_radius)
+        end_row = min(arr.shape[0], row + search_radius + 1)
+        start_col = max(0, col - search_radius)
+        end_col = min(arr.shape[1], col + search_radius + 1)
         slice_ = arr[start_row:end_row, start_col:end_col]
 
         if np.argmax(slice_) == 0:
