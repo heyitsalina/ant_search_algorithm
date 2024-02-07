@@ -124,14 +124,10 @@ class Simulation:
         depth = 0 if pheromone_status == 1 else 1
         pheromone_shape = pheromone_grid[0].shape
         scale = (self.bounds[1]//pheromone_shape[1], -self.bounds[2]//pheromone_shape[0])
-        # print(scale)
 
         # ant_postion = (coordinates[0] * scale[0],  coordinates[1] * scale[1])
         ant_postion = self.map_ant_coordinates_to_pheromone_index(coordinates, colony)
         # print(ant_postion)
-
-        if np.argmin(-pheromone_status*pheromone_grid[depth]) < 0:
-            print("**********")
         pheromone_cell = self.find_pheromone_target(*ant_postion, -pheromone_status*pheromone_grid[depth])
 
         if pheromone_cell is None:
@@ -144,20 +140,16 @@ class Simulation:
 
         return pheromone_direction
 
-    def find_pheromone_target(self, row, col, arr, radius=100):
-        # print(arr)
-        # start_row = max(0, row - radius)
-        # end_row = min(arr.shape[0], row + radius + 1)
-        # start_col = max(0, col - radius)
-        # end_col = min(arr.shape[1], col + radius + 1)
-        # slice_ = arr[start_row:end_row, start_col:end_col]
-        slice_ = arr[max(0, row - 1):min(row + 2, arr.shape[0]),
-                 max(0, col - 1):min(col + 2, arr.shape[1])]
+    def find_pheromone_target(self, row, col, arr, radius=5):
+        start_row = max(0, row - radius)
+        end_row = min(arr.shape[0], row + radius + 1)
+        start_col = max(0, col - radius)
+        end_col = min(arr.shape[1], col + radius + 1)
+        slice_ = arr[start_row:end_row, start_col:end_col]
 
         if np.argmax(slice_) == 0:
             return
-        # print(np.argmax(slice_))
+        
         max_pos = np.unravel_index(np.argmax(slice_), slice_.shape)
-        max_pos_in_original_array = (max(0, row - 1) + max_pos[0], max(0, col - 1) + max_pos[1])
-        # print(max_pos_in_original_array)
+        max_pos_in_original_array = (start_row + max_pos[0], start_col + max_pos[1])
         return max_pos_in_original_array
