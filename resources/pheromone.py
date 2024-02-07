@@ -69,7 +69,7 @@ class Pheromone:
         
         return level_of_pheromones
 
-    def reduce_pheromones(self, reducing_factor = 0.9999, zero_threshold = 0.0001):
+    def reduce_pheromones(self, reducing_factor = 0.5, zero_threshold = 0.01):
         """
         Reduces the pheromone level by a reduction factor every epoch.
         By the multiplication these will be reduced weighted by their amount, higher amount of pheromones results in higher reduction.

@@ -53,7 +53,7 @@ class Simulation:
                 
                 idx_row, idx_col = self.map_ant_coordinates_to_pheromone_index(ant_coordinates = ant.coordinates,
                                                                                colony = colony)
-                colony.pheromone.reduce_pheromones()
+                colony.pheromone.reduce_pheromones(0.9999, 0.0001)
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)
                 
