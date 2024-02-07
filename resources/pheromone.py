@@ -150,7 +150,7 @@ class Pheromone:
         return idx_target_pheromone_value
     
     
-    def get_pheromone_target_pos(self, idx_ant_pos, pheromone_status, bounds):
+    def get_target_pheromone_pos(self, idx_ant_pos, pheromone_status, bounds):
         """
         Converts the target pheromone grid index to its corresponding (center) position in the environment.
 
@@ -162,4 +162,22 @@ class Pheromone:
         Returns:
             tuple: The (x, y) position in the environment corresponding to the target pheromone index.
         """
-        pass
+        
+        # Find the grid index for the target pheromone
+        idx_target_pheromone_value = self.find_target_pheromone_idx(idx_ant_pos, pheromone_status)
+        
+        # Get the dimensions of the pheromone grid
+        n_row, n_col = self.pheromone_array.shape[1:] # Rows (y-axis), Columns (x-axis)
+        
+        width_board = bounds[1] - bounds[0]
+        height_board = bounds[3] - bounds[2]
+        
+        width_spot = width_board / n_col
+        height_spot = height_board / n_row
+        
+        # Compute the central position of the target grid cell
+        x_target_pos = idx_target_pheromone_value[1] * width_spot + width_spot / 2
+        y_target_pos = idx_target_pheromone_value[0] * height_spot + height_spot / 2
+        
+        # Return the position with the y-coordinate inverted to match the environment's coordinate system
+        return x_target_pos, -y_target_pos
