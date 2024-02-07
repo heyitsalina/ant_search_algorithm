@@ -150,4 +150,16 @@ class Pheromone:
         return idx_target_pheromone_value
     
     
-    
+    def get_pheromone_target_pos(self, idx_ant_pos, pheromone_status, bounds):
+        """
+        Converts the target pheromone grid index to its corresponding (center) position in the environment.
+
+        Args:
+            idx_ant_pos (tuple): The grid position of the ant (row, column).
+            pheromone_status (int): The pheromone status indicating if the ant is seeking food (-1) or returning (1).
+            bounds (tuple): The min and max bounds of the environment (min_x, max_x, min_y, max_y).
+
+        Returns:
+            tuple: The (x, y) position in the environment corresponding to the target pheromone index.
+        """
+        pass
