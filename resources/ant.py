@@ -66,6 +66,8 @@ class Ant:
             
             #Rotate and normalize the direction vector
             self.direction = np.dot(rotation_matrix, self.direction)
+            if pheromone_direction is not None:
+                self.direction += pheromone_direction / np.linalg.norm(pheromone_direction)
             self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
         
         future_position = position + self.direction
