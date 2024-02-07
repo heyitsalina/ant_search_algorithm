@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 class Pheromone:
     def __init__(self, grid_shape):
@@ -100,4 +101,53 @@ class Pheromone:
         Returns:
             tuple: The grid index of the target cell with the highest (when seeking food) or lowest (when returning) pheromone value.
         """
-        pass
+        
+        # Initialize target pheromone values for comparison
+        target_pheromone_value = None
+        idx_target_pheromone_value = None
+
+        # Determine the grid size
+        n_rows, n_cols = self.pheromone_array.shape[1:]
+
+        # Determine the pheromone layer to inspect
+        depth = 0 if pheromone_status == 1 else 1
+
+        # Store indices of potential targets
+        potential_targets = []
+
+        # Define range limits for row and column
+        row_start = max(0, idx_ant_pos[0] - 1)
+        row_end = min(idx_ant_pos[0] + 2, n_rows)
+        col_start = max(0, idx_ant_pos[1] - 1)
+        col_end = min(idx_ant_pos[1] + 2, n_cols)
+
+        # Iterate over cells around the ant
+        for i in range(row_start, row_end):
+            for j in range(col_start, col_end):
+                if (i, j) != idx_ant_pos:  # Ignore the ant's current cell
+                    current_value = self.pheromone_array[depth, i, j]
+
+                    # Update target for highest pheromone value when seeking food
+                    if pheromone_status == -1 and (target_pheromone_value is None or current_value > target_pheromone_value):
+                        target_pheromone_value = current_value
+                        idx_target_pheromone_value = (i, j)
+                        potential_targets = [(i, j)]  # Reset potential targets since a new max has been found
+
+                    # Update target for lowest pheromone value when returning to colony
+                    elif pheromone_status == 1 and (target_pheromone_value is None or current_value < target_pheromone_value):
+                        target_pheromone_value = current_value
+                        idx_target_pheromone_value = (i, j)
+                        potential_targets = [(i, j)]  # Reset potential targets since a new min has been found
+
+                    # Add index to potential targets if value is equal to the current target
+                    elif current_value == target_pheromone_value:
+                        potential_targets.append((i, j))
+
+        # Choose randomly from potential targets if there are multiple
+        if len(potential_targets) > 1:
+            idx_target_pheromone_value = random.choice(potential_targets)
+            
+        return idx_target_pheromone_value
+    
+    
+    
