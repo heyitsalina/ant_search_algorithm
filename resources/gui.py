@@ -364,7 +364,6 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                                         search_radius_label,
                                         show_pheromone_label,
                                         orientation="vertical",
-                                        # spacing="12dp",
                                         size_hint_y=None,
                                         height="400dp"),
                 buttons=[
