@@ -46,8 +46,8 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
-                pheromone_direction = self.find_pheromone_trace(ant.coordinates, ant.pheromone_status, colony.pheromone.pheromone_array)
-                future_position = ant.move()
+                pheromone_direction = self.find_pheromone_trace(ant.coordinates, ant.pheromone_status, colony.pheromone.pheromone_array, colony)
+                future_position = ant.move(pheromone_direction=pheromone_direction)
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
                 
@@ -88,7 +88,6 @@ class Simulation:
         elif y > max_y:
             y = max_y
         return np.array([x, y])
-    
 
     def map_ant_coordinates_to_pheromone_index(self, ant_coordinates, colony):
         """
@@ -121,39 +120,44 @@ class Simulation:
 
         return idx_row, idx_col
     
-    def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_grid):
+    def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_grid, colony):
         depth = 0 if pheromone_status == 1 else 1
         pheromone_shape = pheromone_grid[0].shape
         scale = (self.bounds[1]//pheromone_shape[1], -self.bounds[2]//pheromone_shape[0])
+        # print(scale)
 
-        ant_postion = (coordinates[0] * scale[0],  coordinates[1] * scale[1])
+        # ant_postion = (coordinates[0] * scale[0],  coordinates[1] * scale[1])
+        ant_postion = self.map_ant_coordinates_to_pheromone_index(coordinates, colony)
+        # print(ant_postion)
 
-        pheromone_cell = self.find_pheromone_target(*ant_postion, pheromone_status*pheromone_grid[depth])
-        pheromone_position = self.calculate_pheromone_target_pos(pheromone_cell, pheromone_grid)
+        if np.argmin(-pheromone_status*pheromone_grid[depth]) < 0:
+            print("**********")
+        pheromone_cell = self.find_pheromone_target(*ant_postion, -pheromone_status*pheromone_grid[depth])
+
+        if pheromone_cell is None:
+            return
+        # print("Cell: ", pheromone_cell)
+        pheromone_position = (pheromone_cell[1] * scale[0], -pheromone_cell[0]*scale[1])
+        # print("Position: ", pheromone_position)
         pheromone_direction = np.array(pheromone_position) - coordinates
+        # print(pheromone_direction)
 
         return pheromone_direction
 
-    def find_pheromone_target(self, row, col, arr):
+    def find_pheromone_target(self, row, col, arr, radius=100):
+        # print(arr)
+        # start_row = max(0, row - radius)
+        # end_row = min(arr.shape[0], row + radius + 1)
+        # start_col = max(0, col - radius)
+        # end_col = min(arr.shape[1], col + radius + 1)
+        # slice_ = arr[start_row:end_row, start_col:end_col]
         slice_ = arr[max(0, row - 1):min(row + 2, arr.shape[0]),
                  max(0, col - 1):min(col + 2, arr.shape[1])]
+
+        if np.argmax(slice_) == 0:
+            return
+        # print(np.argmax(slice_))
         max_pos = np.unravel_index(np.argmax(slice_), slice_.shape)
         max_pos_in_original_array = (max(0, row - 1) + max_pos[0], max(0, col - 1) + max_pos[1])
-        
+        # print(max_pos_in_original_array)
         return max_pos_in_original_array
-
-    def calculate_pheromone_target_pos(self, idx_target_pheromone_value, pheromone_grid):
-        
-        n_row = pheromone_grid[1] #y
-        n_col = pheromone_grid[2] #x        
-        
-        width_board = self.bounds[1] - self.bounds[0]
-        height_board = self.bounds[3] - self.bounds[2]
-        
-        width_spot = width_board/ n_col
-        height_spot = height_board/ n_row
-        
-        x_target_pos = idx_target_pheromone_value[1] * width_spot + width_spot/2 
-        y_target_pos = idx_target_pheromone_value[0] * height_spot + height_spot/2
-        
-        return x_target_pos, -y_target_pos
