@@ -1,7 +1,7 @@
 import numpy as np
 
 class Ant:
-    def __init__(self, coordinates, amount_to_carry, step_size=1):
+    def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=1):
         """
         This class represents an ant in the Ant search algorithm.
         
@@ -32,6 +32,7 @@ class Ant:
         self.direction = np.array([0, 0])
         self.epoch = 0
         self.ant_carries = 0
+        self.search_radius = search_radius
 
         
     def switch_pheromone(self):
