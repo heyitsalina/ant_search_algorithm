@@ -66,6 +66,8 @@ class Ant:
             
             #Rotate and normalize the direction vector
             self.direction = np.dot(rotation_matrix, self.direction)
+            pheromone_direction = self.colony.pheromone.find_pheromone_target(1 , self.coordinates, self.pheromone_status)
+            self.direction = self.direction + pheromone_direction
             self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
         
         future_position = position + self.direction
