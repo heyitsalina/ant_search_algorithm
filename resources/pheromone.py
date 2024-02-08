@@ -89,7 +89,7 @@ class Pheromone:
         self.pheromone_array[1][self.pheromone_array[1] < zero_threshold] = 0
 
 
-    def find_pheromone_target(self, step_size, ant_array_position, pheromone_status):
+    def find_pheromone_target(self, step_size, ant_array_position, pheromone_status, colony, bounds):
         """
         Searches for the strongest or weakest (depending on the goal=pheromone-status) pheromone-value in the pheromone array 
         in a range of a given step size.
@@ -104,6 +104,7 @@ class Pheromone:
         Returns:
             float: An angle for the ant.move-method to do the movement in the direction of the calculated angle.
         """
+        self.colony = colony
 
         # To fit the coordinates correctly from x, y to y, x
         ant_array_position = (ant_array_position[1], ant_array_position[0])
@@ -183,13 +184,14 @@ class Pheromone:
         if pheromone_status == -1:
             self.pheromone_array[0] = -self.pheromone_array[0]
 
-        future_position = self.calculate_pheromone_target_pos(original_index_max_value, self.colony)
+        #future_position = self.calculate_pheromone_target_pos(original_index_max_value, self.colony, bounds)
         
-        return future_position
+        return original_index_max_value
 
 
-    def calculate_pheromone_target_pos(self, idx_target_pheromone_value, colony):
-    
+    def calculate_pheromone_target_pos(self, idx_target_pheromone_value, colony, bounds):
+        self.bounds = bounds
+
         n_row = colony.pheromone.pheromone_array.shape[1] #y
         n_col = colony.pheromone.pheromone_array.shape[2] #x        
         
@@ -202,5 +204,5 @@ class Pheromone:
         x_target_pos = idx_target_pheromone_value[1] * width_spot + width_spot/2 
         y_target_pos = idx_target_pheromone_value[0] * height_spot + height_spot/2
         
-        return np.array([x_target_pos, -y_target_pos])
+        return np.array([x_target_pos, y_target_pos])
     

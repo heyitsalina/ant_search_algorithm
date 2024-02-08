@@ -40,7 +40,7 @@ class Ant:
     
 
 
-    def move(self, angle_offset = 0):
+    def move(self, angle_offset = 0, pheromone_target_position=None):
 
         position = np.array(self.coordinates)
         
@@ -66,8 +66,8 @@ class Ant:
             
             #Rotate and normalize the direction vector
             self.direction = np.dot(rotation_matrix, self.direction)
-            pheromone_direction = self.colony.pheromone.find_pheromone_target(1 , self.coordinates, self.pheromone_status)
-            self.direction = self.direction + pheromone_direction
+            if pheromone_target_position is not None and self.epoch >= 50:
+                self.direction = self.direction + pheromone_target_position / np.linalg.norm(self.direction)
             self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
         
         future_position = position + self.direction
