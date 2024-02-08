@@ -183,4 +183,24 @@ class Pheromone:
         if pheromone_status == -1:
             self.pheromone_array[0] = -self.pheromone_array[0]
 
-        return original_index_max_value
+        future_position = self.calculate_pheromone_target_pos(original_index_max_value, self.colony)
+        
+        return future_position
+
+
+    def calculate_pheromone_target_pos(self, idx_target_pheromone_value, colony):
+    
+        n_row = colony.pheromone.pheromone_array.shape[1] #y
+        n_col = colony.pheromone.pheromone_array.shape[2] #x        
+        
+        width_board = self.bounds[1] - self.bounds[0]
+        height_board = self.bounds[3] - self.bounds[2]
+        
+        width_spot = width_board/ n_col
+        height_spot = height_board/ n_row
+        
+        x_target_pos = idx_target_pheromone_value[1] * width_spot + width_spot/2 
+        y_target_pos = idx_target_pheromone_value[0] * height_spot + height_spot/2
+        
+        return np.array([x_target_pos, -y_target_pos])
+    

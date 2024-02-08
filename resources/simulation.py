@@ -54,6 +54,8 @@ class Simulation:
                                                                                colony = colony)
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)
+            colony.pheromone.reduce_pheromones()
+            
                 
         self.food = list(food for food in self.food if food.amount_of_food > 0)
         
