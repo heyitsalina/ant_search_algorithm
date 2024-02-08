@@ -46,20 +46,15 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
-
-
-                new_coordinates = self.map_ant_coordinates_to_pheromone_index(ant.coordinates, colony)
-                pheromone_target_position = colony.pheromone.find_pheromone_target(1, new_coordinates, ant.pheromone_status, colony, self.bounds)
-                future_position = ant.move(pheromone_target_position=pheromone_target_position)
+                future_position = ant.move()
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
                 
                 idx_row, idx_col = self.map_ant_coordinates_to_pheromone_index(ant_coordinates = ant.coordinates,
                                                                                colony = colony)
-                colony.pheromone.reduce_pheromones()
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)
-            
+            colony.pheromone.reduce_pheromones()
             
                 
         self.food = list(food for food in self.food if food.amount_of_food > 0)
