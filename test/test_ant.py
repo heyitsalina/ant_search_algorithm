@@ -13,6 +13,8 @@ def test_switch_pheromone():
     assert ant.pheromone_status == 1, "pheromone switch should be 1 after switch"
 
 def test_move():
+    ant.target_position = np.array([10, 10])
+    
     ant.move()
     assert ant.epoch == 1, "Epoch should increment after move"
     initial_direction = ant.direction.copy()

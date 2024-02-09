@@ -59,12 +59,13 @@ class Ant:
 
         else:
             
-            self.direction = self.target_position - np.array(self.coordinates)
+            if self.target_position is not None:
+                self.direction = self.target_position - np.array(self.coordinates)
             
-            if np.linalg.norm(self.direction) < self.step_size:
-                self.target_position = None #target has been arived
-            else:
-                self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
+                if np.linalg.norm(self.direction) < self.step_size:
+                    self.target_position = None #target has been arived
+                else:
+                    self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
     
         future_position = position + self.direction
         self.epoch += 1
