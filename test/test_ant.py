@@ -26,7 +26,7 @@ def test_move():
     assert np.isclose(initial_step_size, new_step_size), "Step size should remain constant"
     original_position = ant.coordinates
     ant.coordinates = ant.move()
-    assert (ant.coordinates != original_position), "Ant's position should change after move"
+    assert (ant.coordinates != original_position).all(), "Ant's position should change after move"
 
 def test_is_near_target():
     ant.coordinates = (145, 145)  # Inside radius
