@@ -143,7 +143,7 @@ class Ant:
             bool: True if the ant can drop food, False otherwise.
         """
 
-        return self.pheromone_status == 1 and self.is_near_target(colony.coordinates) 
+        return self.pheromone_status == 1 and self.is_near_target(colony.coordinates, radius = 26) 
 
 
 
