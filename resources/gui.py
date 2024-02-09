@@ -71,7 +71,7 @@ class GUI(MDApp):
 
         with background.canvas:
             Color(0.64, 0.43, 0.25, 1)
-            Rectangle(pos=(0, 0), size=(1920, 1080))
+            Rectangle(pos=(0, 0), size=(Window.size[0], Window.size[1]))
         background.sound = True
 
         simulation_widget = SimulationWidget()
@@ -239,7 +239,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         None
         """
         min_x, max_x, min_y, max_y = sim.bounds
-        
+
         with self.canvas:
             Color(0, 0, 0, 1)
             Line(rectangle=(
@@ -248,8 +248,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 max_x - min_x + 5,
                 max_y - min_y + 5
             ), width=1)
-            pos = (min_x, min_y)
-            Image(source="../images/background.jpg", pos=pos, size=(max_x-min_x+5, max_y-min_y+5), allow_stretch=True, keep_ratio=False)
+            Image(source="../images/background.png", pos=(min_x, min_y), size=(max_x-min_x+5, max_y-min_y+5), allow_stretch=True, keep_ratio=False)
 
     def update_canvas(self):
         self.canvas.clear()
