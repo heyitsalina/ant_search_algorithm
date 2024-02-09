@@ -55,7 +55,7 @@ class Simulation:
                     pos = colony.pheromone.get_target_pheromone_pos((idx_row, idx_col), ant.pheromone_status, self.bounds, 3)
                     ant.set_target_position(pos)
                     
-                ant.coordinates = ant.move()
+                ant.move()
                 
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)

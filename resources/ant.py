@@ -40,10 +40,20 @@ class Ant:
         self.pheromone_status *= -1
     
     def set_target_position(self, target):
+        """
+        Sets the target position for the ant.
+
+        Args:
+            target (tuple): The target coordinates as an tuple of target coordinates.
+        """
+        
         self.target_position = np.array(target)
 
     def move(self):
-
+        """
+        Moves the ant based on its direction and step size. On the first epoch, initializes 
+        a random direction. On subsequent epochs, moves towards a set target if present. 
+        """
         position = np.array(self.coordinates)
         
         if self.epoch == 0:
@@ -67,9 +77,8 @@ class Ant:
                 else:
                     self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
     
-        future_position = position + self.direction
         self.epoch += 1
-        return tuple(future_position)
+        self.coordinates = position + self.direction
 
         
     def is_near_target(self, target_position, center_offset = 45, radius = 20):

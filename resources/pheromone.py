@@ -180,4 +180,4 @@ class Pheromone:
         y_target_pos = idx_target_pheromone_value[0] * height_spot + height_spot / 2
         
         # Return the position with the y-coordinate inverted to match the environment's coordinate system
-        return x_target_pos, -y_target_pos
+        return (x_target_pos, -y_target_pos)
