@@ -32,15 +32,17 @@ class Ant:
         self.direction = np.array([0, 0])
         self.epoch = 0
         self.ant_carries = 0
+        self.target_position = None  #to be sure, that an ant first arived its target, before getting new target 
 
         
     def switch_pheromone(self):
         """Switches the pheromone status of the ant."""
         self.pheromone_status *= -1
     
+    def set_target_position(self, target):
+        self.target_position = np.array(target)
 
-
-    def move(self, angle_offset = 0):
+    def move(self):
 
         position = np.array(self.coordinates)
         
@@ -57,17 +59,13 @@ class Ant:
 
         else:
             
-            if angle_offset == 0:
-                #Apply a random rotation to the existing direction
-                angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
-                
-            rotation_matrix = np.array([[np.cos(angle_offset), -np.sin(angle_offset)],
-                                    [np.sin(angle_offset), np.cos(angle_offset)]])
+            self.direction = self.target_position - np.array(self.coordinates)
             
-            #Rotate and normalize the direction vector
-            self.direction = np.dot(rotation_matrix, self.direction)
-            self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
-        
+            if np.linalg.norm(self.direction) < self.step_size:
+                self.target_position = None #target has been arived
+            else:
+                self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
+    
         future_position = position + self.direction
         self.epoch += 1
         return tuple(future_position)
