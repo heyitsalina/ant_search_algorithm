@@ -46,15 +46,28 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
-                future_position = ant.move()
-                adjusted_position = self.check_future_position(future_position)
-                ant.coordinates = adjusted_position
                 
                 idx_row, idx_col = self.map_ant_coordinates_to_pheromone_index(ant_coordinates = ant.coordinates,
                                                                                colony = colony)
+                
+                
+                if ant.target_position is None or ant.is_near_target(ant.target_position):
+                    pos = colony.pheromone.get_target_pheromone_pos((idx_row, idx_col), ant.pheromone_status, self.bounds, 3)
+                    ant.set_target_position(pos)
+                    
+                ant.coordinates = ant.move()
+                
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)
                 
+                #Simulate three "colony-ants" => they have to be seen later, not only pheromone
+                idx_row_colonyAnt, idx_col_colonyAnt = self.map_ant_coordinates_to_pheromone_index(
+                                                        (colony.coordinates[0]+45, colony.coordinates[1]+45), colony)
+                colony.pheromone.leave_pheromone(pos = (idx_row_colonyAnt, idx_col_colonyAnt), pheromone_status = -3)
+                
+                
+                colony.pheromone.reduce_pheromones(0.72, 0.001)
+
         self.food = list(food for food in self.food if food.amount_of_food > 0)
         
     def add_colony(self, colony):
