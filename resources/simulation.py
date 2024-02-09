@@ -75,7 +75,8 @@ class Simulation:
 
     def add_food(self, food):
         self.food.append(food)
-    
+        
+    #this method has no use now.
     def check_future_position(self, future_position):
         """
         Adjusts the given position to ensure it stays within the simulation bounds.
