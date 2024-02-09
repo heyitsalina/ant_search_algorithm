@@ -90,7 +90,7 @@ class Pheromone:
         self.pheromone_array[1][self.pheromone_array[1] < zero_threshold] = 0
         
         
-    def find_target_pheromone_idx(self, idx_ant_pos, pheromone_status, search_radius = 3):
+    def find_target_pheromone_idx(self, idx_ant_pos, pheromone_status, search_radius):
         """
         Identifies the index of the neighboring cell with the optimal pheromone value based on the ant's status.
 
@@ -150,7 +150,7 @@ class Pheromone:
         return idx_target_pheromone_value
     
     
-    def get_target_pheromone_pos(self, idx_ant_pos, pheromone_status, bounds):
+    def get_target_pheromone_pos(self, idx_ant_pos, pheromone_status, bounds, search_radius = 3):
         """
         Converts the target pheromone grid index to its corresponding (center) position in the environment.
 
@@ -164,7 +164,7 @@ class Pheromone:
         """
         
         # Find the grid index for the target pheromone
-        idx_target_pheromone_value = self.find_target_pheromone_idx(idx_ant_pos, pheromone_status)
+        idx_target_pheromone_value = self.find_target_pheromone_idx(idx_ant_pos, pheromone_status, search_radius)
         
         # Get the dimensions of the pheromone grid
         n_row, n_col = self.pheromone_array.shape[1:] # Rows (y-axis), Columns (x-axis)
