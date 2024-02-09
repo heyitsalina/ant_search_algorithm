@@ -90,7 +90,7 @@ class Pheromone:
         self.pheromone_array[1][self.pheromone_array[1] < zero_threshold] = 0
         
         
-    def find_target_pheromone_idx(self, idx_ant_pos, pheromone_status):
+    def find_target_pheromone_idx(self, idx_ant_pos, pheromone_status, search_radius = 3):
         """
         Identifies the index of the neighboring cell with the optimal pheromone value based on the ant's status.
 
@@ -116,10 +116,10 @@ class Pheromone:
         potential_targets = []
 
         # Define range limits for row and column
-        row_start = max(0, idx_ant_pos[0] - 1)
-        row_end = min(idx_ant_pos[0] + 2, n_rows)
-        col_start = max(0, idx_ant_pos[1] - 1)
-        col_end = min(idx_ant_pos[1] + 2, n_cols)
+        row_start = max(0, idx_ant_pos[0] - search_radius)
+        row_end = min(idx_ant_pos[0] + (search_radius + 1), n_rows)
+        col_start = max(0, idx_ant_pos[1] - search_radius)
+        col_end = min(idx_ant_pos[1] + (search_radius + 1), n_cols)
 
         # Iterate over cells around the ant
         for i in range(row_start, row_end):
