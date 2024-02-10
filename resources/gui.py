@@ -302,7 +302,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     Color(0.5, 0.5, 0.5, 1)
                     Rectangle(pos=(food.coordinates[0]+13, food.coordinates[1]+80-2), size=(74, 14))
                     Color(0, 1, 0.2, 1)
-                    Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/100, 10))
+                    Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/food.start_amount, 10))
 
     def transform_array(self, array):
         return array[array.shape[0]-1::-1, :].T
@@ -448,6 +448,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 self.show_error_dialog("Please enter a valid integer for food amount.\nThe amount of food must be >= 0.")
                 return
             food.amount_of_food = new_food_amount
+            food.start_amount = new_food_amount
             food.show_life_bar = new_life_bar_state
             self.dialog.dismiss()
 
