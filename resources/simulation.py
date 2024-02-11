@@ -140,13 +140,20 @@ if  __name__ == "__main__":
 
     sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=amount, size=(100, 100),
                                   coordinates=coordinates, color=(0, 0, 0, 1)))
+    
+    sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=amount, size=(100, 100),
+                                  coordinates=coordinates, color=(0, 0, 0, 1)))
 
     coordinates = (150, -300)
     amount_of_food = 100
 
     sim.add_food(Food(size=(100, 100), coordinates=coordinates, amount_of_food=amount_of_food))
 
-    for  i in range(10_000):
+    for  i in range(1000):
         sim.next_epoch()
+    
+    for colony in sim.colonies:
+        print(colony.food_counter)
 
-    print(sim.colonies[0].food_counter)
+    for food in sim.food:
+        print(food.amount_of_food)
