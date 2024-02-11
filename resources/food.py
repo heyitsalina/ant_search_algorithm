@@ -16,5 +16,6 @@ class Food:
         self.coordinates = coordinates
         self.size = size
         self.amount_of_food = amount_of_food
+        self.start_amount = amount_of_food
         self.show_life_bar = show_life_bar
 
