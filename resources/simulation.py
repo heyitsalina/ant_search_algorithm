@@ -1,4 +1,6 @@
 import numpy as np
+from resources.colony import Colony
+from resources.food import Food
 
 class Simulation:
     """
@@ -119,3 +121,39 @@ class Simulation:
         idx_col = int(ant_coordinates[0] / width_spot)
 
         return idx_row, idx_col
+
+
+
+if  __name__ == "__main__":
+    sim = Simulation()
+
+    sim.bounds = (
+            0,
+            720,
+            -480,
+            0 
+        )
+    
+    n_row, n_col = int(sim.bounds[3]-sim.bounds[2])//40, int(sim.bounds[1]-sim.bounds[0])//40
+    coordinates = (360, -240)
+    amount = 100
+
+    sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=amount, size=(100, 100),
+                                  coordinates=coordinates, color=(0, 0, 0, 1)))
+    
+    sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=amount, size=(100, 100),
+                                  coordinates=coordinates, color=(0, 0, 0, 1)))
+
+    coordinates = (150, -300)
+    amount_of_food = 100
+
+    sim.add_food(Food(size=(100, 100), coordinates=coordinates, amount_of_food=amount_of_food))
+
+    for  i in range(1000):
+        sim.next_epoch()
+    
+    for colony in sim.colonies:
+        print(colony.food_counter)
+
+    for food in sim.food:
+        print(food.amount_of_food)
