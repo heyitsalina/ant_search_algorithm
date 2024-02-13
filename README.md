@@ -53,11 +53,11 @@ If you started the Simulation the GUI should look like this:
 
 ![image](https://github.com/heyitsalina/ant_search_algorithm/assets/119052351/802b5841-10d0-41eb-a50d-93b439a854bc)
 
-This ant food search simulation offers an intuitive GUI to interact with the simulation, allowing you to directly influence the simulation environment and observe the complex behaviors of ants in their quest for food. Here’s how you can interact with the simulation:
+This ant food search simulation offers an intuitive GUI to interact with the simulation. It allows you to directly influence the simulation environment and observe the complex behaviors of ants in their quest for food. Here’s how you can interact with the simulation:
 
 - **Placing Entities**: To add food sources or ant colonies to the simulation, click on the respective symbols for food and ants located in the bottom left corner of the GUI. Then, click on the desired location on the map to place them. This method allows for easy customization of the simulation's starting conditions. You can place several.
 
-- **Updating Entity Parameters**: You can tailor the simulation to your specific interests by adjusting entity parameters. Double-click on any placed entity to open its settings panel.
+- **Updating Entity Parameters**: You can tailor the simulation to your specific interests by adjusting entity parameters. Double-click on any placed entity (food or colony) to open its settings.
 
   - **Food Settings**:
     - **Amount of Food**: Specify how much food is available at a food object. This value determines how long the food will last as ants collect it.
@@ -70,7 +70,7 @@ This ant food search simulation offers an intuitive GUI to interact with the sim
     - **Step Size**: Adjust the speed at which ants move across the map.
     - **Amount to Carry**: Define how many pieces of food an ant can carry back to the colony from a food source.
     - **Color**: Choose the color of your ant colony for easy identification.
-    - **Pheromone Grid**: Configure the shape and size of the pheromone grid, which affects how ants communicate and navigate to food sources and back to the colony.
+    - **Pheromone Grid**: Configure the shape and size of the pheromone grid, which affects how ants navigate to food sources and back to the colony.
     ![Colony Settings Screenshot](#add_link_to_colony_settings_screenshot)
 
 - **Simulation Controls**: The simulation can be dynamically controlled using the **start**, **stop**, and **clear** buttons located within the GUI. Use these to begin the simulation, pause or stop the action to make adjustments, or reset the environment for a new setup.
@@ -78,9 +78,21 @@ This ant food search simulation offers an intuitive GUI to interact with the sim
 - **Settings and View**: Customize your simulation experience further with additional settings and view options:
   - In the top right corner, access the settings menu to disable sound.
   - You can zoom to focus on specific areas of interest within the simulation. If you need to reset your view, simply click the **Adjust View** button to return to the default perspective.
-  - The window size can be adjusted from the bottom right corner, providing flexibility in how much of the simulation is visible on your screen.
+  - The window size can be adjusted from the bottom right corner.
 
 Experiment with different configurations and observe how each change affects the behavior and efficiency of the ant colonies. The Ant Simulation Project is designed to be a versatile tool for exploring the fascinating dynamics of ant behavior and food search strategies.
+
+## Contribute
+
+We welcome contributions! If you're interested in helping improve the Ant Food Search Simulation, please follow these steps:
+
+1. Clone/Fork the repository.
+2. Create a new branch for your feature (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+For more information on contributing, or if you have any questions or encounter issues, please don't hesitate to contact us by opening an issue. This is also the perfect place to share your ideas or ask for help with any errors or questions you might have.
 
 ## License
 
