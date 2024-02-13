@@ -1,4 +1,4 @@
-<img src="images/ant_matrix1.jpeg" width="100" height="100">
+<img src="images/ant_matrix1.jpeg" width="360" height="120">
 
 # Ant Simulation Project
 
