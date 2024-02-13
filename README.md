@@ -62,8 +62,6 @@ This ant food search simulation offers an intuitive GUI to interact with the sim
   - **Food Settings**:
     - **Amount of Food**: Specify how much food is available at a food object. This value determines how long the food will last as ants collect it.
     - **Show Life Bar**: Toggle the visibility of a life bar that dynamically represents the remaining amount of food at each food source.
-
-    ![Food Settings Screenshot](#add_link_to_food_settings_screenshot? or would gif be enough?)
   
   - **Colony Settings**:
     - **Number of Ants**: Set the initial number of ants in a colony.
@@ -71,7 +69,6 @@ This ant food search simulation offers an intuitive GUI to interact with the sim
     - **Amount to Carry**: Define how many pieces of food an ant can carry back to the colony from a food source.
     - **Color**: Choose the color of your ant colony for easy identification.
     - **Pheromone Grid**: Configure the shape and size of the pheromone grid, which affects how ants navigate to food sources and back to the colony.
-    ![Colony Settings Screenshot](#add_link_to_colony_settings_screenshot?)
 
 - **Simulation Controls**: The simulation can be dynamically controlled using the **start**, **stop**, and **clear** buttons located within the GUI. Use these to begin the simulation, pause or stop the action to make adjustments, or reset the environment for a new setup.
 
@@ -111,7 +108,7 @@ We appreciate your interest in contributing to the Ant Food Search Simulation pr
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE.md file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Authors
 
