@@ -1,6 +1,6 @@
 <img src="images/ant_matrix1.jpeg" width="1000" height="200">
 
-# Ant Simulation Project
+# Ant Food Search Simulation
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/heyitsalina/ant_search_algorithm) ![GitHub License](https://img.shields.io/github/license/heyitsalina/ant_search_algorithm) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/heyitsalina/ant_search_algorithm/main.yml) ![Python Version](https://img.shields.io/badge/python-3.11%20and%20below-blue)
 
