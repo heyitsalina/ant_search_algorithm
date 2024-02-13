@@ -63,7 +63,7 @@ This ant food search simulation offers an intuitive GUI to interact with the sim
     - **Amount of Food**: Specify how much food is available at a food object. This value determines how long the food will last as ants collect it.
     - **Show Life Bar**: Toggle the visibility of a life bar that dynamically represents the remaining amount of food at each food source.
 
-    ![Food Settings Screenshot](#add_link_to_food_settings_screenshot)
+    ![Food Settings Screenshot](#add_link_to_food_settings_screenshot? or would gif be enough?)
   
   - **Colony Settings**:
     - **Number of Ants**: Set the initial number of ants in a colony.
@@ -71,7 +71,7 @@ This ant food search simulation offers an intuitive GUI to interact with the sim
     - **Amount to Carry**: Define how many pieces of food an ant can carry back to the colony from a food source.
     - **Color**: Choose the color of your ant colony for easy identification.
     - **Pheromone Grid**: Configure the shape and size of the pheromone grid, which affects how ants navigate to food sources and back to the colony.
-    ![Colony Settings Screenshot](#add_link_to_colony_settings_screenshot)
+    ![Colony Settings Screenshot](#add_link_to_colony_settings_screenshot?)
 
 - **Simulation Controls**: The simulation can be dynamically controlled using the **start**, **stop**, and **clear** buttons located within the GUI. Use these to begin the simulation, pause or stop the action to make adjustments, or reset the environment for a new setup.
 
@@ -84,15 +84,30 @@ Experiment with different configurations and observe how each change affects the
 
 ## Contribute
 
-We welcome contributions! If you're interested in helping improve the Ant Food Search Simulation, please follow these steps:
+We welcome contributions to our Ant Food Search Simulation project! To ensure that our project remains high-quality and coherent, we have documented the architecture and code extensively. Here’s how you can get started:
+
+### Familiarize Yourself with the Project
+
+- **Project Structure:** We have included a diagram of the project structure in the repository to help you understand how the project is organized.
+- **Code Documentation:** The classes, methods, and parameters are thoroughly described using docstrings in the code files. This documentation is your go-to resource for understanding the functionality and purpose of the code.
+
+### How to Contribute
 
 1. Clone/Fork the repository.
-2. Create a new branch for your feature (`git checkout -b feature/AmazingFeature`).
+2. Create a new branch for your feature (`git checkout -b AmazingFeature`).
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
+4. Push to the branch (`git push origin AmazingFeature`).
 5. Open a Pull Request.
 
-For more information on contributing, or if you have any questions or encounter issues, please don't hesitate to contact us by opening an issue. This is also the perfect place to share your ideas or ask for help with any errors or questions you might have.
+### Stay Updated
+
+- **Pull the Latest Changes:** Regularly update your forked repository with the latest changes from the main project to avoid merge conflicts and stay up-to-date with the development.
+
+### Need Help?
+
+If you have any questions, encounter issues or need assistance please don't hesitate to contact us by opening an issue. This is also the perfect place to share your ideas or ask for help with any errors or questions you might have.
+
+We appreciate your interest in contributing to the Ant Food Search Simulation project. Your contributions help us build a better project for everyone. We look forward to your amazing features and improvements!
 
 ## License
 
