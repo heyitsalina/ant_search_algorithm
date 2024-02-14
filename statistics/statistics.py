@@ -16,15 +16,11 @@ latex_template = """
 
 \\section{Colonies}
 
-\\begin{itemize}
 %s
-\\end{itemize}
 
 \\section{Food}
 
-\\begin{itemize}
 %s
-\\end{itemize}
 
 \\end{document}
 """
@@ -32,14 +28,22 @@ latex_template = """
 colonies_content = ""
 if isinstance(data['colonies'], list):
     for idx, colony_data in enumerate(data['colonies']):
-        colonies_content += "\\item Colony %d: Amount - %s, Size - %s, Coordinates - %s, Pheromone Grid - %s, Color - %s\n" % (
-            idx + 1, colony_data['amount'], colony_data['size'],
-            colony_data['coordinates'], colony_data['pheromone grid'], colony_data['color'])
+        colonies_content += "\\subsection*{Colony %d}\n" % (idx + 1)
+        colonies_content += "\\begin{itemize}\n"
+        colonies_content += "\\item Amount: %s\n" % colony_data['amount']
+        colonies_content += "\\item Size: %s\n" % colony_data['size']
+        colonies_content += "\\item Coordinates: %s\n" % colony_data['coordinates']
+        colonies_content += "\\item Pheromone Grid: %s\n" % colony_data['pheromone grid']
+        colonies_content += "\\item Color: %s\n" % colony_data['color']
+        colonies_content += "\\end{itemize}\n"
 
 food_content = ""
 if isinstance(data['food'], list):
     for idx, food_data in enumerate(data['food']):
-        food_content += "\\item Food %d: Amount - %s\n" % (idx + 1, food_data['amount_of_food'])
+        food_content += "\\subsection*{Food %d}\n" % (idx + 1)
+        food_content += "\\begin{itemize}\n"
+        food_content += "\\item Amount of food: %s\n" % food_data['amount_of_food']
+        food_content += "\\end{itemize}\n"
 
 latex_document = latex_template % (colonies_content, food_content)
 
