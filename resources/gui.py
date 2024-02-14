@@ -119,13 +119,13 @@ class SettingsButton(MDIconButton):
         self.icon_size = 60
     
     def on_press(self, *args):
-        settings_content = MDBoxLayout(orientation="vertical", spacing="8dp", size_hint_y=None)
+        settings_content = MDBoxLayout(orientation="vertical", spacing="12dp", size_hint_y=None)
         sound_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
         sound_layout.add_widget(MDLabel(text="Sound"))
         sound_switch = CustomSwitch(active=self.parent.sound, pos_hint={"center_x": 1.5, "center_y": 0.4})
         sound_layout.add_widget(sound_switch)
         study_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
-        study_label = MDLabel(text="Conduct new study")
+        study_label = MDLabel(text="New study")
         study_layout.add_widget(study_label)
         study_switch = CustomSwitch(active=self.parent.study, pos_hint={"center_x": 1.5, "center_y": 0.4})
         study_layout.add_widget(study_switch)
