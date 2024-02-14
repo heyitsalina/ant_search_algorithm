@@ -134,13 +134,16 @@ class Simulation:
                 "size": colony.size,
                 "coordinates": colony.coordinates,
                 "pheromone grid": colony.pheromone.pheromone_array[0].shape,
-                "color": colony.color
+                "color": colony.color,
+                "food counter": colony.food_counter
             }
             data["colonies"].append(colony_data)
 
-        for food_item in self.food:
+        for food in self.food:
             food_data = {
-                "amount_of_food": food_item.amount_of_food
+                "start amount": food.start_amount,
+                "amount of food": food.amount_of_food,
+                "coordinates": food.coordinates
             }
             data["food"].append(food_data)
 
