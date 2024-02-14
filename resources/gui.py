@@ -1,4 +1,5 @@
 import ast
+import json
 import numpy as np
 from resources import config
 from kivymd.app import MDApp
@@ -119,7 +120,7 @@ class SettingsButton(MDIconButton):
         self.icon_size = 60
     
     def on_press(self, *args):
-        settings_content = MDBoxLayout(orientation="vertical", spacing="12dp", size_hint_y=None)
+        settings_content = MDBoxLayout(orientation="vertical", spacing="12dp", size_hint_y=None, height="160dp")
         sound_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
         sound_layout.add_widget(MDLabel(text="Sound"))
         sound_switch = CustomSwitch(active=self.parent.sound, pos_hint={"center_x": 1.5, "center_y": 0.4})
@@ -129,8 +130,15 @@ class SettingsButton(MDIconButton):
         study_layout.add_widget(study_label)
         study_switch = CustomSwitch(active=self.parent.study, pos_hint={"center_x": 1.5, "center_y": 0.4})
         study_layout.add_widget(study_switch)
+        load_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
+        load_label = MDLabel(text="Load data")
+        load_layout.add_widget(load_label)
+        load_switch = CustomSwitch(active=False, pos_hint={"center_x": 1.5, "center_y": 0.4})
+        load_layout.add_widget(load_switch)
+
         settings_content.add_widget(sound_layout)
         settings_content.add_widget(study_layout)
+        settings_content.add_widget(load_layout)
 
         self.dialog = MDDialog(
             title="Settings",
@@ -144,17 +152,46 @@ class SettingsButton(MDIconButton):
                 ),
                 MDFlatButton(
                     text="Apply Changes",
-                    on_release=lambda *args: self.apply_changes(sound_switch.active, study_switch.active)
+                    on_release=lambda *args: self.apply_changes(sound_switch.active, study_switch.active, load_switch.active)
                 ),
             ],
         )
         self.dialog.open()
 
-    def apply_changes(self, new_sound_status, new_study_status):
+    def apply_changes(self, new_sound_status, new_study_status, new_load_status):
         self.parent.sound = new_sound_status
         self.parent.study = new_study_status
+        if new_load_status:
+            self.load_settings()
         self.dialog.dismiss()
 
+    def load_settings(self):
+            with open('statistics/statistics.json', 'r') as json_file:
+                data = json.load(json_file)
+
+            sim.bounds = data["simulation"][0]["boundaries"]
+
+            sim.colonies = []
+            for colony_data in data["colonies"]:
+                colony = Colony(
+                                grid_pheromone_shape=colony_data['pheromone grid'],
+                                amount=colony_data["amount"],
+                                coordinates=colony_data["coordinates"],
+                                color=colony_data["color"],
+                                size=(100, 100)
+                                )
+                sim.colonies.append(colony)
+
+            sim.food = []
+            for food_data in data["food"]:
+                food = Food(
+                            amount_of_food=food_data["start amount"],
+                            coordinates=food_data["coordinates"],
+                            size=(100, 100)
+                            )
+                sim.food.append(food)
+            
+            self.parent.children[1].update_canvas()
 
 class ResizableDraggablePicture(Scatter):
     def on_touch_down(self, touch):
