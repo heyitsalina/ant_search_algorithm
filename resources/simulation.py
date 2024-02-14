@@ -2,6 +2,7 @@ import json
 import numpy as np
 from resources.colony import Colony
 from resources.food import Food
+from statistics.statistics import build_pdf
 
 class Simulation:
     """
@@ -122,7 +123,7 @@ class Simulation:
 
         return idx_row, idx_col
     
-    def create_json(self):
+    def create_statistic(self):
         data = {
             "colonies": [],
             "food": []
@@ -149,6 +150,8 @@ class Simulation:
 
         with open("statistics/statistics.json", "w") as json_file:
             json.dump(data, json_file, indent=4)
+
+        build_pdf()
 
 
 
