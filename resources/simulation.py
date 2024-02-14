@@ -1,3 +1,4 @@
+import json
 import numpy as np
 from resources.colony import Colony
 from resources.food import Food
@@ -89,7 +90,6 @@ class Simulation:
         elif y > max_y:
             y = max_y
         return np.array([x, y])
-    
 
     def map_ant_coordinates_to_pheromone_index(self, ant_coordinates, colony):
         """
@@ -121,6 +121,31 @@ class Simulation:
         idx_col = int(ant_coordinates[0] / width_spot)
 
         return idx_row, idx_col
+    
+    def create_json(self):
+        data = {
+            "colonies": [],
+            "food": []
+        }
+
+        for colony in self.colonies:
+            colony_data = {
+                "amount": colony.amount,
+                "size": colony.size,
+                "coordinates": colony.coordinates,
+                "pheromone grid": colony.pheromone.pheromone_array[0].shape,
+                "color": colony.color
+            }
+            data["colonies"].append(colony_data)
+
+        for food_item in self.food:
+            food_data = {
+                "amount_of_food": food_item.amount_of_food
+            }
+            data["food"].append(food_data)
+
+        with open("statistics/statistics.json", "w") as json_file:
+            json.dump(data, json_file, indent=4)
 
 
 
@@ -141,15 +166,17 @@ if  __name__ == "__main__":
     sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=amount, size=(100, 100),
                                   coordinates=coordinates, color=(0, 0, 0, 1)))
     
-    sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=amount, size=(100, 100),
-                                  coordinates=coordinates, color=(0, 0, 0, 1)))
+    sim.add_colony(Colony(grid_pheromone_shape=(n_row-2, n_col+2), amount=amount+400, size=(100, 100),
+                                  coordinates=coordinates, color=(0, 0, 1, 1)))
 
     coordinates = (150, -300)
     amount_of_food = 100
 
     sim.add_food(Food(size=(100, 100), coordinates=coordinates, amount_of_food=amount_of_food))
 
-    for  i in range(1000):
+    sim.add_food(Food(size=(100, 100), coordinates=coordinates, amount_of_food=amount_of_food+250))
+
+    for  i in range(100):
         sim.next_epoch()
     
     for colony in sim.colonies:
@@ -157,3 +184,5 @@ if  __name__ == "__main__":
 
     for food in sim.food:
         print(food.amount_of_food)
+
+    sim.create_json()
