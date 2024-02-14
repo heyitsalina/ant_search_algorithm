@@ -14,7 +14,13 @@ latex_template = """
 \\author{\\url{https://github.com/heyitsalina/ant_search_algorithm}}
 \\maketitle
 
-\\section{Data}
+\\section{Colonies}
+
+\\begin{itemize}
+%s
+\\end{itemize}
+
+\\section{Food}
 
 \\begin{itemize}
 %s
@@ -23,17 +29,24 @@ latex_template = """
 \\end{document}
 """
 
-latex_content = ""
-for item in data:
-    latex_content += "\\item %s: %s\n" % (item, data[item])
+colonies_content = ""
+if isinstance(data['colonies'], list):
+    for idx, colony_data in enumerate(data['colonies']):
+        colonies_content += "\\item Colony %d: Amount - %s, Size - %s, Coordinates - %s, Pheromone Grid - %s, Color - %s\n" % (
+            idx + 1, colony_data['amount'], colony_data['size'],
+            colony_data['coordinates'], colony_data['pheromone grid'], colony_data['color'])
 
-latex_document = latex_template % latex_content
+food_content = ""
+if isinstance(data['food'], list):
+    for idx, food_data in enumerate(data['food']):
+        food_content += "\\item Food %d: Amount - %s\n" % (idx + 1, food_data['amount_of_food'])
+
+latex_document = latex_template % (colonies_content, food_content)
 
 path = os.path.join("statistics", time.strftime("%Y-%m-%d_%H-%M-%S"))
-os.mkdir(path)
+os.makedirs(path, exist_ok=True)
 
 with open(os.path.join(path, "statistics.tex"), 'w') as output_file:
     output_file.write(latex_document)
 
-# Compile LaTeX document to PDF
-os.system('texlive output.tex')
+# os.system('pdflatex -output-directory={} {}'.format(path, os.path.join(path, "statistics.tex")))
