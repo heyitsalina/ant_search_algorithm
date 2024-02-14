@@ -73,6 +73,7 @@ class GUI(MDApp):
             Color(0.64, 0.43, 0.25, 1)
             Rectangle(pos=(0, 0), size=(Window.size[0], Window.size[1]))
         background.sound = True
+        background.study = False
 
         simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
@@ -123,7 +124,13 @@ class SettingsButton(MDIconButton):
         sound_layout.add_widget(MDLabel(text="Sound"))
         sound_switch = CustomSwitch(active=self.parent.sound, pos_hint={"center_x": 1.5, "center_y": 0.4})
         sound_layout.add_widget(sound_switch)
+        study_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
+        study_label = MDLabel(text="Conduct new study")
+        study_layout.add_widget(study_label)
+        study_switch = CustomSwitch(active=self.parent.study, pos_hint={"center_x": 1.5, "center_y": 0.4})
+        study_layout.add_widget(study_switch)
         settings_content.add_widget(sound_layout)
+        settings_content.add_widget(study_layout)
 
         self.dialog = MDDialog(
             title="Settings",
@@ -137,14 +144,15 @@ class SettingsButton(MDIconButton):
                 ),
                 MDFlatButton(
                     text="Apply Changes",
-                    on_release=lambda *args: self.apply_changes(sound_switch.active)
+                    on_release=lambda *args: self.apply_changes(sound_switch.active, study_switch.active)
                 ),
             ],
         )
         self.dialog.open()
 
-    def apply_changes(self, new_sound_status):
+    def apply_changes(self, new_sound_status, new_study_status):
         self.parent.sound = new_sound_status
+        self.parent.study = new_study_status
         self.dialog.dismiss()
 
 
@@ -193,8 +201,6 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         draw the Colony objects and their ants
     draw_food_life_bar():
         draw a life bar of the Food object above them
-    transform_array():
-        transform the array to get show it right on the screen
     toggle_simulation():
         change whether the simulation is running or not
     draw_bounds():
@@ -304,12 +310,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     Color(0, 1, 0.2, 1)
                     Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/food.start_amount, 10))
 
-    def transform_array(self, array):
-        return array[array.shape[0]-1::-1, :].T
-
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
+
+        if self.parent.study:
+            if not self.is_running:
+                sim.create_statistic()
             
     def clear_canvas(self, instance):
         sim.food = []
