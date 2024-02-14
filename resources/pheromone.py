@@ -153,7 +153,10 @@ class Pheromone:
             # Check if all pheromone-levels are equal or not
             if np.all(found_values == np.max(found_values)):
                 #If all pheromones in reach have the same level (f.e. all have 5 or all have 0) a random index will be picked
-                original_index_max_value = random.choice(original_indices)
+                #original_index_max_value = random.choice(original_indices)
+                if pheromone_status == -1:
+                    self.pheromone_array[0] = -self.pheromone_array[0]
+                return
                 
             else:
                 # Find index of highest value
@@ -167,14 +170,16 @@ class Pheromone:
         else:
             # If there is no pheromone in step_size-reach, perform an random step by reducing the step_size until possible indices to move are found, 
             # then pick a random one of them
-            
+            if pheromone_status == -1:
+                self.pheromone_array[0] = -self.pheromone_array[0]
+            return
             # Loop is performed until original_indices isn't empty anymore
-            while not check_and_store_values(self.pheromone_array[depth], ant_array_position, step_size)[1]:
-                step_size = max(step_size - 1, 1)
+            #while not check_and_store_values(self.pheromone_array[depth], ant_array_position, step_size)[1]:
+            #    step_size = max(step_size - 1, 1)
             
             # Get the new positions within the new possible step size
-            found_values, original_indices = check_and_store_values(self.pheromone_array[depth], ant_array_position, step_size)
-            original_index_max_value = random.choice(original_indices)
+           # found_values, original_indices = check_and_store_values(self.pheromone_array[depth], ant_array_position, step_size)
+            #original_index_max_value = random.choice(original_indices)
 
         # Convert back from (y, x) to (x, y)
         original_index_max_value = (original_index_max_value[1], original_index_max_value[0])
@@ -182,19 +187,17 @@ class Pheromone:
         #Convert pheromone-level back to normal
         if pheromone_status == -1:
             self.pheromone_array[0] = -self.pheromone_array[0]
-
-        future_position = self.calculate_pheromone_target_pos(original_index_max_value, self.colony)
         
-        return future_position
+        return original_index_max_value
 
 
-    def calculate_pheromone_target_pos(self, idx_target_pheromone_value, colony):
+    def calculate_pheromone_target_pos(self, idx_target_pheromone_value, colony, bounds):
     
         n_row = colony.pheromone.pheromone_array.shape[1] #y
         n_col = colony.pheromone.pheromone_array.shape[2] #x        
         
-        width_board = self.bounds[1] - self.bounds[0]
-        height_board = self.bounds[3] - self.bounds[2]
+        width_board = bounds[1] - bounds[0]
+        height_board = bounds[3] - bounds[2]
         
         width_spot = width_board/ n_col
         height_spot = height_board/ n_row
