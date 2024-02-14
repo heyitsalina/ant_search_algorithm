@@ -31,7 +31,6 @@ if isinstance(data['colonies'], list):
         colonies_content += "\\subsection*{Colony %d}\n" % (idx + 1)
         colonies_content += "\\begin{itemize}\n"
         colonies_content += "\\item Amount: %s\n" % colony_data['amount']
-        colonies_content += "\\item Size: %s\n" % colony_data['size']
         colonies_content += "\\item Coordinates: %s\n" % colony_data['coordinates']
         colonies_content += "\\item Pheromone Grid: %s\n" % colony_data['pheromone grid']
         colonies_content += "\\item Color: %s\n" % colony_data['color']
@@ -47,10 +46,14 @@ if isinstance(data['food'], list):
 
 latex_document = latex_template % (colonies_content, food_content)
 
-path = os.path.join("statistics", time.strftime("%Y-%m-%d_%H-%M-%S"))
+directory = time.strftime("%Y-%m-%d_%H-%M-%S")
+
+path = os.path.join("statistics", directory)
 os.makedirs(path, exist_ok=True)
 
 with open(os.path.join(path, "statistics.tex"), 'w') as output_file:
     output_file.write(latex_document)
 
-# os.system('pdflatex -output-directory={} {}'.format(path, os.path.join(path, "statistics.tex")))
+os.chdir("statistics\\" + directory)
+
+os.system(f"pdflatexd statistics.tex")
