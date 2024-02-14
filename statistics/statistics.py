@@ -34,6 +34,7 @@ if isinstance(data['colonies'], list):
         colonies_content += "\\item Coordinates: %s\n" % colony_data['coordinates']
         colonies_content += "\\item Pheromone Grid: %s\n" % colony_data['pheromone grid']
         colonies_content += "\\item Color: %s\n" % colony_data['color']
+        colonies_content += "\\item Food Count: %s\n" % colony_data['food counter']
         colonies_content += "\\end{itemize}\n"
 
 food_content = ""
@@ -41,7 +42,9 @@ if isinstance(data['food'], list):
     for idx, food_data in enumerate(data['food']):
         food_content += "\\subsection*{Food %d}\n" % (idx + 1)
         food_content += "\\begin{itemize}\n"
-        food_content += "\\item Amount of food: %s\n" % food_data['amount_of_food']
+        food_content += "\\item Start amount: %s\n" % food_data['start amount']
+        food_content += "\\item Amount of food: %s\n" % food_data['amount of food']
+        food_content += "\\item Coordinates: %s\n" % food_data['coordinates']
         food_content += "\\end{itemize}\n"
 
 latex_document = latex_template % (colonies_content, food_content)
@@ -56,4 +59,4 @@ with open(os.path.join(path, "statistics.tex"), 'w') as output_file:
 
 os.chdir("statistics\\" + directory)
 
-os.system(f"pdflatexd statistics.tex")
+os.system(f"pdflatex statistics.tex")
