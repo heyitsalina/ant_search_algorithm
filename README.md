@@ -49,9 +49,9 @@ python -m resources.gui
 
 ## Demo
 
-If you started the Simulation the GUI should look like this:
+How the Ant-Simulation works:
 
-![image](https://github.com/heyitsalina/ant_search_algorithm/assets/119052351/802b5841-10d0-41eb-a50d-93b439a854bc)
+![Simulation GIF](https://github.com/heyitsalina/ant_search_algorithm/blob/main/images/Explanation.gif)
 
 This ant food search simulation offers an intuitive GUI to interact with the simulation. It allows you to directly influence the simulation environment and observe the complex behaviors of ants in their quest for food. Here’s how you can interact with the simulation:
 
