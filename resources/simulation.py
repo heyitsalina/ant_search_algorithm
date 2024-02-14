@@ -143,7 +143,9 @@ class Simulation:
                 "coordinates": colony.coordinates,
                 "pheromone grid": colony.pheromone.pheromone_array[0].shape,
                 "color": colony.color,
-                "food counter": colony.food_counter
+                "food counter": colony.food_counter,
+                "step size": colony.ants[0].step_size,
+                "amount to carry": colony.ants[0].amount_to_carry
             }
             data["colonies"].append(colony_data)
 

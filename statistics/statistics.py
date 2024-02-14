@@ -66,6 +66,8 @@ def build_pdf():
             colonies_content += "\\item Pheromone Grid: %s\n" % colony_data['pheromone grid']
             colonies_content += "\\item Color: %s\n" % colony_data['color']
             colonies_content += "\\item Food Count: %s\n" % colony_data['food counter']
+            colonies_content += "\\item Step Size: %s\n" % colony_data['step size']
+            colonies_content += "\\item Amount to Carry: %s\n" % colony_data['amount to carry']
             colonies_content += "\\end{itemize}\n"
 
     food_content = ""
