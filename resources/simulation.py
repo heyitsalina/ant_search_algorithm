@@ -39,8 +39,10 @@ class Simulation:
         self.colonies = []
         self.running = False
         self.bounds = () #(min_x, max_x, min_y, max_y)
+        self.epoch = 0
         
     def next_epoch(self):
+        self.epoch += 1
         for colony in self.colonies:
             for ant in colony.ants:
                 for food in self.food:
@@ -123,9 +125,16 @@ class Simulation:
     
     def create_statistic(self):
         data = {
+            "simulation" : [],
             "colonies": [],
             "food": []
         }
+
+        simulation_data = {
+            "epochs": self.epoch,
+            "boundaries": self.bounds
+        }
+        data["simulation"].append(simulation_data)
 
         for colony in self.colonies:
             colony_data = {
