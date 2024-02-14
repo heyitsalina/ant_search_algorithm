@@ -33,7 +33,8 @@ class Ant:
         self.epoch = 0
         self.ant_carries = 0
         self.search_radius = search_radius
-
+        self.food_epoch_threshold = np.random.randint(20, 40)
+        self.carry_timer = 0
         
     def switch_pheromone(self):
         """Switches the pheromone status of the ant."""
@@ -41,7 +42,7 @@ class Ant:
     
 
 
-    def move(self, angle_offset = 0, pheromone_direction=None):
+    def move(self, colony_position, angle_offset = 0, pheromone_direction=None):
 
         position = np.array(self.coordinates)
         
@@ -71,6 +72,17 @@ class Ant:
                 self.direction += pheromone_direction / np.linalg.norm(pheromone_direction)
             self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
         
+            # If the carry timer exceeds the threshold, move towards the colony
+            if self.pheromone_status == 1 and self.carry_timer >= self.food_epoch_threshold:
+                direction_to_colony = np.array(colony_position) - position
+                self.direction = direction_to_colony / np.linalg.norm(direction_to_colony) * self.step_size
+
+            # If the ant is carrying food, increment the carry timer
+            if self.pheromone_status == 1:
+                self.carry_timer += 1
+            else:
+                self.carry_timer = 0
+
         future_position = position + self.direction
         self.epoch += 1
         return tuple(future_position)
