@@ -16,6 +16,10 @@ def build_pdf():
     \\author{\\url{https://github.com/heyitsalina/ant_search_algorithm}}
     \\maketitle
 
+    \\section{General Information}
+
+    %s
+
     \\section{Colonies}
 
     %s
@@ -26,6 +30,10 @@ def build_pdf():
 
     \\end{document}
     """
+
+    simulation_content = ""
+    simulation_content += "Epochs: %s\\newline\n" % data["simulation"][0]["epochs"]
+    simulation_content += "Boundaries: %s\n" % data["simulation"][0]["boundaries"]
 
     colonies_content = ""
     if isinstance(data['colonies'], list):
@@ -49,7 +57,7 @@ def build_pdf():
             food_content += "\\item Coordinates: %s\n" % food_data['coordinates']
             food_content += "\\end{itemize}\n"
 
-    latex_document = latex_template % (colonies_content, food_content)
+    latex_document = latex_template % (simulation_content, colonies_content, food_content)
 
     directory = time.strftime("%Y-%m-%d_%H-%M-%S")
 
