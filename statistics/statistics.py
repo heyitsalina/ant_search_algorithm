@@ -1,11 +1,21 @@
 import json
 import os
 import time
+import hashlib
+
+
+def generate_hash(data):
+    serialized_data = json.dumps(data, sort_keys=True)
+
+    hash_object = hashlib.sha256(serialized_data.encode())
+    return hash_object.hexdigest()
 
 
 def build_pdf():
     with open('statistics/statistics.json', 'r') as json_file:
         data = json.load(json_file)
+    
+    hash_value = generate_hash(data)
 
     latex_template = """
     \\documentclass{article}
@@ -16,6 +26,7 @@ def build_pdf():
 
     \\title{Ant Search Statistics}
     \\author{\\url{https://github.com/heyitsalina/ant_search_algorithm}}
+    \\date{%s}
     \\maketitle
 
     \\section{General Information}
@@ -91,7 +102,7 @@ def build_pdf():
         x, y = food_data['coordinates']
         plot_food += f"({x+50},{y+50}) "
 
-    latex_document = latex_template % (simulation_content, colonies_content, food_content, plot_range, plot_colony, plot_food)
+    latex_document = latex_template % (hash_value, simulation_content, colonies_content, food_content, plot_range, plot_colony, plot_food)
 
     directory = time.strftime("%Y-%m-%d_%H-%M-%S")
     path = os.path.join("statistics", directory)
