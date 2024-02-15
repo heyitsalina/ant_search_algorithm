@@ -43,6 +43,8 @@ class GUI(MDApp):
     -------
     build():
         initialize kivy window
+    on_start():
+        show fps monitor
     on_mouse_pos()
         notice if cursor is over the buttons
     mouse_leave_css():
@@ -198,6 +200,7 @@ class SettingsButton(MDIconButton):
             except Exception:
                 pass
 
+
 class ResizableDraggablePicture(Scatter):
     def on_touch_down(self, touch):
         if touch.is_mouse_scrolling:
@@ -263,6 +266,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         show the error dialog
     adjust_view():
         change the view back to the original
+    delete_object():
+        delete the passed object
     """
 
     def __init__(self, **kwargs):
@@ -549,6 +554,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.dialog.dismiss()
         self.update_canvas()
 
+
 class CustomSwitch(MDSwitch):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -714,6 +720,10 @@ class ButtonWidget(BoxLayout):
         place the food on the canvas
     place_colony():
         place the colony on the canvas
+    play_button_sound():
+        play sound if button is pressed
+    play_place_sound():
+        play sound when a new object is placed on the canvas
     """
     
     def __init__(self, simulation_widget, **kwargs):
