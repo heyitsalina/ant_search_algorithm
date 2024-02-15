@@ -372,7 +372,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     ),
                     MDFlatButton(
                         text="Apply Changes",
-                        on_release=lambda *args: self.apply_ant_changes(colony, ants_label.text, ant_settings_label.text, carry_label.text, color_label.text, pheromone_grid_label.text, pheromone_switch.active)
+                        on_release=lambda *args: self.apply_ant_changes(colony, ants_label.text, ant_settings_label.text, carry_label.text, color_label.text, search_radius_label.text, pheromone_grid_label.text, pheromone_switch.active)
                     ),
                 ],
             )
@@ -410,12 +410,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         )
         self.dialog.open()
     
-    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_pheromone_grid, new_pheromone_state):
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_search_radius, new_pheromone_grid, new_pheromone_state):
         try:
             new_ant_count = int(new_ant_count)
             new_amount_to_carry = int(new_amount_to_carry)
             new_step_size = int(new_step_size)
             new_color = ast.literal_eval(new_color)
+            new_search_radius = int(new_search_radius)
             new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
 
             if new_ant_count < 0:
@@ -430,7 +431,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
 
             colony.amount = new_ant_count
             colony.ants = []
-            colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry)
+            colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry, search_radius=new_search_radius)
             colony.color = new_color
             colony.pheromone = Pheromone(grid_shape=new_pheromone_grid)
             colony.show_pheromone = new_pheromone_state
