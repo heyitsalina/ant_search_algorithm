@@ -38,9 +38,7 @@ class Ant:
         """Switches the pheromone status of the ant."""
         self.pheromone_status *= -1
     
-
-
-    def move(self, angle_offset = 0, pheromone_direction=None):
+    def move(self, angle_offset = 0, pheromone_direction=None, pheromone_influence=0.01):
 
         position = np.array(self.coordinates)
         
@@ -67,14 +65,13 @@ class Ant:
             #Rotate and normalize the direction vector
             self.direction = np.dot(rotation_matrix, self.direction)
             if pheromone_direction is not None:
-                self.direction += pheromone_direction / np.linalg.norm(pheromone_direction)
+                self.direction += pheromone_direction * pheromone_influence
             self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
                 
         future_position = position + self.direction
         self.epoch += 1
         return tuple(future_position)
-
-        
+     
     def is_near_target(self, target_position, center_offset = 45, radius = 20):
         """
         Determines if an ant is within a specified radius of a food or colony source.
@@ -108,7 +105,6 @@ class Ant:
             return (ant_x, ant_y)
         return None
     
-
     def try_carry_food(self, food):
         """
         Determine if the ant can pick up food from a specified source.
@@ -120,8 +116,7 @@ class Ant:
             bool: True if the ant can carry food, False otherwise.
         """
         return self.pheromone_status == -1 and  self.is_near_target(food.coordinates) and food.amount_of_food > 0
-
-        
+   
     def carry_food(self, food):
         """
         Have the ant pick up food from the specified source and update its status.
@@ -148,8 +143,6 @@ class Ant:
         """
 
         return self.pheromone_status == 1 and self.is_near_target(colony.coordinates) 
-
-
 
     def drop_food(self, colony):
         """
