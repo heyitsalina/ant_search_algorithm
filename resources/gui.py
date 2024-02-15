@@ -166,34 +166,37 @@ class SettingsButton(MDIconButton):
         self.dialog.dismiss()
 
     def load_settings(self):
-            with open('statistics/statistics.json', 'r') as json_file:
-                data = json.load(json_file)
+            try:
+                with open('statistics/statistics.json', 'r') as json_file:
+                    data = json.load(json_file)
 
-            sim.bounds = data["simulation"][0]["boundaries"]
+                sim.bounds = data["simulation"][0]["boundaries"]
 
-            sim.colonies = []
-            for colony_data in data["colonies"]:
-                colony = Colony(
-                                grid_pheromone_shape=colony_data['pheromone grid'],
-                                amount=colony_data["amount"],
-                                coordinates=colony_data["coordinates"],
-                                color=colony_data["color"],
+                sim.colonies = []
+                for colony_data in data["colonies"]:
+                    colony = Colony(
+                                    grid_pheromone_shape=colony_data['pheromone grid'],
+                                    amount=colony_data["amount"],
+                                    coordinates=colony_data["coordinates"],
+                                    color=colony_data["color"],
+                                    size=(100, 100)
+                                    )
+                    colony.ants = []
+                    colony.add_ants(colony_data["amount to carry"], colony_data["step size"])
+                    sim.colonies.append(colony)
+
+                sim.food = []
+                for food_data in data["food"]:
+                    food = Food(
+                                amount_of_food=food_data["start amount"],
+                                coordinates=food_data["coordinates"],
                                 size=(100, 100)
                                 )
-                colony.ants = []
-                colony.add_ants(colony_data["amount to carry"], colony_data["step size"])
-                sim.colonies.append(colony)
-
-            sim.food = []
-            for food_data in data["food"]:
-                food = Food(
-                            amount_of_food=food_data["start amount"],
-                            coordinates=food_data["coordinates"],
-                            size=(100, 100)
-                            )
-                sim.food.append(food)
-            
-            self.parent.children[1].update_canvas()
+                    sim.food.append(food)
+                
+                self.parent.children[1].update_canvas()
+            except Exception:
+                pass
 
 class ResizableDraggablePicture(Scatter):
     def on_touch_down(self, touch):
@@ -419,6 +422,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                         on_release=lambda *args: self.dialog.dismiss()
                     ),
                     MDFlatButton(
+                        text="Delete",
+                        on_release=lambda *args: self.delete_object(colony),
+                    ),
+                    MDFlatButton(
                         text="Apply Changes",
                         on_release=lambda *args: self.apply_ant_changes(colony, ants_label.text, ant_settings_label.text, carry_label.text, color_label.text, pheromone_grid_label.text, pheromone_switch.active)
                     ),
@@ -450,6 +457,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     text="Cancel",
                     on_release=lambda *args: self.dialog.dismiss()
                 ),
+                MDFlatButton(
+                        text="Delete",
+                        on_release=lambda *args: self.delete_object(food),
+                    ),
                 MDFlatButton(
                     text="Apply Changes",
                     on_release=lambda *args: self.apply_food_changes(food, amount_label.text, life_bar_switch.active)
@@ -530,6 +541,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.scale = 1
         self.pos = ((self.width - sim.bounds[1])//2 + 45, (self.height - sim.bounds[2])//2)
 
+    def delete_object(self, object):
+        if isinstance(object, Food):
+            sim.food.remove(object)
+        elif isinstance(object, Colony):
+            sim.colonies.remove(object)
+        self.dialog.dismiss()
+        self.update_canvas()
 
 class CustomSwitch(MDSwitch):
     def __init__(self, **kwargs):
