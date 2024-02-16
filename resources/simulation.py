@@ -213,8 +213,8 @@ if  __name__ == "__main__":
     reduce_fac = [0.75, 0.95]
     pheromone_influence = [0.05, 0.09]
 
-    results = pd.DataFrame(columns=["Colony Amount", "Grid Pheromone", "Final Food Counter",
-                                    "Final remaining Food", "Search Radius","Reduce Factor", "pheromone influence"])
+    results = pd.DataFrame(columns=["Colony Amount", "Grid Pheromone", "Final Food Counter", "Final remaining Food",
+                                    "still carrying food", "Search Radius","Reduce Factor", "pheromone influence"])
 
     for c_coord in colony_coords:
         for f_coord in food_coords:
@@ -226,15 +226,18 @@ if  __name__ == "__main__":
                                 sim = Simulation()
                                 sim.bounds = (0, 720, -480, 0)
                                 sim.add_colony(Colony(grid_pheromone_shape=g_shape, amount=c_amount, size=(100, 100), coordinates=c_coord, color=(0, 0, 0, 1)))
-                                sim.add_food(Food(size=(100, 100), coordinates=f_coord, amount_of_food=100))
+                                amount_of_food = 100
+                                sim.add_food(Food(size=(100, 100), coordinates=f_coord, amount_of_food=amount_of_food))
 
-                                for _ in range(1000):
+                                for _ in range(1250):
                                     sim.next_epoch(search_rad, red_fac)
                                 
                                 total_food_collected = sum(colony.food_counter for colony in sim.colonies)
                                 remaining_food = sum(food.amount_of_food for food in sim.food)
-                                new_row = pd.DataFrame([{"Colony Amount": c_amount, "Grid Pheromone": g_shape, "Final Food Counter": total_food_collected,
-                                                        "Final remaining Food": remaining_food, "Search Radius": search_rad, "Reduce Factor": red_fac, "pheromone influence": phero_influence}])
+                                ant_carrying_food = amount_of_food - (remaining_food + total_food_collected)
+
+                                new_row = pd.DataFrame([{"Colony Amount": c_amount, "Grid Pheromone": g_shape, "Final Food Counter": total_food_collected, "Final remaining Food": remaining_food,
+                                                         "still carrying food": ant_carrying_food, "Search Radius": search_rad, "Reduce Factor": red_fac, "pheromone influence": phero_influence}])
                                 results = pd.concat([results, new_row], ignore_index=True)
 
 
