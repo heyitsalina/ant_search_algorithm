@@ -203,8 +203,6 @@ class Simulation:
 
 
 if  __name__ == "__main__":
-    sim = Simulation()
-    sim.bounds = (0, 720, -480, 0)
     
     colony_coords = [(110, -110)]
     food_coords = [(600, -360)]
@@ -230,7 +228,7 @@ if  __name__ == "__main__":
                                 sim.add_colony(Colony(grid_pheromone_shape=g_shape, amount=c_amount, size=(100, 100), coordinates=c_coord, color=(0, 0, 0, 1)))
                                 sim.add_food(Food(size=(100, 100), coordinates=f_coord, amount_of_food=100))
 
-                                for _ in range(2):
+                                for _ in range(1000):
                                     sim.next_epoch(search_rad, red_fac)
                                 
                                 total_food_collected = sum(colony.food_counter for colony in sim.colonies)
