@@ -148,7 +148,8 @@ class Simulation:
                 "color": colony.color,
                 "food counter": colony.food_counter,
                 "step size": colony.ants[0].step_size,
-                "amount to carry": colony.ants[0].amount_to_carry
+                "amount to carry": colony.ants[0].amount_to_carry,
+                "search radius": colony.ants[0].search_radius,
             }
             data["colonies"].append(colony_data)
 

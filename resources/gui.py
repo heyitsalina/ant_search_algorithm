@@ -184,7 +184,7 @@ class SettingsButton(MDIconButton):
                                     size=(100, 100)
                                     )
                     colony.ants = []
-                    colony.add_ants(colony_data["amount to carry"], colony_data["step size"])
+                    colony.add_ants(colony_data["amount to carry"], colony_data["step size"], colony_data["search radius"])
                     sim.colonies.append(colony)
 
                 sim.food = []
