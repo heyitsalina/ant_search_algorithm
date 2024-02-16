@@ -1,4 +1,5 @@
 import ast
+import json
 import numpy as np
 from resources import config
 from kivymd.app import MDApp
@@ -42,6 +43,8 @@ class GUI(MDApp):
     -------
     build():
         initialize kivy window
+    on_start():
+        show fps monitor
     on_mouse_pos()
         notice if cursor is over the buttons
     mouse_leave_css():
@@ -73,6 +76,7 @@ class GUI(MDApp):
             Color(0.64, 0.43, 0.25, 1)
             Rectangle(pos=(0, 0), size=(Window.size[0], Window.size[1]))
         background.sound = True
+        background.study = False
 
         simulation_widget = SimulationWidget()
         button_widget = ButtonWidget(simulation_widget)
@@ -118,12 +122,25 @@ class SettingsButton(MDIconButton):
         self.icon_size = 60
     
     def on_press(self, *args):
-        settings_content = MDBoxLayout(orientation="vertical", spacing="8dp", size_hint_y=None)
+        settings_content = MDBoxLayout(orientation="vertical", spacing="12dp", size_hint_y=None, height="160dp")
         sound_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
         sound_layout.add_widget(MDLabel(text="Sound"))
         sound_switch = CustomSwitch(active=self.parent.sound, pos_hint={"center_x": 1.5, "center_y": 0.4})
         sound_layout.add_widget(sound_switch)
+        study_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
+        study_label = MDLabel(text="New study")
+        study_layout.add_widget(study_label)
+        study_switch = CustomSwitch(active=self.parent.study, pos_hint={"center_x": 1.5, "center_y": 0.4})
+        study_layout.add_widget(study_switch)
+        load_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
+        load_label = MDLabel(text="Load data")
+        load_layout.add_widget(load_label)
+        load_switch = CustomSwitch(active=False, pos_hint={"center_x": 1.5, "center_y": 0.4})
+        load_layout.add_widget(load_switch)
+
         settings_content.add_widget(sound_layout)
+        settings_content.add_widget(study_layout)
+        settings_content.add_widget(load_layout)
 
         self.dialog = MDDialog(
             title="Settings",
@@ -137,15 +154,51 @@ class SettingsButton(MDIconButton):
                 ),
                 MDFlatButton(
                     text="Apply Changes",
-                    on_release=lambda *args: self.apply_changes(sound_switch.active)
+                    on_release=lambda *args: self.apply_changes(sound_switch.active, study_switch.active, load_switch.active)
                 ),
             ],
         )
         self.dialog.open()
 
-    def apply_changes(self, new_sound_status):
+    def apply_changes(self, new_sound_status, new_study_status, new_load_status):
         self.parent.sound = new_sound_status
+        self.parent.study = new_study_status
+        if new_load_status:
+            self.load_settings()
         self.dialog.dismiss()
+
+    def load_settings(self):
+            try:
+                with open('statistics/statistics.json', 'r') as json_file:
+                    data = json.load(json_file)
+
+                sim.bounds = data["simulation"][0]["boundaries"]
+
+                sim.colonies = []
+                for colony_data in data["colonies"]:
+                    colony = Colony(
+                                    grid_pheromone_shape=colony_data['pheromone grid'],
+                                    amount=colony_data["amount"],
+                                    coordinates=colony_data["coordinates"],
+                                    color=colony_data["color"],
+                                    size=(100, 100)
+                                    )
+                    colony.ants = []
+                    colony.add_ants(colony_data["amount to carry"], colony_data["step size"], colony_data["search radius"], colony_data["pheromone influence"])
+                    sim.colonies.append(colony)
+
+                sim.food = []
+                for food_data in data["food"]:
+                    food = Food(
+                                amount_of_food=food_data["start amount"],
+                                coordinates=food_data["coordinates"],
+                                size=(100, 100)
+                                )
+                    sim.food.append(food)
+                
+                self.parent.children[1].update_canvas()
+            except Exception:
+                pass
 
 
 class ResizableDraggablePicture(Scatter):
@@ -193,8 +246,6 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         draw the Colony objects and their ants
     draw_food_life_bar():
         draw a life bar of the Food object above them
-    transform_array():
-        transform the array to get show it right on the screen
     toggle_simulation():
         change whether the simulation is running or not
     draw_bounds():
@@ -215,6 +266,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         show the error dialog
     adjust_view():
         change the view back to the original
+    delete_object():
+        delete the passed object
     """
 
     def __init__(self, **kwargs):
@@ -281,7 +334,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def draw_food(self):
         with self.canvas:
             for food in sim.food:
-                Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
+                if food.amount_of_food > 0:
+                    Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
 
     def draw_ants(self):
         with self.canvas:
@@ -299,17 +353,20 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         with self.canvas:
             for food in sim.food:
                 if food.show_life_bar:
-                    Color(0.5, 0.5, 0.5, 1)
-                    Rectangle(pos=(food.coordinates[0]+13, food.coordinates[1]+80-2), size=(74, 14))
-                    Color(0, 1, 0.2, 1)
-                    Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/food.start_amount, 10))
-
-    def transform_array(self, array):
-        return array[array.shape[0]-1::-1, :].T
+                    if food.amount_of_food > 0:
+                        Color(0.5, 0.5, 0.5, 1)
+                        Rectangle(pos=(food.coordinates[0]+13, food.coordinates[1]+80-2), size=(74, 14))
+                        Color(0, 1, 0.2, 1)
+                        Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/food.start_amount, 10))
 
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
+
+        if self.parent.study:
+            if not self.is_running:
+                sim.create_statistic()
+                self.parent.study = False
             
     def clear_canvas(self, instance):
         sim.food = []
@@ -343,6 +400,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             show_pheromone_label = MDBoxLayout(orientation="horizontal", size_hint=(1.1, .9))
             pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
             search_radius_label = MDTextField(hint_text="Search radius of the ants", text=str(colony.ants[0].search_radius))
+            pheromone_influence_label = MDTextField(hint_text="Pheromone influence", text=str(colony.ants[0].pheromone_influence))
             switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
             pheromone_switch = CustomSwitch(active=colony.show_pheromone)
             pheromone_text = MDLabel(text="Show Pheromone Grid", pos_hint={"center_x": 1.5, "center_y": .35}) #.65
@@ -361,18 +419,23 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                                         carry_label,
                                         color_label,
                                         search_radius_label,
+                                        pheromone_influence_label,
                                         show_pheromone_label,
                                         orientation="vertical",
                                         size_hint_y=None,
-                                        height="400dp"),
+                                        height="450dp"),
                 buttons=[
                     MDFlatButton(
                         text="Cancel",
                         on_release=lambda *args: self.dialog.dismiss()
                     ),
                     MDFlatButton(
+                        text="Delete",
+                        on_release=lambda *args: self.delete_object(colony),
+                    ),
+                    MDFlatButton(
                         text="Apply Changes",
-                        on_release=lambda *args: self.apply_ant_changes(colony, ants_label.text, ant_settings_label.text, carry_label.text, color_label.text, search_radius_label.text, pheromone_grid_label.text, pheromone_switch.active)
+                        on_release=lambda *args: self.apply_ant_changes(colony, ants_label.text, ant_settings_label.text, carry_label.text, color_label.text, search_radius_label.text, pheromone_influence_label.text, pheromone_grid_label.text, pheromone_switch.active)
                     ),
                 ],
             )
@@ -403,6 +466,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     on_release=lambda *args: self.dialog.dismiss()
                 ),
                 MDFlatButton(
+                        text="Delete",
+                        on_release=lambda *args: self.delete_object(food),
+                    ),
+                MDFlatButton(
                     text="Apply Changes",
                     on_release=lambda *args: self.apply_food_changes(food, amount_label.text, life_bar_switch.active)
                 ),
@@ -410,12 +477,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         )
         self.dialog.open()
     
-    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_search_radius, new_pheromone_grid, new_pheromone_state):
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_search_radius, new_pheromone_influence, new_pheromone_grid, new_pheromone_state):
         try:
             new_ant_count = int(new_ant_count)
             new_amount_to_carry = int(new_amount_to_carry)
             new_step_size = int(new_step_size)
             new_color = ast.literal_eval(new_color)
+            new_pheromone_influence = int(new_pheromone_influence)
             new_search_radius = int(new_search_radius)
             new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
 
@@ -431,7 +499,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
 
             colony.amount = new_ant_count
             colony.ants = []
-            colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry, search_radius=new_search_radius)
+            colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry, search_radius=new_search_radius, pheromone_influence=new_pheromone_influence)
             colony.color = new_color
             colony.pheromone = Pheromone(grid_shape=new_pheromone_grid)
             colony.show_pheromone = new_pheromone_state
@@ -482,6 +550,14 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             return False
         self.scale = 1
         self.pos = ((self.width - sim.bounds[1])//2 + 45, (self.height - sim.bounds[2])//2)
+
+    def delete_object(self, object):
+        if isinstance(object, Food):
+            sim.food.remove(object)
+        elif isinstance(object, Colony):
+            sim.colonies.remove(object)
+        self.dialog.dismiss()
+        self.update_canvas()
 
 
 class CustomSwitch(MDSwitch):
@@ -649,6 +725,10 @@ class ButtonWidget(BoxLayout):
         place the food on the canvas
     place_colony():
         place the colony on the canvas
+    play_button_sound():
+        play sound if button is pressed
+    play_place_sound():
+        play sound when a new object is placed on the canvas
     """
     
     def __init__(self, simulation_widget, **kwargs):

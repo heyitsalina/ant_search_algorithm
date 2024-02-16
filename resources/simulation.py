@@ -1,6 +1,8 @@
+import json
 import numpy as np
 from resources.colony import Colony
 from resources.food import Food
+from statistics.statistics import build_pdf
 
 class Simulation:
     """
@@ -37,8 +39,10 @@ class Simulation:
         self.colonies = []
         self.running = False
         self.bounds = () #(min_x, max_x, min_y, max_y)
+        self.epoch = 0
         
     def next_epoch(self):
+        self.epoch += 1
         for colony in self.colonies:
             for ant in colony.ants:
                 for food in self.food:
@@ -57,12 +61,9 @@ class Simulation:
                                                                                colony = colony)
                 
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
-                                                 pheromone_status = ant.pheromone_status)
-                
+                                                 pheromone_status = ant.pheromone_status)    
             colony.pheromone.reduce_pheromones(0.99, 0.001)
                 
-        self.food = list(food for food in self.food if food.amount_of_food > 0)
-        
     def add_colony(self, colony):
         self.colonies.append(colony)
 
@@ -125,6 +126,47 @@ class Simulation:
 
         return idx_row, idx_col
     
+    def create_statistic(self):
+        data = {
+            "simulation" : [],
+            "colonies": [],
+            "food": []
+        }
+
+        simulation_data = {
+            "epochs": self.epoch,
+            "boundaries": self.bounds
+        }
+        data["simulation"].append(simulation_data)
+
+        for colony in self.colonies:
+            colony_data = {
+                "amount": colony.amount,
+                "size": colony.size,
+                "coordinates": colony.coordinates,
+                "pheromone grid": colony.pheromone.pheromone_array[0].shape,
+                "color": colony.color,
+                "food counter": colony.food_counter,
+                "step size": colony.ants[0].step_size,
+                "amount to carry": colony.ants[0].amount_to_carry,
+                "search radius": colony.ants[0].search_radius,
+                "pheromone influence": colony.ants[0].pheromone_influence,
+            }
+            data["colonies"].append(colony_data)
+
+        for food in self.food:
+            food_data = {
+                "start amount": food.start_amount,
+                "amount of food": food.amount_of_food,
+                "coordinates": food.coordinates
+            }
+            data["food"].append(food_data)
+
+        with open("statistics/statistics.json", "w") as json_file:
+            json.dump(data, json_file, indent=4)
+
+        build_pdf()
+
     def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_array, colony, search_radius):
         depth = 0 if pheromone_status == 1 else 1
         pheromone_shape = pheromone_array[0].shape
@@ -174,15 +216,17 @@ if  __name__ == "__main__":
     sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=amount, size=(100, 100),
                                   coordinates=coordinates, color=(0, 0, 0, 1)))
     
-    sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=amount, size=(100, 100),
-                                  coordinates=coordinates, color=(0, 0, 0, 1)))
+    sim.add_colony(Colony(grid_pheromone_shape=(n_row-2, n_col+2), amount=amount+400, size=(100, 100),
+                                  coordinates=coordinates, color=(0, 0, 1, 1)))
 
     coordinates = (150, -300)
     amount_of_food = 100
 
     sim.add_food(Food(size=(100, 100), coordinates=coordinates, amount_of_food=amount_of_food))
 
-    for  i in range(1000):
+    sim.add_food(Food(size=(100, 100), coordinates=coordinates, amount_of_food=amount_of_food+250))
+
+    for  i in range(100):
         sim.next_epoch()
     
     for colony in sim.colonies:
