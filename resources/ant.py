@@ -1,7 +1,7 @@
 import numpy as np
 
 class Ant:
-    def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=3):
+    def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=3, pheromone_influence=0.01):
         """
         This class represents an ant in the Ant search algorithm.
         
@@ -33,12 +33,13 @@ class Ant:
         self.epoch = 0
         self.ant_carries = 0
         self.search_radius = search_radius
+        self.pheromone_influence = pheromone_influence
         
     def switch_pheromone(self):
         """Switches the pheromone status of the ant."""
         self.pheromone_status *= -1
     
-    def move(self, angle_offset = 0, pheromone_direction=None, pheromone_influence=0.01):
+    def move(self, angle_offset = 0, pheromone_direction=None):
 
         position = np.array(self.coordinates)
         
@@ -65,7 +66,7 @@ class Ant:
             #Rotate and normalize the direction vector
             self.direction = np.dot(rotation_matrix, self.direction)
             if pheromone_direction is not None:
-                self.direction += pheromone_direction * pheromone_influence
+                self.direction += pheromone_direction * self.pheromone_influence
             self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
                 
         future_position = position + self.direction
