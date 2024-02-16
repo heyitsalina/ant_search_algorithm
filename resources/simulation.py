@@ -150,6 +150,7 @@ class Simulation:
                 "step size": colony.ants[0].step_size,
                 "amount to carry": colony.ants[0].amount_to_carry,
                 "search radius": colony.ants[0].search_radius,
+                "pheromone influence": colony.ants[0].pheromone_influence,
             }
             data["colonies"].append(colony_data)
 
