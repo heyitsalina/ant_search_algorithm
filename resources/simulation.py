@@ -42,7 +42,7 @@ class Simulation:
         self.bounds = () #(min_x, max_x, min_y, max_y)
         self.epoch = 0
         
-    def next_epoch(self):
+    def next_epoch(self, search_radius = 3):
         self.epoch += 1
         for colony in self.colonies:
             for ant in colony.ants:
@@ -53,6 +53,7 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
+                ant.search_radius = search_radius
                 pheromone_direction = self.find_pheromone_trace(ant.coordinates, ant.pheromone_status, colony.pheromone.pheromone_array, colony, ant.search_radius)
                 future_position = ant.move(pheromone_direction=pheromone_direction)
                 adjusted_position = self.check_future_position(future_position)
@@ -209,29 +210,31 @@ if  __name__ == "__main__":
     colony_amounts = [100, 250, 400]
     #grid_pheromone_shape = [(10, 15), (17, 23), (21, 27), (26, 30)]
     grid_pheromone_shape = [(15, 20), (10, 15), (30, 35)]
+    search_radius = [2, 3, 4]
 
-    results = pd.DataFrame(columns=["Colony Amount", "Grid Pheromone", "Final Food Counter", "Final remaining Food"])
+    results = pd.DataFrame(columns=["Colony Amount", "Grid Pheromone", "Final Food Counter", "Final remaining Food", "Search Radius"])
 
     for c_coord in colony_coords:
         for f_coord in food_coords:
             for c_amount in colony_amounts:
                 for g_shape in grid_pheromone_shape:
-                    n_row, n_col = int(sim.bounds[3]-sim.bounds[2])//40, int(sim.bounds[1]-sim.bounds[0])//40
+                    for search_rad in search_radius:
+                        sim = Simulation()
+                        sim.bounds = (0, 720, -480, 0)
+                        sim.add_colony(Colony(grid_pheromone_shape=g_shape, amount=c_amount, size=(100, 100), coordinates=c_coord, color=(0, 0, 0, 1)))
+                        sim.add_food(Food(size=(100, 100), coordinates=f_coord, amount_of_food=100))
 
-                    sim = Simulation()
-                    sim.bounds = (0, 720, -480, 0)
-                    sim.add_colony(Colony(grid_pheromone_shape=g_shape, amount=c_amount, size=(100, 100), coordinates=c_coord, color=(0, 0, 0, 1)))
-                    sim.add_food(Food(size=(100, 100), coordinates=f_coord, amount_of_food=100))
-
-                    for _ in range(2):
-                        sim.next_epoch()
-                    
-                    total_food_collected = sum(colony.food_counter for colony in sim.colonies)
-                    remaining_food = sum(food.amount_of_food for food in sim.food)
-                    new_row = pd.DataFrame([{"Colony Amount": c_amount, "Grid Pheromone": g_shape, "Final Food Counter": total_food_collected, "Final remaining Food": remaining_food}])
-                    results = pd.concat([results, new_row], ignore_index=True)
+                        for _ in range(2):
+                            sim.next_epoch(search_rad)
+                        
+                        total_food_collected = sum(colony.food_counter for colony in sim.colonies)
+                        remaining_food = sum(food.amount_of_food for food in sim.food)
+                        new_row = pd.DataFrame([{"Colony Amount": c_amount, "Grid Pheromone": g_shape, "Final Food Counter": total_food_collected, "Final remaining Food": remaining_food, "Search Radius": search_rad}])
+                        results = pd.concat([results, new_row], ignore_index=True)
 
 
     sorted_results = results.sort_values(by=["Final Food Counter", "Final remaining Food"], ascending=[True, False])
     pd.set_option('display.max_rows', None)
     print(sorted_results)
+    
+    
