@@ -197,8 +197,28 @@ class SettingsButton(MDIconButton):
                     sim.food.append(food)
                 
                 self.parent.children[1].update_canvas()
-            except Exception:
-                pass
+            except Exception as e:
+                self.show_error_dialog(f"Error: {str(e)}" + "\n\n" + "Could not load settings. Try to restart the program.")
+    
+    def show_error_dialog(self, error_message):
+        sound = SoundLoader.load("../sounds/error.mp3")
+        if sound:
+            sound.play()
+        error_layout = MDBoxLayout(orientation="vertical", spacing="12dp", size_hint_y=None)
+        error_layout.add_widget(MDLabel(text=error_message))
+
+        error_dialog = MDDialog(
+            title="[color=ff0000]Error[/color]",
+            type="custom",
+            content_cls=error_layout,
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    on_release=lambda *args: error_dialog.dismiss()
+                ),
+            ],
+        )
+        error_dialog.open()
 
 
 class ResizableDraggablePicture(Scatter):
@@ -483,7 +503,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             new_amount_to_carry = int(new_amount_to_carry)
             new_step_size = int(new_step_size)
             new_color = ast.literal_eval(new_color)
-            new_pheromone_influence = int(new_pheromone_influence)
+            new_pheromone_influence = float(new_pheromone_influence)
             new_search_radius = int(new_search_radius)
             new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
 
