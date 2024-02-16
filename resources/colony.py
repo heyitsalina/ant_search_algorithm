@@ -27,9 +27,9 @@ class Colony:
         self.add_ants()
         self.food_counter = 0
 
-    def add_ants(self, amount_to_carry=1, step_size=3):
+    def add_ants(self, amount_to_carry=1, step_size=3, search_radius=3):
         for _ in range(self.amount):
             self.ants.append(Ant(coordinates=(self.coordinates[0]+50, self.coordinates[1]+50),
                                  amount_to_carry=amount_to_carry,
-                                 step_size=step_size))
+                                 step_size=step_size, search_radius=search_radius))
     
