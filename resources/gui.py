@@ -483,7 +483,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             new_amount_to_carry = int(new_amount_to_carry)
             new_step_size = int(new_step_size)
             new_color = ast.literal_eval(new_color)
-            new_pheromone_influence = int(new_pheromone_influence)
+            new_pheromone_influence = float(new_pheromone_influence)
             new_search_radius = int(new_search_radius)
             new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
 
