@@ -27,5 +27,7 @@ class Food:
             
                 min_x, max_x, min_y, max_y = bounds
                 
-                x_coord = random.uniform(min_x, max_x)
-                y_coord = random.uniform(min_y, max_y)
+                x_coord = random.uniform((min_x + self.size[0]), (max_x - self.size[0]))
+                y_coord = random.uniform((min_y + self.size[1]), (max_y - self.size[1]))
+                
+                self.coordinates = (x_coord, y_coord)
