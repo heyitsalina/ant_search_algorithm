@@ -162,7 +162,8 @@ class Simulation:
         data = {
             "simulation" : [],
             "colonies": [],
-            "food": []
+            "food": [],
+            "obstacles": []
         }
 
         simulation_data = {
@@ -193,6 +194,13 @@ class Simulation:
                 "coordinates": [round(num, 3) for num in food.coordinates],
             }
             data["food"].append(food_data)
+
+        for obstacle in self.obstacles:
+            obstacle_data = {
+                "pos": obstacle.pos,
+                "size": obstacle.size
+            }
+            data["obstacles"].append(obstacle_data)
 
         with open("statistics/statistics.json", "w") as json_file:
             json.dump(data, json_file, indent=4)
