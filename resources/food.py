@@ -1,3 +1,4 @@
+import random
 
 class Food:
     def __init__(self, size, coordinates, amount_of_food, show_life_bar=True):
@@ -18,4 +19,8 @@ class Food:
         self.amount_of_food = amount_of_food
         self.start_amount = amount_of_food
         self.show_life_bar = show_life_bar
-
+        
+        
+        def move_randomly_after_while(self, current_epoch, checkpoint_epoch, bounds):
+            
+            pass
