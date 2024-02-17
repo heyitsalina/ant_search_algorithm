@@ -488,6 +488,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             
             try:
                 new_pheromone_influence = float(new_pheromone_influence)
+                
+                if new_pheromone_influence < 0:
+                    self.show_error_dialog("Number of pheromone influence has to be non-negative.")
+                    return
             except ValueError:
                 self.show_error_dialog("Please input a valid float value for pheromone influence.")
                 return
