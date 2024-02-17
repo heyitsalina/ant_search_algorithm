@@ -23,4 +23,9 @@ class Food:
         
         def move_randomly_after_while(self, current_epoch, checkpoint_epoch, bounds):
             
-            pass
+            if current_epoch % checkpoint_epoch == 0:
+            
+                min_x, max_x, min_y, max_y = bounds
+                
+                x_coord = random.uniform(min_x, max_x)
+                y_coord = random.uniform(min_y, max_y)
