@@ -397,7 +397,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             
     def clear_canvas(self, instance):
         sim.food = []
-        sim.colonies= []
+        sim.colonies = []
+        sim.obstacles = []
         self.update_canvas()
 
     def on_touch_down(self, touch):
