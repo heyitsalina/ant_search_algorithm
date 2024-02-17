@@ -483,18 +483,23 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             new_amount_to_carry = int(new_amount_to_carry)
             new_step_size = int(new_step_size)
             new_color = ast.literal_eval(new_color)
-            new_pheromone_influence = float(new_pheromone_influence)
             new_search_radius = int(new_search_radius)
             new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
-
+            
+            try:
+                new_pheromone_influence = float(new_pheromone_influence)
+            except ValueError:
+                self.show_error_dialog("Please input a valid float value for pheromone influence.")
+                return
+            
             if new_ant_count < 0:
-                self.show_error_dialog("Number of ants must be non-negative.")
+                self.show_error_dialog("Number of ants has to be non-negative.")
                 return
             if new_step_size < 0: 
-                self.show_error_dialog("Step size must be non-negative.")
+                self.show_error_dialog("Step size has to be non-negative.")
                 return
             if new_amount_to_carry < 0:
-                self.show_error_dialog("Amount to carry must be non-negative.")
+                self.show_error_dialog("Amount to carry has to be non-negative.")
                 return
 
             colony.amount = new_ant_count
