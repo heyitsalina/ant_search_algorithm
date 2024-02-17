@@ -63,7 +63,13 @@ class Simulation:
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)    
             colony.pheromone.reduce_pheromones(0.99, 0.001)
-                
+            
+        for food in self.food:
+            if food.amount_of_food == 0:
+                self.food.remove(food)
+            else:
+                food.move_randomly_after_while(500, self.bounds)
+            
     def add_colony(self, colony):
         self.colonies.append(colony)
 
