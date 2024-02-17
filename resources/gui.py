@@ -196,6 +196,14 @@ class SettingsButton(MDIconButton):
                                 )
                     sim.food.append(food)
                 
+                sim.obstacles = []
+                for obstacle_data in data["obstacles"]:
+                    obstacle = Rectangle(
+                                pos=obstacle_data["pos"],
+                                size=obstacle_data["size"]
+                                )
+                    sim.obstacles.append(obstacle)
+                
                 self.parent.children[1].update_canvas()
             except Exception as e:
                 self.show_error_dialog(f"Error: {str(e)}" + "\n\n" + "Could not load settings. Try to restart the program.")
