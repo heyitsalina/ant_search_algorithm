@@ -383,7 +383,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def draw_obstacles(self):
         with self.canvas:
             for obstacle in sim.obstacles:
-                Color(0, 0, 0, 1)
+                Color(0.75, 0.75, 0.75, 1)
                 Rectangle(pos=obstacle.pos, size=obstacle.size)
 
     def toggle_simulation(self, instance):
@@ -869,7 +869,7 @@ class ButtonWidget(BoxLayout):
 
         if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
             with self.simulation_widget.canvas:
-                Color(0, 0, 0, 1)
+                Color(0.75, 0.75, 0.75, 1)
                 obstacle = Rectangle(pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
             self.simulation_widget.unbind(on_touch_down=self.place_obstacle)
             sim.obstacles.append(obstacle)
