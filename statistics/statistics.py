@@ -38,19 +38,19 @@ def build_pdf():
     \\section{Overview}
 
     \\begin{tikzpicture}
-    \\begin{axis}[%s, width=12cm, height=7cm]
+    \\begin{axis}[%s, width=12cm, height=7cm, legend pos=outer north east, legend image post style={scale=0.5}]
 
-    \\addplot[only marks, mark=triangle, mark size=3pt, blue] coordinates {
+    \\addplot[only marks, mark=triangle, mark size=8pt, blue] coordinates {
     %s
     };
     \\addlegendentry{Colony}
 
-    \\addplot[only marks, mark=*, mark size=3pt, red] coordinates {
+    \\addplot[only marks, mark=*, mark size=8pt, red] coordinates {
     %s
     };
     \\addlegendentry{Food}
 
-    \\addplot[only marks, mark=square, mark size=3pt, black] coordinates {
+    \\addplot[only marks, mark=square, mark size=8pt, black] coordinates {
     %s
     };
     \\addlegendentry{Obstacle}
@@ -129,3 +129,7 @@ def build_pdf():
 
     os.chdir(path)
     os.system(f"pdflatex statistics.tex")
+
+
+if  __name__ == "__main__":
+    build_pdf()
