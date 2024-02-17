@@ -37,6 +37,7 @@ class Simulation:
     def __init__(self):
         self.food = []
         self.colonies = []
+        self.obstacles = []
         self.running = False
         self.bounds = () #(min_x, max_x, min_y, max_y)
         self.epoch = 0
