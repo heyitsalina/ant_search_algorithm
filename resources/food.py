@@ -22,7 +22,21 @@ class Food:
         self.epoch = 0
         
     def move_randomly_after_while(self, checkpoint_epoch, bounds):
-        
+        """
+        Moves the food source randomly within the given bounds at specified epochs.
+        Resets the food amount to its initial value upon movement.
+
+        Args:
+        ----
+        checkpoint_epoch (int):
+            Epoch target for moving the food source.
+        bounds (tuple):
+            ant world bounds for the movement (min_x, max_x, min_y, max_y).
+
+        Returns:
+        -------
+        None: Modifies the food source's coordinates and amount directly.
+        """
         self.epoch += 1
         if self.epoch % checkpoint_epoch == 0:
         
