@@ -19,15 +19,18 @@ class Food:
         self.amount_of_food = amount_of_food
         self.start_amount = amount_of_food
         self.show_life_bar = show_life_bar
+        self.epoch = 0
         
+    def move_randomly_after_while(self, checkpoint_epoch, bounds):
         
-        def move_randomly_after_while(self, current_epoch, checkpoint_epoch, bounds):
+        self.epoch += 1
+        if self.epoch % checkpoint_epoch == 0:
+        
+            min_x, max_x, min_y, max_y = bounds
             
-            if current_epoch % checkpoint_epoch == 0:
+            x_coord = random.uniform((min_x + self.size[0]), (max_x - self.size[0]))
+            y_coord = random.uniform((min_y + self.size[1]), (max_y - self.size[1]))
             
-                min_x, max_x, min_y, max_y = bounds
-                
-                x_coord = random.uniform((min_x + self.size[0]), (max_x - self.size[0]))
-                y_coord = random.uniform((min_y + self.size[1]), (max_y - self.size[1]))
-                
-                self.coordinates = (x_coord, y_coord)
+            self.coordinates = (x_coord, y_coord)
+            
+            self.amount_of_food = self.start_amount
