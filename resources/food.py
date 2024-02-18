@@ -1,7 +1,7 @@
 import random
 
 class Food:
-    def __init__(self, size, coordinates, amount_of_food, move_after_amount_of_epochs, show_life_bar=True, move_randomly = False):
+    def __init__(self, size, coordinates, amount_of_food, move_after_amount_of_epochs = 500, show_life_bar=True, move_randomly = False):
         """
         This class represents a food source in the Ant Search Algorithm.
 
