@@ -31,20 +31,29 @@ def build_pdf():
 
     %s
 
+    \\section{Obstacles}
+
+    %s
+
     \\section{Overview}
 
     \\begin{tikzpicture}
-    \\begin{axis}[%s, width=12cm, height=7cm]
+    \\begin{axis}[%s, width=12cm, height=7cm, legend pos=outer north east, legend image post style={scale=0.5}]
 
-    \\addplot[only marks, mark=square, mark size=3pt, blue] coordinates {
+    \\addplot[only marks, mark=triangle, mark size=8pt, blue] coordinates {
     %s
     };
     \\addlegendentry{Colony}
 
-    \\addplot[only marks, mark=*, mark size=3pt, red] coordinates {
+    \\addplot[only marks, mark=*, mark size=8pt, red] coordinates {
     %s
     };
     \\addlegendentry{Food}
+
+    \\addplot[only marks, mark=square, mark size=8pt, black] coordinates {
+    %s
+    };
+    \\addlegendentry{Obstacle}
 
     \\end{axis}
     \\end{tikzpicture}
@@ -82,11 +91,21 @@ def build_pdf():
             food_content += "\\item Coordinates: %s\n" % food_data['coordinates']
             food_content += "\\end{itemize}\n"
 
+    obstacle_content = ""
+    if isinstance(data['obstacles'], list):
+        for idx, obstacle_data in enumerate(data['obstacles']):
+            obstacle_content += "\\subsection*{Obstacle %d}\n" % (idx + 1)
+            obstacle_content += "\\begin{itemize}\n"
+            obstacle_content += "\\item Coordinates: %s\n" % obstacle_data['pos']
+            obstacle_content += "\\item Size: %s\n" % obstacle_data['size']
+            obstacle_content += "\\end{itemize}\n"
+
     min_x, max_x, min_y, max_y = data["simulation"][0]["boundaries"]
     plot_range = f"xmin={min_x}, xmax={max_x}, ymin={min_y}, ymax={max_y}"
 
     plot_colony = ""
     plot_food = ""
+    plot_obstacle = ""
     
     for colony_data in data['colonies']:
         x, y = colony_data['coordinates']
@@ -96,7 +115,11 @@ def build_pdf():
         x, y = food_data['coordinates']
         plot_food += f"({x+50},{y+50}) "
 
-    latex_document = latex_template % (simulation_content, colonies_content, food_content, plot_range, plot_colony, plot_food)
+    for obstacle_data in data['obstacles']:
+        x, y = obstacle_data['pos']
+        plot_obstacle += f"({x+25},{y+25}) "
+
+    latex_document = latex_template % (simulation_content, colonies_content, food_content, obstacle_content, plot_range, plot_colony, plot_food, plot_obstacle)
 
     directory = time.strftime("%Y-%m-%d_%H-%M-%S")
     path = os.path.join("statistics", directory)
@@ -106,3 +129,7 @@ def build_pdf():
 
     os.chdir(path)
     os.system(f"pdflatex statistics.tex")
+
+
+if  __name__ == "__main__":
+    build_pdf()
