@@ -478,16 +478,36 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.dialog.open()
     
     def show_food_dialog(self, food):
-        food_label = MDBoxLayout(orientation="horizontal", size_hint=(1, .9), spacing="30dp")
+        food_label = MDBoxLayout(orientation="vertical", spacing="30dp")
+
+        food_amount_label = MDBoxLayout(orientation="horizontal", size_hint=(1, .9), spacing="30dp")
         amount_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
         switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
-        
         life_bar_switch = CustomSwitch(active=food.show_life_bar)
-        life_bar_text = MDLabel(text="Show Life Bar", pos_hint={"center_x": 1.5, "center_y": .4})
+        life_bar_text = MDLabel(text="Show Life Bar", pos_hint={"center_x": 1.5, "center_y": 0.75})
         switch_label.add_widget(life_bar_switch)
         switch_label.add_widget(life_bar_text)
-        food_label.add_widget(amount_label)
-        food_label.add_widget(switch_label)
+
+        food_amount_label.add_widget(amount_label)
+        food_amount_label.add_widget(switch_label)
+
+
+        move_random_layout = MDBoxLayout(orientation="horizontal", size_hint=(1, .9), spacing="7dp")
+
+        switch_move_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
+        move_random_label = MDTextField(hint_text="Move after number of epochs", text=str(food.move_after_number_of_epochs))
+
+        move_random_switch = CustomSwitch(active=food.move_randomly)
+        move_random_text = MDLabel(text="Move randomly", pos_hint={"center_x": 1.5, "center_y": 0.75})
+
+        switch_move_label.add_widget(move_random_switch)
+        switch_move_label.add_widget(move_random_text)
+
+        move_random_layout.add_widget(move_random_label)
+        move_random_layout.add_widget(switch_move_label)
+
+        food_label.add_widget(food_amount_label)
+        food_label.add_widget(move_random_layout)
 
         self.dialog = MDDialog(
             title='Food Settings',
@@ -496,7 +516,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             content_cls=MDBoxLayout(food_label,
                                     orientation="vertical",
                                     size_hint_y=None,
-                                    height="80dp"),
+                                    height="120dp"),
             buttons=[
                 MDFlatButton(
                     text="Cancel",
