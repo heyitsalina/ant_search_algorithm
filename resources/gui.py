@@ -528,7 +528,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     ),
                 MDFlatButton(
                     text="Apply Changes",
-                    on_release=lambda *args: self.apply_food_changes(food, amount_label.text, life_bar_switch.active)
+                    on_release=lambda *args: self.apply_food_changes(food, amount_label.text, life_bar_switch.active, move_random_label.text, move_random_switch.active)
                 ),
                 ],
         )
@@ -577,16 +577,18 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         except Exception as e:
             self.show_error_dialog(f"Error: {str(e)}")
 
-    def apply_food_changes(self, food, new_food_amount, new_life_bar_state, move_randomly):
+    def apply_food_changes(self, food, new_food_amount, new_life_bar_state, new_move_random_epoch, new_move_randomly_state):
         try:
             new_food_amount = int(new_food_amount)
+            new_move_random_epoch = int(new_move_random_epoch)
             if new_food_amount < 0:
                 self.show_error_dialog("Please enter a valid integer for food amount.\nThe amount of food must be >= 0.")
                 return
             food.amount_of_food = new_food_amount
             food.start_amount = new_food_amount
             food.show_life_bar = new_life_bar_state
-            food.move_randomly = move_randomly
+            food.move_after_number_of_epochs = new_move_random_epoch
+            food.move_randomly = new_move_randomly_state
             self.dialog.dismiss()
 
         except ValueError:
