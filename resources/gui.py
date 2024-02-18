@@ -445,6 +445,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         food_label = MDBoxLayout(orientation="horizontal", size_hint=(1, .9), spacing="30dp")
         amount_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
         switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
+        
         life_bar_switch = CustomSwitch(active=food.show_life_bar)
         life_bar_text = MDLabel(text="Show Life Bar", pos_hint={"center_x": 1.5, "center_y": .4})
         switch_label.add_widget(life_bar_switch)
