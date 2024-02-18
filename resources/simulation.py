@@ -36,6 +36,7 @@ class Simulation:
     """
     def __init__(self):
         self.food = []
+        self.food_statistic = []
         self.colonies = []
         self.running = False
         self.bounds = () #(min_x, max_x, min_y, max_y)
@@ -46,6 +47,7 @@ class Simulation:
         for colony in self.colonies:
             for ant in colony.ants:
                 for food in self.food:
+                    self.food_statistic.append(food)
                     if ant.try_carry_food(food):
                         ant.carry_food(food)
                         break
