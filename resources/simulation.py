@@ -162,7 +162,7 @@ class Simulation:
             }
             data["colonies"].append(colony_data)
 
-        for food in self.food:
+        for food in self.food_statistic:
             food_data = {
                 "start amount": food.start_amount,
                 "amount of food": food.amount_of_food,
