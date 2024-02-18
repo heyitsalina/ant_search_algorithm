@@ -36,7 +36,6 @@ class Simulation:
     """
     def __init__(self):
         self.food = []
-        self.food_statistic = []
         self.colonies = []
         self.running = False
         self.bounds = () #(min_x, max_x, min_y, max_y)
@@ -44,10 +43,11 @@ class Simulation:
         
     def next_epoch(self):
         self.epoch += 1
+        active_food_objects = [food for food in self.food if food.amount_of_food != 0]
+
         for colony in self.colonies:
             for ant in colony.ants:
-                for food in self.food:
-                    self.food_statistic.append(food)
+                for food in active_food_objects:
                     if ant.try_carry_food(food):
                         ant.carry_food(food)
                         break
@@ -162,7 +162,7 @@ class Simulation:
             }
             data["colonies"].append(colony_data)
 
-        for food in self.food_statistic:
+        for food in self.food:
             food_data = {
                 "start amount": food.start_amount,
                 "amount of food": food.amount_of_food,
