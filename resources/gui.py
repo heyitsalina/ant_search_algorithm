@@ -520,7 +520,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         except Exception as e:
             self.show_error_dialog(f"Error: {str(e)}")
 
-    def apply_food_changes(self, food, new_food_amount, new_life_bar_state):
+    def apply_food_changes(self, food, new_food_amount, new_life_bar_state, move_randomly):
         try:
             new_food_amount = int(new_food_amount)
             if new_food_amount < 0:
@@ -529,6 +529,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             food.amount_of_food = new_food_amount
             food.start_amount = new_food_amount
             food.show_life_bar = new_life_bar_state
+            food.move_randomly = move_randomly
             self.dialog.dismiss()
 
         except ValueError:
