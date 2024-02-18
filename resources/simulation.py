@@ -41,7 +41,6 @@ class Simulation:
         self.running = False
         self.bounds = () #(min_x, max_x, min_y, max_y)
         self.epoch = 0
-        self.move_food_randomly = False
         
     def next_epoch(self):
         self.epoch += 1
@@ -70,7 +69,7 @@ class Simulation:
         for food in self.food:
             if food.amount_of_food == 0:
                 self.food.remove(food)
-            elif self.move_food_randomly:
+            else:
                 food.move_randomly_after_while(500, self.bounds)
             
     def add_colony(self, colony):
