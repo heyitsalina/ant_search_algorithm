@@ -67,11 +67,9 @@ class Simulation:
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)    
             colony.pheromone.reduce_pheromones(0.99, 0.001)
-            
-
+        
         for food in active_food_objects:
             food.move_randomly_after_while(self.bounds)
-
             
     def add_colony(self, colony):
         self.colonies.append(colony)

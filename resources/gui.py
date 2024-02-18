@@ -789,6 +789,8 @@ class ButtonWidget(BoxLayout):
         change the size of the border
     on_food_button_press():
         executed after pressing the food button
+    on_obstacle_button_press():
+        executed after pressing the obstacle button
     on_colony_button_press():
         executed after pressing the colony button
     on_clear_button_press():
@@ -797,6 +799,8 @@ class ButtonWidget(BoxLayout):
         place the food on the canvas
     place_colony():
         place the colony on the canvas
+    place_obstacle():
+        place an obstacle on the canvas
     play_button_sound():
         play sound if button is pressed
     play_place_sound():
