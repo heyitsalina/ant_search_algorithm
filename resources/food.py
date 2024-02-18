@@ -1,7 +1,7 @@
 import random
 
 class Food:
-    def __init__(self, size, coordinates, amount_of_food, move_after_amount_of_epoch, show_life_bar=True):
+    def __init__(self, size, coordinates, amount_of_food, move_after_amount_of_epochs, show_life_bar=True):
         """
         This class represents a food source in the Ant Search Algorithm.
 
@@ -20,10 +20,10 @@ class Food:
         self.start_amount = amount_of_food
         self.show_life_bar = show_life_bar
         self.move_randomly = False
-        self.move_after_amount_of_epoch = move_after_amount_of_epoch
+        self.move_after_amount_of_epochs = move_after_amount_of_epochs
         self.epoch = 0
         
-    def move_randomly_after_while(self, checkpoint_epoch, bounds):
+    def move_randomly_after_while(self, bounds):
         """
         Moves the food source randomly within the given bounds at specified epochs.
         Resets the food amount to its initial value upon movement.
@@ -43,7 +43,7 @@ class Food:
             return
         
         self.epoch += 1
-        if self.epoch % checkpoint_epoch == 0:
+        if self.epoch % self.move_after_amount_of_epochs == 0:
         
             min_x, max_x, min_y, max_y = bounds
             
