@@ -70,7 +70,7 @@ class Simulation:
             if food.amount_of_food == 0:
                 self.food.remove(food)
             else:
-                food.move_randomly_after_while(500, self.bounds)
+                food.move_randomly_after_while(self.bounds)
             
     def add_colony(self, colony):
         self.colonies.append(colony)
