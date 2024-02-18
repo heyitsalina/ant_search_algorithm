@@ -19,6 +19,7 @@ class Food:
         self.amount_of_food = amount_of_food
         self.start_amount = amount_of_food
         self.show_life_bar = show_life_bar
+        self.move_randomly = False
         self.epoch = 0
         
     def move_randomly_after_while(self, checkpoint_epoch, bounds):
@@ -37,6 +38,9 @@ class Food:
         -------
         None: Modifies the food source's coordinates and amount directly.
         """
+        if self.move_randomly is False:
+            return
+        
         self.epoch += 1
         if self.epoch % checkpoint_epoch == 0:
         
