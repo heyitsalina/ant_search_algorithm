@@ -196,6 +196,15 @@ class SettingsButton(MDIconButton):
                                 )
                     sim.food.append(food)
                 
+                sim.obstacles = []
+                for obstacle_data in data["obstacles"]:
+                    obstacle = Image(
+                                source="../images/obstacle.png",
+                                pos=obstacle_data["pos"],
+                                size=obstacle_data["size"]
+                                )
+                    sim.obstacles.append(obstacle)
+                
                 self.parent.children[1].update_canvas()
             except Exception as e:
                 self.show_error_dialog(f"Error: {str(e)}" + "\n\n" + "Could not load settings. Try to restart the program.")
@@ -326,6 +335,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def update_canvas(self):
         self.canvas.clear()
         self.draw_bounds()
+        self.draw_obstacles()
         self.draw_pheromone()
         self.draw_food()
         self.draw_ants()
@@ -379,6 +389,11 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                         Color(0, 1, 0.2, 1)
                         Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/food.start_amount, 10))
 
+    def draw_obstacles(self):
+        with self.canvas:
+            for obstacle in sim.obstacles:
+                Image(source="../images/obstacle.png", pos=obstacle.pos, size=obstacle.size)
+
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
@@ -390,7 +405,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             
     def clear_canvas(self, instance):
         sim.food = []
-        sim.colonies= []
+        sim.colonies = []
+        sim.obstacles = []
         self.update_canvas()
 
     def on_touch_down(self, touch):
@@ -715,6 +731,15 @@ class AdjustViewButton(MDFillRoundFlatButton):
         self.padding = 20
 
 
+class Obstacles_Button(MDFloatingActionButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.icon = "square-outline"
+        self.theme_cls.material_style = "M3"
+        self.icon_size = 70
+        self.md_bg_color = (1, 0.6, .11, 1)
+
+
 class ButtonWidget(BoxLayout):
     """
     This class is the widget for all the buttons.
@@ -757,6 +782,7 @@ class ButtonWidget(BoxLayout):
 
         self.food_button = FoodButton(on_press=self.play_button_sound, on_release=self.on_food_button_press)
         self.colony_button = ColonyButton(on_press=self.play_button_sound, on_release=self.on_colony_button_press)
+        self.obstacles_button = Obstacles_Button(on_press=self.play_button_sound, on_release=self.on_obstacles_button_press)
 
         sizes = {"size-xxl": (2560, 1440), "size-xl": (1920, 1080), "size-l": (1080, 720), "size-m": (720, 480), "size-s": (480, 360)}
 
@@ -770,6 +796,7 @@ class ButtonWidget(BoxLayout):
         food_colony_layout = BoxLayout(orientation='horizontal', spacing=10, padding=0)
         food_colony_layout.add_widget(self.food_button)
         food_colony_layout.add_widget(self.colony_button)
+        food_colony_layout.add_widget(self.obstacles_button)
 
         self.start_stop_button = StartStopButton(on_press=self.play_button_sound, on_release=self.simulation_widget.toggle_simulation)
 
@@ -812,6 +839,10 @@ class ButtonWidget(BoxLayout):
         if not self.simulation_widget.is_running:
             self.simulation_widget.bind(on_touch_down=self.place_colony)       
     
+    def on_obstacles_button_press(self, instance):
+        if not self.simulation_widget.is_running:
+            self.simulation_widget.bind(on_touch_down=self.place_obstacle)
+
     def on_clear_button_press(self, instance):
         if self.simulation_widget.is_running:
             self.start_stop_button.trigger_action(0)
@@ -840,6 +871,16 @@ class ButtonWidget(BoxLayout):
             n_row, n_col = int(sim.bounds[3]-sim.bounds[2])//40, int(sim.bounds[1]-sim.bounds[0])//40
             sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=100, size=(100, 100),
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
+
+    def place_obstacle(self, instance, touch):
+        self.play_place_sound()
+        transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
+
+        if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
+            with self.simulation_widget.canvas:
+                obstacle = Image(source="../images/obstacle.png", pos=(transformed_touch[0] - 25, transformed_touch[1] - 25), size=(50, 50))
+            self.simulation_widget.unbind(on_touch_down=self.place_obstacle)
+            sim.obstacles.append(obstacle)
 
     def play_button_sound(self, *args):
         if self.parent.children[1].sound:
