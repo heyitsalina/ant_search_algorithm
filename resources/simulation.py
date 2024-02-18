@@ -68,11 +68,10 @@ class Simulation:
                                                  pheromone_status = ant.pheromone_status)    
             colony.pheromone.reduce_pheromones(0.99, 0.001)
             
-        for food in self.food:
-            if food.amount_of_food == 0:
-                self.food.remove(food)
-            else:
-                food.move_randomly_after_while(self.bounds)
+
+        for food in active_food_objects:
+            food.move_randomly_after_while(self.bounds)
+
             
     def add_colony(self, colony):
         self.colonies.append(colony)
