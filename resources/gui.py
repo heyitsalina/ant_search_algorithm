@@ -198,7 +198,8 @@ class SettingsButton(MDIconButton):
                 
                 sim.obstacles = []
                 for obstacle_data in data["obstacles"]:
-                    obstacle = Rectangle(
+                    obstacle = Image(
+                                source="../images/obstacle.png",
                                 pos=obstacle_data["pos"],
                                 size=obstacle_data["size"]
                                 )
