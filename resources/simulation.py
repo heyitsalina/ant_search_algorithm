@@ -44,9 +44,11 @@ class Simulation:
         
     def next_epoch(self):
         self.epoch += 1
+        active_food_objects = [food for food in self.food if food.amount_of_food != 0]
+
         for colony in self.colonies:
             for ant in colony.ants:
-                for food in self.food:
+                for food in active_food_objects:
                     if ant.try_carry_food(food):
                         ant.carry_food(food)
                         break
@@ -65,7 +67,10 @@ class Simulation:
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)    
             colony.pheromone.reduce_pheromones(0.99, 0.001)
-                
+        
+        for food in active_food_objects:
+            food.move_randomly_after_while(self.bounds)
+            
     def add_colony(self, colony):
         self.colonies.append(colony)
 
