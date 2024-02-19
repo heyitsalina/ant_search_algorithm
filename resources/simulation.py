@@ -38,15 +38,18 @@ class Simulation:
     def __init__(self):
         self.food = []
         self.colonies = []
+        self.obstacles = []
         self.running = False
         self.bounds = () #(min_x, max_x, min_y, max_y)
         self.epoch = 0
         
     def next_epoch(self, search_radius = 3, reduce_fac = 0.5, pheromone_influence = 0.01):
         self.epoch += 1
+        active_food_objects = [food for food in self.food if food.amount_of_food != 0]
+
         for colony in self.colonies:
             for ant in colony.ants:
-                for food in self.food:
+                for food in active_food_objects:
                     if ant.try_carry_food(food):
                         ant.carry_food(food)
                         break
@@ -57,6 +60,7 @@ class Simulation:
                 ant.pheromone_influence = pheromone_influence
                 pheromone_direction = self.find_pheromone_trace(ant.coordinates, ant.pheromone_status, colony.pheromone.pheromone_array, colony, ant.search_radius)
                 future_position = ant.move(pheromone_direction=pheromone_direction)
+                future_position = self.check_for_obstacles(future_position)
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
                 
@@ -65,8 +69,9 @@ class Simulation:
                 
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)    
+
             colony.pheromone.reduce_pheromones(reduce_fac, 0.001)
-                
+
     def add_colony(self, colony):
         self.colonies.append(colony)
 
@@ -96,6 +101,36 @@ class Simulation:
             y = min_y + 1
         elif y > max_y:
             y = max_y
+        return np.array([x, y])
+    
+    def check_for_obstacles(self, future_position):
+        x, y = future_position
+        
+        for obstacle in self.obstacles:
+            min_x, max_x, min_y, max_y = obstacle.pos[0]-5, obstacle.pos[0] + obstacle.size[0], obstacle.pos[1]-5, obstacle.pos[1] + obstacle.size[1]
+            if x >= min_x and x <= max_x and y >= min_y and y <= max_y:
+                x_diff = min(abs(x - min_x), abs(x - max_x))
+                y_diff = min(abs(y - min_y), abs(y - max_y))
+
+                if x_diff < y_diff:
+                    if x_diff == abs(x - min_x):
+                        x = min_x - 5
+                        if x < min_x:
+                            x = min_x
+                    else:
+                        x = max_x + 1
+                        if x > max_x:
+                            x = max_x
+                else:
+                    if y_diff == abs(y - min_y):
+                        y = min_y - 5
+                        if y < min_y:
+                            y = min_y
+                    else:
+                        y = max_y + 1
+                        if y > max_y:
+                            y = max_y
+
         return np.array([x, y])
 
     def map_ant_coordinates_to_pheromone_index(self, ant_coordinates, colony):
@@ -133,7 +168,8 @@ class Simulation:
         data = {
             "simulation" : [],
             "colonies": [],
-            "food": []
+            "food": [],
+            "obstacles": []
         }
 
         simulation_data = {
@@ -146,7 +182,7 @@ class Simulation:
             colony_data = {
                 "amount": colony.amount,
                 "size": colony.size,
-                "coordinates": colony.coordinates,
+                "coordinates": [round(num, 3) for num in colony.coordinates],
                 "pheromone grid": colony.pheromone.pheromone_array[0].shape,
                 "color": colony.color,
                 "food counter": colony.food_counter,
@@ -161,9 +197,16 @@ class Simulation:
             food_data = {
                 "start amount": food.start_amount,
                 "amount of food": food.amount_of_food,
-                "coordinates": food.coordinates
+                "coordinates": [round(num, 3) for num in food.coordinates],
             }
             data["food"].append(food_data)
+
+        for obstacle in self.obstacles:
+            obstacle_data = {
+                "pos": obstacle.pos,
+                "size": obstacle.size
+            }
+            data["obstacles"].append(obstacle_data)
 
         with open("statistics/statistics.json", "w") as json_file:
             json.dump(data, json_file, indent=4)

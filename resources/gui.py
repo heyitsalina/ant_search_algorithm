@@ -196,9 +196,38 @@ class SettingsButton(MDIconButton):
                                 )
                     sim.food.append(food)
                 
+                sim.obstacles = []
+                for obstacle_data in data["obstacles"]:
+                    obstacle = Image(
+                                source="../images/obstacle.png",
+                                pos=obstacle_data["pos"],
+                                size=obstacle_data["size"]
+                                )
+                    sim.obstacles.append(obstacle)
+                
                 self.parent.children[1].update_canvas()
-            except Exception:
-                pass
+            except Exception as e:
+                self.show_error_dialog(f"Error: {str(e)}" + "\n\n" + "Could not load settings. Try to restart the program.")
+    
+    def show_error_dialog(self, error_message):
+        sound = SoundLoader.load("../sounds/error.mp3")
+        if sound:
+            sound.play()
+        error_layout = MDBoxLayout(orientation="vertical", spacing="12dp", size_hint_y=None)
+        error_layout.add_widget(MDLabel(text=error_message))
+
+        error_dialog = MDDialog(
+            title="[color=ff0000]Error[/color]",
+            type="custom",
+            content_cls=error_layout,
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    on_release=lambda *args: error_dialog.dismiss()
+                ),
+            ],
+        )
+        error_dialog.open()
 
 
 class ResizableDraggablePicture(Scatter):
@@ -306,6 +335,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def update_canvas(self):
         self.canvas.clear()
         self.draw_bounds()
+        self.draw_obstacles()
         self.draw_pheromone()
         self.draw_food()
         self.draw_ants()
@@ -359,6 +389,11 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                         Color(0, 1, 0.2, 1)
                         Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/food.start_amount, 10))
 
+    def draw_obstacles(self):
+        with self.canvas:
+            for obstacle in sim.obstacles:
+                Image(source="../images/obstacle.png", pos=obstacle.pos, size=obstacle.size)
+
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
@@ -370,7 +405,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             
     def clear_canvas(self, instance):
         sim.food = []
-        sim.colonies= []
+        sim.colonies = []
+        sim.obstacles = []
         self.update_canvas()
 
     def on_touch_down(self, touch):
@@ -442,15 +478,36 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.dialog.open()
     
     def show_food_dialog(self, food):
-        food_label = MDBoxLayout(orientation="horizontal", size_hint=(1, .9), spacing="30dp")
+        food_label = MDBoxLayout(orientation="vertical", spacing="12dp")
+
+        food_amount_label = MDBoxLayout(orientation="horizontal", size_hint=(1, .9), spacing="30dp")
         amount_label = MDTextField(hint_text="Amount of food", text=str(food.amount_of_food))
         switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
         life_bar_switch = CustomSwitch(active=food.show_life_bar)
-        life_bar_text = MDLabel(text="Show Life Bar", pos_hint={"center_x": 1.5, "center_y": .4})
+        life_bar_text = MDLabel(text="Show Life Bar", pos_hint={"center_x": 1.5, "center_y": 0.6})
         switch_label.add_widget(life_bar_switch)
         switch_label.add_widget(life_bar_text)
-        food_label.add_widget(amount_label)
-        food_label.add_widget(switch_label)
+
+        food_amount_label.add_widget(amount_label)
+        food_amount_label.add_widget(switch_label)
+
+
+        move_random_layout = MDBoxLayout(orientation="horizontal", size_hint=(1, .9), spacing="30dp")
+
+        switch_move_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
+        move_random_label = MDTextField(hint_text="Move after number of epochs", text=str(food.move_after_number_of_epochs))
+
+        move_random_switch = CustomSwitch(active=food.move_randomly)
+        move_random_text = MDLabel(text="Move randomly", pos_hint={"center_x": 1.5, "center_y": 0.6})
+
+        switch_move_label.add_widget(move_random_switch)
+        switch_move_label.add_widget(move_random_text)
+
+        move_random_layout.add_widget(move_random_label)
+        move_random_layout.add_widget(switch_move_label)
+
+        food_label.add_widget(food_amount_label)
+        food_label.add_widget(move_random_layout)
 
         self.dialog = MDDialog(
             title='Food Settings',
@@ -459,7 +516,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             content_cls=MDBoxLayout(food_label,
                                     orientation="vertical",
                                     size_hint_y=None,
-                                    height="80dp"),
+                                    height="120dp"),
             buttons=[
                 MDFlatButton(
                     text="Cancel",
@@ -471,7 +528,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     ),
                 MDFlatButton(
                     text="Apply Changes",
-                    on_release=lambda *args: self.apply_food_changes(food, amount_label.text, life_bar_switch.active)
+                    on_release=lambda *args: self.apply_food_changes(food, amount_label.text, life_bar_switch.active, move_random_label.text, move_random_switch.active)
                 ),
                 ],
         )
@@ -483,18 +540,21 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             new_amount_to_carry = int(new_amount_to_carry)
             new_step_size = int(new_step_size)
             new_color = ast.literal_eval(new_color)
-            new_pheromone_influence = int(new_pheromone_influence)
             new_search_radius = int(new_search_radius)
+            new_pheromone_influence = float(new_pheromone_influence)
             new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
-
+            
             if new_ant_count < 0:
-                self.show_error_dialog("Number of ants must be non-negative.")
+                self.show_error_dialog("Number of ants has to be non-negative.")
                 return
             if new_step_size < 0: 
-                self.show_error_dialog("Step size must be non-negative.")
+                self.show_error_dialog("Step size has to be non-negative.")
                 return
             if new_amount_to_carry < 0:
-                self.show_error_dialog("Amount to carry must be non-negative.")
+                self.show_error_dialog("Amount to carry has to be non-negative.")
+                return
+            if new_pheromone_influence < 0:
+                self.show_error_dialog("Number of pheromone influence has to be non-negative.")
                 return
 
             colony.amount = new_ant_count
@@ -511,15 +571,18 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         except Exception as e:
             self.show_error_dialog(f"Error: {str(e)}")
 
-    def apply_food_changes(self, food, new_food_amount, new_life_bar_state):
+    def apply_food_changes(self, food, new_food_amount, new_life_bar_state, new_move_random_epoch, new_move_randomly_state):
         try:
             new_food_amount = int(new_food_amount)
+            new_move_random_epoch = int(new_move_random_epoch)
             if new_food_amount < 0:
                 self.show_error_dialog("Please enter a valid integer for food amount.\nThe amount of food must be >= 0.")
                 return
             food.amount_of_food = new_food_amount
             food.start_amount = new_food_amount
             food.show_life_bar = new_life_bar_state
+            food.move_after_number_of_epochs = new_move_random_epoch
+            food.move_randomly = new_move_randomly_state
             self.dialog.dismiss()
 
         except ValueError:
@@ -695,6 +758,15 @@ class AdjustViewButton(MDFillRoundFlatButton):
         self.padding = 20
 
 
+class Obstacles_Button(MDFloatingActionButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.icon = "square-outline"
+        self.theme_cls.material_style = "M3"
+        self.icon_size = 70
+        self.md_bg_color = (1, 0.6, .11, 1)
+
+
 class ButtonWidget(BoxLayout):
     """
     This class is the widget for all the buttons.
@@ -717,6 +789,8 @@ class ButtonWidget(BoxLayout):
         change the size of the border
     on_food_button_press():
         executed after pressing the food button
+    on_obstacle_button_press():
+        executed after pressing the obstacle button
     on_colony_button_press():
         executed after pressing the colony button
     on_clear_button_press():
@@ -725,6 +799,8 @@ class ButtonWidget(BoxLayout):
         place the food on the canvas
     place_colony():
         place the colony on the canvas
+    place_obstacle():
+        place an obstacle on the canvas
     play_button_sound():
         play sound if button is pressed
     play_place_sound():
@@ -737,6 +813,7 @@ class ButtonWidget(BoxLayout):
 
         self.food_button = FoodButton(on_press=self.play_button_sound, on_release=self.on_food_button_press)
         self.colony_button = ColonyButton(on_press=self.play_button_sound, on_release=self.on_colony_button_press)
+        self.obstacles_button = Obstacles_Button(on_press=self.play_button_sound, on_release=self.on_obstacles_button_press)
 
         sizes = {"size-xxl": (2560, 1440), "size-xl": (1920, 1080), "size-l": (1080, 720), "size-m": (720, 480), "size-s": (480, 360)}
 
@@ -750,6 +827,7 @@ class ButtonWidget(BoxLayout):
         food_colony_layout = BoxLayout(orientation='horizontal', spacing=10, padding=0)
         food_colony_layout.add_widget(self.food_button)
         food_colony_layout.add_widget(self.colony_button)
+        food_colony_layout.add_widget(self.obstacles_button)
 
         self.start_stop_button = StartStopButton(on_press=self.play_button_sound, on_release=self.simulation_widget.toggle_simulation)
 
@@ -792,6 +870,10 @@ class ButtonWidget(BoxLayout):
         if not self.simulation_widget.is_running:
             self.simulation_widget.bind(on_touch_down=self.place_colony)       
     
+    def on_obstacles_button_press(self, instance):
+        if not self.simulation_widget.is_running:
+            self.simulation_widget.bind(on_touch_down=self.place_obstacle)
+
     def on_clear_button_press(self, instance):
         if self.simulation_widget.is_running:
             self.start_stop_button.trigger_action(0)
@@ -820,6 +902,16 @@ class ButtonWidget(BoxLayout):
             n_row, n_col = int(sim.bounds[3]-sim.bounds[2])//40, int(sim.bounds[1]-sim.bounds[0])//40
             sim.add_colony(Colony(grid_pheromone_shape=(n_row, n_col), amount=100, size=(100, 100),
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
+
+    def place_obstacle(self, instance, touch):
+        self.play_place_sound()
+        transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
+
+        if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
+            with self.simulation_widget.canvas:
+                obstacle = Image(source="../images/obstacle.png", pos=(transformed_touch[0] - 25, transformed_touch[1] - 25), size=(50, 50))
+            self.simulation_widget.unbind(on_touch_down=self.place_obstacle)
+            sim.obstacles.append(obstacle)
 
     def play_button_sound(self, *args):
         if self.parent.children[1].sound:
