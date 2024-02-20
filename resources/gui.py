@@ -417,15 +417,22 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 if colony_x < transformed_touch[0] < colony_x + 100 and \
                    colony_y < transformed_touch[1] < colony_y + 100:
                     self.show_colony_dialog(colony)
-                    return True 
+                    return True
 
             for food in sim.food:
                 food_x, food_y = food.coordinates
                 if food_x < transformed_touch[0] < food_x + 100 and \
                    food_y < transformed_touch[1] < food_y + 100:
                     self.show_food_dialog(food)
-                    return True  
-
+                    return True
+            
+            for obstacle in sim.obstacles:
+                obstacle_x, obstacle_y = obstacle.pos
+                if obstacle_x  < transformed_touch[0] < obstacle_x + 50 and \
+                    obstacle_y < transformed_touch[1] < obstacle_y + 50:
+                    self.show_obstacle_dialog(obstacle)
+                    return True
+                
         return super(SimulationWidget, self).on_touch_down(touch)
 
     def show_colony_dialog(self, colony):
@@ -534,6 +541,26 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         )
         self.dialog.open()
     
+    def show_obstacle_dialog(self, obstacle):
+        self.dialog = MDDialog(
+            title='Obstacle Settings',
+            type="custom",
+            size_hint=[0.35, None],
+            content_cls=MDBoxLayout(),
+            buttons=[
+                MDFlatButton(
+                    text="Cancel",
+                    on_release=lambda *args: self.dialog.dismiss()
+                ),
+                MDFlatButton(
+                        text="Delete",
+                        on_release=lambda *args: self.delete_object(obstacle),
+                    ),
+                ],
+        )
+        self.dialog.open()
+
+
     def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_search_radius, new_pheromone_influence, new_pheromone_grid, new_pheromone_state):
         try:
             new_ant_count = int(new_ant_count)
@@ -619,6 +646,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             sim.food.remove(object)
         elif isinstance(object, Colony):
             sim.colonies.remove(object)
+        elif isinstance(object, Image):
+            sim.obstacles.remove(object)
         self.dialog.dismiss()
         self.update_canvas()
 
