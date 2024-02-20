@@ -1,9 +1,11 @@
 import pytest
 import numpy as np
 import os
+import json
 from resources.simulation import Simulation
 from resources.colony import Colony
 from statistics.statistics import build_pdf
+
 
 def test_next_epoch():
     sim = Simulation()
@@ -136,6 +138,13 @@ def test_create_statistic():
 
     # Call the create_statistic method
     sim.create_statistic()
+    
+    # Adjust current path (remove tail) 
+    current_path = os.getcwd()
+
+    resetted_path = os.path.split(current_path)
+
+    os.chdir(resetted_path[0])
 
     # Check if the statistics.json file is created
     assert os.path.exists("statistics/statistics.json")
