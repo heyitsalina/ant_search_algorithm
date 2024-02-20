@@ -912,20 +912,20 @@ class ButtonWidget(BoxLayout):
         self.simulation_widget.clear_canvas(instance)
         
     def place_food(self, instance, touch):
-        self.play_place_sound()
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
         
         if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
+            self.play_place_sound()
             with self.simulation_widget.canvas:
                 Image(source="../images/apple.png", pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
             self.simulation_widget.unbind(on_touch_down=self.place_food)
             sim.add_food(Food(size=(100, 100), coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), amount_of_food=100))
 
     def place_colony(self, instance, touch):
-        self.play_place_sound()
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
 
         if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
+            self.play_place_sound()
             with self.simulation_widget.canvas:
                 Image(source="../images/colony.png", pos=(transformed_touch[0] - 50, transformed_touch[1] - 50), size=(100, 100))
             self.simulation_widget.unbind(on_touch_down=self.place_colony)
@@ -934,10 +934,10 @@ class ButtonWidget(BoxLayout):
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
 
     def place_obstacle(self, instance, touch):
-        self.play_place_sound()
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
 
         if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
+            self.play_place_sound()
             with self.simulation_widget.canvas:
                 obstacle = Image(source="../images/obstacle.png", pos=(transformed_touch[0] - 25, transformed_touch[1] - 25), size=(50, 50))
             self.simulation_widget.unbind(on_touch_down=self.place_obstacle)
