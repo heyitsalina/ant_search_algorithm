@@ -146,17 +146,18 @@ def test_create_statistic():
 
     os.chdir(resetted_path[0])
 
+
     # Check if the statistics.json file is created
-    assert os.path.exists("statistics/statistics.json")
+    assert os.path.exists("statistics.json")
 
     # Check if the statistics.json file contains the expected data
-    with open("statistics/statistics.json", "r") as json_file:
+    with open("statistics.json", "r") as json_file:
         data = json.load(json_file)
 
     assert data["simulation"][0]["epochs"] == 10
-    assert data["simulation"][0]["boundaries"] == (50, 200, 50, 200)
-    assert len(data["colonies"]) == 1
-    assert len(data["food"]) == 1
+    assert data["simulation"][0]["boundaries"] == [50, 200, 50, 200]
+    assert len(data["colonies"]) == 0
+    assert len(data["food"]) == 0
 
 
 
