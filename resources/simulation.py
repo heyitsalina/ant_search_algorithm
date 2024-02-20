@@ -106,7 +106,7 @@ class Simulation:
         x, y = future_position
         
         for obstacle in self.obstacles:
-            min_x, max_x, min_y, max_y = obstacle.pos[0]-5, obstacle.pos[0] + obstacle.size[0], obstacle.pos[1]-5, obstacle.pos[1] + obstacle.size[1]
+            min_x, max_x, min_y, max_y = obstacle.pos[0]-2.5, obstacle.pos[0] + obstacle.size[0]-2.5, obstacle.pos[1]-5, obstacle.pos[1] + obstacle.size[1]
             if x >= min_x and x <= max_x and y >= min_y and y <= max_y:
                 x_diff = min(abs(x - min_x), abs(x - max_x))
                 y_diff = min(abs(y - min_y), abs(y - max_y))
