@@ -287,6 +287,8 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         show a dialog to change the colony settings
     show_food_dialog():
         show a dialog to change the food settings
+    show_obstacle_dialog():
+        show a dialog to change the obstacle settings
     apply_ant_changes():
         apply changes made in the ant dialog to the ants
     apply_food_changes():
@@ -559,7 +561,6 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 ],
         )
         self.dialog.open()
-
 
     def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_search_radius, new_pheromone_influence, new_pheromone_grid, new_pheromone_state):
         try:
