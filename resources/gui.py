@@ -658,7 +658,7 @@ class CustomSwitch(MDSwitch):
         super().__init__(**kwargs)
         self.icon_active = "check"
 
-    def on_active(self, instance_switch, active_value: bool) -> None:
+    def on_active(self, instance_switch, active_value):
         if self.theme_cls.material_style == "M3" and self.widget_style != "ios":
             size = (
                 (
@@ -729,7 +729,7 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.label_radius = 12
         self.root_button_anim = True
  
-    def on_enter(self, instance_button) -> None:
+    def on_enter(self, instance_button):
         """Called when the mouse cursor is over a button from the stack."""
         if self.state == "open":
             for widget in self.children:
