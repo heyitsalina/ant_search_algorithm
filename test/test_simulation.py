@@ -4,7 +4,7 @@ import os
 import json
 from resources.simulation import Simulation
 from resources.colony import Colony
-from statistics.statistics import build_pdf
+
 
 
 def test_next_epoch():
@@ -21,7 +21,7 @@ def test_simulation_initialisation():
 
     assert sim.food == []
     assert sim.colonies == []
-    assert sim.running == False
+    assert sim.running is False
     assert sim.bounds == ()
 
 
