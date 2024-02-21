@@ -43,7 +43,7 @@ class Simulation:
         self.bounds = () #(min_x, max_x, min_y, max_y)
         self.epoch = 0
         
-    def next_epoch(self, search_radius = 3, reduce_fac = 0.5, pheromone_influence = 0.01):
+    def next_epoch(self, reduce_fac = 0.5, pheromone_influence = 0.01):
         self.epoch += 1
         active_food_objects = [food for food in self.food if food.amount_of_food != 0]
 
@@ -56,7 +56,6 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
-                ant.search_radius = search_radius
                 ant.pheromone_influence = pheromone_influence
                 pheromone_direction = self.find_pheromone_trace(ant.coordinates, ant.pheromone_status, colony.pheromone.pheromone_array, colony, ant.search_radius)
                 future_position = ant.move(pheromone_direction=pheromone_direction)
@@ -216,19 +215,25 @@ class Simulation:
     def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_array, colony, search_radius):
         depth = 0 if pheromone_status == 1 else 1
         pheromone_shape = pheromone_array[0].shape
-        scale = (self.bounds[1]//pheromone_shape[1], -self.bounds[2]//pheromone_shape[0])
 
-        ant_postion = self.map_ant_coordinates_to_pheromone_index(coordinates, colony)
-        pheromone_cell = self.get_pheromone_position(*ant_postion, -pheromone_status*pheromone_array[depth], search_radius)
+        scale_x = self.bounds[1] // pheromone_shape[1]
+        scale_y = -self.bounds[2] // pheromone_shape[0]
 
-        if pheromone_cell is None or pheromone_cell == ant_postion:
-            return
+        ant_position = self.map_ant_coordinates_to_pheromone_index(coordinates, colony)
+        pheromone_cell = self.get_pheromone_position(*ant_position, -pheromone_status * pheromone_array[depth], search_radius)
 
-        pheromone_position = (pheromone_cell[1]*scale[0]+pheromone_shape[0]/2, -pheromone_cell[0]*scale[1]-pheromone_shape[1]/2 )
+        if pheromone_cell is None or pheromone_cell == ant_position:
+            return None
+
+        pheromone_position = (
+            pheromone_cell[1] * scale_x + pheromone_shape[0] / 2,
+            -pheromone_cell[0] * scale_y - pheromone_shape[1] / 2
+        )
+
         pheromone_direction = np.array(pheromone_position) - coordinates
 
         return pheromone_direction
-
+    
     def get_pheromone_position(self, row, col, arr, search_radius):
         start_row = max(0, row - search_radius)
         end_row = min(arr.shape[0], row + search_radius + 1)
