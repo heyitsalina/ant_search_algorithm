@@ -106,8 +106,6 @@ class Simulation:
     def check_food_collision_with_obstacles(self, food):
         width, height = food.size
         bottom_left_x, bottom_left_y = food.coordinates
-        bottom_right_x, bottom_right_y = food.coordinates[0] + width, food.coordinates[1] 
-        top_left_x, top_left_y = food.coordinates[0] , food.coordinates[1] + height
         top_right_x, top_right_y = food.coordinates[0] + width, food.coordinates[1] + height
 
 
@@ -115,7 +113,8 @@ class Simulation:
         for obstacle in self.obstacles:
             obstacle_min_x, obstacle_max_x, obstacle_min_y, obstacle_max_y = obstacle.pos[0]-5, obstacle.pos[0] + obstacle.size[0] +5, obstacle.pos[1] - 5, obstacle.pos[1] + obstacle.size[1] + 5
 
-            if bottom_left_x >= obstacle_min_x and bottom_left_x <= obstacle_max_x and bottom_left_y >= obstacle_min_y and bottom_left_y <= obstacle_max_y:
+            # Axis-Aligned Bounding Box (AABB) collision detection method
+            if (bottom_left_x <= obstacle_max_x and top_right_x >= obstacle_min_x) and (bottom_left_y <= obstacle_max_y and top_right_y >= obstacle_min_y):
 
                 
 
