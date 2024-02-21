@@ -102,6 +102,25 @@ class Simulation:
         elif y > max_y:
             y = max_y
         return np.array([x, y])
+
+    def check_food_collision_with_obstacles(self, food):
+        width, height = food.size
+        bottom_left_x, bottom_left_y = food.coordinates
+        bottom_right_x, bottom_right_y = food.coordinates[0] + width, food.coordinates[1] 
+        top_left_x, top_left_y = food.coordinates[0] , food.coordinates[1] + height
+        top_right_x, top_right_y = food.coordinates[0] + width, food.coordinates[1] + height
+
+
+        width, height = food.size
+        for obstacle in self.obstacles:
+            obstacle_min_x, obstacle_max_x, obstacle_min_y, obstacle_max_y = obstacle.pos[0]-5, obstacle.pos[0] + obstacle.size[0] +5, obstacle.pos[1] - 5, obstacle.pos[1] + obstacle.size[1] + 5
+
+            if bottom_left_x >= obstacle_min_x and bottom_left_x <= obstacle_max_x and bottom_left_y >= obstacle_min_y and bottom_left_y <= obstacle_max_y:
+
+                
+
+                return True #collision
+        return False
     
     def check_for_obstacles(self, future_position):
         x, y = future_position
