@@ -1,7 +1,7 @@
 import numpy as np
 
 class Ant:
-    def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=3, pheromone_influence=0.01):
+    def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=1, pheromone_influence=0.01):
         """
         This class represents an ant in the Ant search algorithm.
         
@@ -26,7 +26,7 @@ class Ant:
         """
         
         self.pheromone_status = -1
-        self.coordinates = np.array(coordinates)
+        self.coordinates = coordinates
         self.amount_to_carry = amount_to_carry
         self.step_size = step_size
         self.direction = self.first_direction()
@@ -50,23 +50,28 @@ class Ant:
         self.pheromone_status *= -1
     
     def move(self, angle_offset=0, pheromone_direction=None):
+        position = np.array(self.coordinates)
         
         if angle_offset == 0:
             angle_offset = np.random.uniform(-np.pi / 4, np.pi / 4)
+        
+        cos_offset = np.cos(angle_offset)
+        sin_offset = np.sin(angle_offset)
 
-        rotation_matrix = np.array([[np.cos(angle_offset), -np.sin(angle_offset)],
-                                        [np.sin(angle_offset), np.cos(angle_offset)]])
-
-        self.direction = np.dot(rotation_matrix, self.direction)
+        new_x = cos_offset * self.direction[0] - sin_offset * self.direction[1]
+        new_y = sin_offset * self.direction[0] + cos_offset * self.direction[1]
+        
+        self.direction = np.array([new_x, new_y])
 
         if pheromone_direction is not None:
             self.direction += pheromone_direction * self.pheromone_influence
 
-        self.direction /= np.linalg.norm(self.direction)
-        self.direction *= self.step_size
+        magnitude = np.sqrt(new_x ** 2 + new_y ** 2)
+        self.direction *= self.step_size / magnitude
 
-        future_position = self.coordinates + self.direction
         self.epoch += 1
+
+        future_position = position + self.direction
         return tuple(future_position)
      
     def is_near_target(self, target_position, center_offset = 45, radius = 20):
