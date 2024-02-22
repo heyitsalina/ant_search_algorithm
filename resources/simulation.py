@@ -159,7 +159,7 @@ class Simulation:
         if y < min_y:
             y = min_y
 
-        return np.array([x, y])
+        return (x, y)
 
 
     def check_for_obstacles(self, future_position):
