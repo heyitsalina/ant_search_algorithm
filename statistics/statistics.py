@@ -40,7 +40,7 @@ def build_pdf():
     \\begin{tikzpicture}
     \\begin{axis}[%s, width=12cm, height=7cm, legend pos=outer north east, legend image post style={scale=0.5}]
 
-    \\addplot[only marks, mark=triangle, mark size=8pt, blue] coordinates {
+    \\addplot[only marks, mark=triangle, mark size=8pt, black] coordinates {
     %s
     };
     \\addlegendentry{Colony}
@@ -50,7 +50,7 @@ def build_pdf():
     };
     \\addlegendentry{Food}
 
-    \\addplot[only marks, mark=square, mark size=8pt, black] coordinates {
+    \\addplot[only marks, mark=square, mark size=8pt, blue] coordinates {
     %s
     };
     \\addlegendentry{Obstacle}
@@ -96,7 +96,7 @@ def build_pdf():
         for idx, obstacle_data in enumerate(data['obstacles']):
             obstacle_content += "\\subsection*{Obstacle %d}\n" % (idx + 1)
             obstacle_content += "\\begin{itemize}\n"
-            obstacle_content += "\\item Coordinates: %s\n" % obstacle_data['pos']
+            obstacle_content += "\\item Coordinates: %s\n" % obstacle_data['coordinates']
             obstacle_content += "\\item Size: %s\n" % obstacle_data['size']
             obstacle_content += "\\end{itemize}\n"
 
@@ -116,7 +116,7 @@ def build_pdf():
         plot_food += f"({x+50},{y+50}) "
 
     for obstacle_data in data['obstacles']:
-        x, y = obstacle_data['pos']
+        x, y = obstacle_data['coordinates']
         plot_obstacle += f"({x+25},{y+25}) "
 
     latex_document = latex_template % (simulation_content, colonies_content, food_content, obstacle_content, plot_range, plot_colony, plot_food, plot_obstacle)
