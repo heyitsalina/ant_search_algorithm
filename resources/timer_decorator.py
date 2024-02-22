@@ -34,6 +34,9 @@ def print_execution_times():
     TimeTracker.execution_times, prints the total time for each function, and
     then clears the stored times.
     """
-    for func_name, total_time in TimeTracker.execution_times.items():
+    sorted_times = sorted(TimeTracker.execution_times.items(), key=lambda x: x[1], reverse=True)
+    
+    for func_name, total_time in sorted_times:
         print(f"Total execution time of {func_name}: {total_time:.4f} seconds")
+
     TimeTracker.execution_times.clear()
