@@ -49,25 +49,6 @@ class Pheromone:
 
         self.pheromone_array[depth, pos[0], pos[1]] += pheromone_status
 
-    
-    def get_pheromone_level(self, pos):
-        """
-        Retrieves the levels of pheromones at a specified grid position. The method returns a dictionary 
-        with the levels of two types of pheromones: those coming from the colony and those coming from food.
-
-        Args:
-            pos (Tuple[int, int]): The (x, y) coordinates in the grid for which the pheromone levels are to be retrieved.
-
-        Returns:
-            dict: A dictionary containing the levels of 'coming from colony' and 'coming from food' pheromones at the specified position.
-        """
-        
-        level_of_pheromones = {
-        'coming from colony': self.pheromone_array[0, pos[1], pos[0]],
-        'coming from food': self.pheromone_array[1, pos[1], pos[0]]
-        }
-        
-        return level_of_pheromones
 
     def reduce_pheromones(self, reducing_factor = 0.5, zero_threshold = 0.01):
         """
