@@ -46,7 +46,8 @@ class Simulation:
         
     
     @time_this
-    def next_epoch(self, search_radius = 3, reduce_fac = 0.5, pheromone_influence = 0.01):
+    def next_epoch(self, reduce_fac = 0.5, pheromone_influence = 0.01):
+
         self.epoch += 1
         active_food_objects = [food for food in self.food if food.amount_of_food != 0]
 
@@ -59,7 +60,6 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
-                ant.search_radius = search_radius
                 ant.pheromone_influence = pheromone_influence
                 pheromone_direction = self.find_pheromone_trace(ant.coordinates, ant.pheromone_status, colony.pheromone.pheromone_array, colony, ant.search_radius)
                 future_position = ant.move(pheromone_direction=pheromone_direction)
@@ -112,29 +112,18 @@ class Simulation:
         x, y = future_position
         
         for obstacle in self.obstacles:
-            min_x, max_x, min_y, max_y = obstacle.pos[0]-5, obstacle.pos[0] + obstacle.size[0], obstacle.pos[1]-5, obstacle.pos[1] + obstacle.size[1]
-            if x >= min_x and x <= max_x and y >= min_y and y <= max_y:
+            min_x, max_x = obstacle.pos[0], obstacle.pos[0] + obstacle.size[0]
+            min_y, max_y = obstacle.pos[1], obstacle.pos[1] + obstacle.size[1]
+            
+            if x >= min_x - 2.5 and x <= max_x and y >= min_y - 5 and y <= max_y:
+                # Determine closest edge of the obstacle
                 x_diff = min(abs(x - min_x), abs(x - max_x))
                 y_diff = min(abs(y - min_y), abs(y - max_y))
 
                 if x_diff < y_diff:
-                    if x_diff == abs(x - min_x):
-                        x = min_x - 5
-                        if x < min_x:
-                            x = min_x
-                    else:
-                        x = max_x + 1
-                        if x > max_x:
-                            x = max_x
+                    x = min_x - 2.5 if x_diff == abs(x - min_x) else max_x - 2.5
                 else:
-                    if y_diff == abs(y - min_y):
-                        y = min_y - 5
-                        if y < min_y:
-                            y = min_y
-                    else:
-                        y = max_y + 1
-                        if y > max_y:
-                            y = max_y
+                    y = min_y - 5 if y_diff == abs(y - min_y) else max_y
 
         return np.array([x, y])
 
@@ -224,18 +213,25 @@ class Simulation:
     def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_array, colony, search_radius):
         depth = 0 if pheromone_status == 1 else 1
         pheromone_shape = pheromone_array[0].shape
-        scale = (self.bounds[1]//pheromone_shape[1], -self.bounds[2]//pheromone_shape[0])
 
-        ant_postion = self.map_ant_coordinates_to_pheromone_index(coordinates, colony)
-        pheromone_cell = self.get_pheromone_position(*ant_postion, -pheromone_status*pheromone_array[depth], search_radius)
+        scale_x = self.bounds[1] // pheromone_shape[1]
+        scale_y = -self.bounds[2] // pheromone_shape[0]
 
-        if pheromone_cell is None or pheromone_cell == ant_postion:
-            return
+        ant_position = self.map_ant_coordinates_to_pheromone_index(coordinates, colony)
+        pheromone_cell = self.get_pheromone_position(*ant_position, -pheromone_status * pheromone_array[depth], search_radius)
 
-        pheromone_position = (pheromone_cell[1]*scale[0]+pheromone_shape[0]/2, -pheromone_cell[0]*scale[1]-pheromone_shape[1]/2 )
+        if pheromone_cell is None or pheromone_cell == ant_position:
+            return None
+
+        pheromone_position = (
+            pheromone_cell[1] * scale_x + pheromone_shape[0] / 2,
+            -pheromone_cell[0] * scale_y - pheromone_shape[1] / 2
+        )
+
         pheromone_direction = np.array(pheromone_position) - coordinates
 
         return pheromone_direction
+
 
     @time_this
     def get_pheromone_position(self, row, col, arr, search_radius):
@@ -243,16 +239,17 @@ class Simulation:
         end_row = min(arr.shape[0], row + search_radius + 1)
         start_col = max(0, col - search_radius)
         end_col = min(arr.shape[1], col + search_radius + 1)
+        
         slice_ = arr[start_row:end_row, start_col:end_col]
 
-        if np.argmax(slice_) == 0:
-            return
+        max_pos_in_slice = np.unravel_index(np.argmax(slice_), slice_.shape)
+
+        if slice_[max_pos_in_slice] == 0:
+            return None
         
-        max_pos = np.unravel_index(np.argmax(slice_), slice_.shape)
-        max_pos_in_original_array = (start_row + max_pos[0], start_col + max_pos[1])
+        max_pos_in_original_array = (start_row + max_pos_in_slice[0], start_col + max_pos_in_slice[1])
+        
         return max_pos_in_original_array
-
-
 
 
 if  __name__ == "__main__":

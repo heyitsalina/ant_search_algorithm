@@ -2,7 +2,7 @@ import numpy as np
 from resources.timer_decorator import time_this
 
 class Ant:
-    def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=3, pheromone_influence=0.01):
+    def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=1, pheromone_influence=0.01):
         """
         This class represents an ant in the Ant search algorithm.
         
@@ -30,53 +30,55 @@ class Ant:
         self.coordinates = coordinates
         self.amount_to_carry = amount_to_carry
         self.step_size = step_size
-        self.direction = np.array([0, 0])
+        self.direction = self.first_direction()
         self.epoch = 0
         self.ant_carries = 0
         self.search_radius = search_radius
         self.pheromone_influence = pheromone_influence
-        
+
+    def first_direction(self):
+        theta = np.random.uniform(0, 2 * np.pi)
+        phi = np.arccos(2 * np.random.uniform(0, 1) - 1)
+
+        x = np.sin(phi) * np.cos(theta)
+        y = np.sin(phi) * np.sin(theta)
+
+        return np.array([x, y]) * self.step_size
+
     def switch_pheromone(self):
         """Switches the pheromone status of the ant."""
         self.pheromone_status *= -1
         
-    @time_this
-    def move(self, angle_offset = 0, pheromone_direction=None):
+    @time_this 
+    def move(self, angle_offset=0, pheromone_direction=None):
 
         position = np.array(self.coordinates)
         
-        if self.epoch == 0:
-            #Randomly set initial direction in coordinates
-            theta = np.random.uniform(0, 2 * np.pi)
-            z = np.random.uniform(-1, 1)
-            
-            x = np.sqrt(1 - z**2) * np.cos(theta)
-            y = np.sqrt(1 - z**2) * np.sin(theta)
-            
-            #Set direction vector        
-            self.direction = np.array([x, y]) * self.step_size
+        if angle_offset == 0:
+            angle_offset = np.random.uniform(-np.pi / 4, np.pi / 4)
+        
+        cos_offset = np.cos(angle_offset)
+        sin_offset = np.sin(angle_offset)
 
-        else:
-            
-            if angle_offset == 0:
-                #Apply a random rotation to the existing direction
-                angle_offset = np.random.uniform(-np.pi/4, np.pi/4)
-                
-            rotation_matrix = np.array([[np.cos(angle_offset), -np.sin(angle_offset)],
-                                    [np.sin(angle_offset), np.cos(angle_offset)]])
-            
-            #Rotate and normalize the direction vector
-            self.direction = np.dot(rotation_matrix, self.direction)
-            if pheromone_direction is not None:
-                self.direction += pheromone_direction * self.pheromone_influence
-            self.direction = self.direction / np.linalg.norm(self.direction) * self.step_size
-                
-        future_position = position + self.direction
+        new_x = cos_offset * self.direction[0] - sin_offset * self.direction[1]
+        new_y = sin_offset * self.direction[0] + cos_offset * self.direction[1]
+        
+        self.direction = np.array([new_x, new_y])
+
+        if pheromone_direction is not None:
+            self.direction += pheromone_direction * self.pheromone_influence
+
+        magnitude = np.sqrt(new_x ** 2 + new_y ** 2)
+        self.direction *= self.step_size / magnitude
+
         self.epoch += 1
+
+        future_position = position + self.direction
         return tuple(future_position)
-    
+         
     @time_this
-    def is_near_target(self, target_position, center_offset = 45, radius = 20):
+    def is_near_target(self, target_position, center_offset=45, radius=20):
+
         """
         Determines if an ant is within a specified radius of a food or colony source.
 
@@ -93,19 +95,12 @@ class Ant:
         otherwise, returns None.
         """
 
-        target_center_x = target_position[0] + center_offset
-        target_center_y = target_position[1] + center_offset
-        
-        #coordiantes of ant
-        ant_x = np.round(self.coordinates[0], 2)
-        ant_y = np.round(self.coordinates[1], 2)
-        
-        #calculation of Euclidean distance
-        distance = np.sqrt((target_center_x - ant_x)**2 + (target_center_y - ant_y)**2)       
-        
-        #check whether the ant is inside or on the edge of the circle
-        if distance <= radius:#maybe radius should be reduced gradually? -> when a part of food has been taken
+        target_center_x, target_center_y = target_position[0] + center_offset, target_position[1] + center_offset
 
+        ant_x, ant_y = self.coordinates
+        distance_squared = (target_center_x - ant_x) ** 2 + (target_center_y - ant_y) ** 2
+
+        if distance_squared <= radius ** 2:
             return (ant_x, ant_y)
         return None
     
@@ -132,7 +127,6 @@ class Ant:
         
         amount_taken = min(food.amount_of_food, self.amount_to_carry)
         food.amount_of_food -= amount_taken
-        # differenciate if ant takes less food because there is not enough food left
         self.ant_carries = amount_taken 
         self.switch_pheromone()
 
