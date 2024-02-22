@@ -44,7 +44,6 @@ class Ant:
 
         return np.array([x, y]) * self.step_size
 
-        
     def switch_pheromone(self):
         """Switches the pheromone status of the ant."""
         self.pheromone_status *= -1
@@ -73,8 +72,8 @@ class Ant:
 
         future_position = position + self.direction
         return tuple(future_position)
-     
-    def is_near_target(self, target_position, center_offset = 45, radius = 20):
+
+    def is_near_target(self, target_position, center_offset=45, radius=20):
         """
         Determines if an ant is within a specified radius of a food or colony source.
 
@@ -91,19 +90,12 @@ class Ant:
         otherwise, returns None.
         """
 
-        target_center_x = target_position[0] + center_offset
-        target_center_y = target_position[1] + center_offset
-        
-        #coordiantes of ant
-        ant_x = np.round(self.coordinates[0], 2)
-        ant_y = np.round(self.coordinates[1], 2)
-        
-        #calculation of Euclidean distance
-        distance = np.sqrt((target_center_x - ant_x)**2 + (target_center_y - ant_y)**2)       
-        
-        #check whether the ant is inside or on the edge of the circle
-        if distance <= radius:#maybe radius should be reduced gradually? -> when a part of food has been taken
+        target_center_x, target_center_y = target_position[0] + center_offset, target_position[1] + center_offset
 
+        ant_x, ant_y = self.coordinates
+        distance_squared = (target_center_x - ant_x) ** 2 + (target_center_y - ant_y) ** 2
+
+        if distance_squared <= radius ** 2:
             return (ant_x, ant_y)
         return None
     
@@ -129,7 +121,6 @@ class Ant:
         
         amount_taken = min(food.amount_of_food, self.amount_to_carry)
         food.amount_of_food -= amount_taken
-        # differenciate if ant takes less food because there is not enough food left
         self.ant_carries = amount_taken 
         self.switch_pheromone()
 
