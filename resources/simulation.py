@@ -86,7 +86,8 @@ class Simulation:
     @time_this
     def add_obstacle(self, obstacle):
         self.obstacles.append(obstacle)
-
+        
+    @time_this
     def check_future_position(self, future_position):
         """
         Adjusts the given position to ensure it stays within the simulation bounds.
