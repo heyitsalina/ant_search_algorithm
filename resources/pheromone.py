@@ -1,4 +1,5 @@
 import numpy as np
+from resources.timer_decorator import time_this
 
 class Pheromone:
     def __init__(self, grid_shape):
@@ -26,7 +27,7 @@ class Pheromone:
 
         self.pheromone_array = np.zeros((2, grid_shape[0], grid_shape[1]))
 
-
+    @time_this
     def leave_pheromone(self, pos, pheromone_status):
         """
         Leaves pheromone at a given position based on the pheromone status. This method is typically
@@ -49,7 +50,7 @@ class Pheromone:
 
         self.pheromone_array[depth, pos[0], pos[1]] += pheromone_status
 
-    
+    @time_this
     def get_pheromone_level(self, pos):
         """
         Retrieves the levels of pheromones at a specified grid position. The method returns a dictionary 
@@ -69,6 +70,7 @@ class Pheromone:
         
         return level_of_pheromones
 
+    @time_this
     def reduce_pheromones(self, reducing_factor = 0.5, zero_threshold = 0.01):
         """
         Reduces the pheromone level by a reduction factor every epoch.
