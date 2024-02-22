@@ -200,12 +200,8 @@ class SettingsButton(MDIconButton):
                 sim.obstacles = []
                 for obstacle_data in data["obstacles"]:
                     obstacle = Obstacle(coordinates=obstacle_data["coordinates"], 
-                                        size=obstacle_data["size"])
-                    # obstacle = Image(
-                    #             source="../images/obstacle.png",
-                    #             pos=obstacle_data["pos"],
-                    #             size=obstacle_data["size"]
-                    #             )
+                                        size=obstacle_data["size"]
+                                        )
                     sim.add_obstacle(obstacle)
                 
                 self.parent.children[1].update_canvas()
@@ -397,7 +393,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def draw_obstacles(self):
         with self.canvas:
             for obstacle in sim.obstacles:
-                Image(source=obstacle.image, pos=obstacle.coordinates, size=obstacle.size)
+                Image(source="../images/obstacle.png", pos=obstacle.coordinates, size=obstacle.size)
 
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
