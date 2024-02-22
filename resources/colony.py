@@ -1,5 +1,6 @@
 from resources.ant import Ant
 from resources.pheromone import Pheromone
+from resources.timer_decorator import time_this
 
 
 class Colony:
@@ -26,7 +27,8 @@ class Colony:
         self.ants = []
         self.add_ants()
         self.food_counter = 0
-
+        
+    @time_this
     def add_ants(self, amount_to_carry=1, step_size=3, search_radius=3, pheromone_influence=0.01):
         for _ in range(self.amount):
             self.ants.append(Ant(coordinates=(self.coordinates[0]+50, self.coordinates[1]+50),
