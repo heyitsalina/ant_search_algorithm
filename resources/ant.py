@@ -1,5 +1,5 @@
 import numpy as np
-from timer_decorator import time_this
+from resources.timer_decorator import time_this
 
 class Ant:
     def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=3, pheromone_influence=0.01):
