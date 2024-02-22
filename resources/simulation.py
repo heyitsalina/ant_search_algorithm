@@ -1,9 +1,9 @@
 import json
 import numpy as np
+import pandas as pd
 from resources.colony import Colony
 from resources.food import Food
 from statistics.statistics import build_pdf
-import pandas as pd
 from resources.timer_decorator import time_this, print_execution_times
 
 class Simulation:
@@ -311,7 +311,7 @@ if  __name__ == "__main__":
         sim.add_food(Food(size=(100, 100), coordinates=(130, -400), amount_of_food=100))
         sim.add_food(Food(size=(100, 100), coordinates=(150, -200), amount_of_food=100))
         
-        for _ in range(100):
+        for _ in range(150):
             sim.next_epoch()
         
         print_execution_times()
