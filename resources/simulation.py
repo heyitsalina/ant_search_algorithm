@@ -239,15 +239,17 @@ class Simulation:
         end_row = min(arr.shape[0], row + search_radius + 1)
         start_col = max(0, col - search_radius)
         end_col = min(arr.shape[1], col + search_radius + 1)
+        
         slice_ = arr[start_row:end_row, start_col:end_col]
 
-        if np.argmax(slice_) == 0:
-            return
-        
-        max_pos = np.unravel_index(np.argmax(slice_), slice_.shape)
-        max_pos_in_original_array = (start_row + max_pos[0], start_col + max_pos[1])
-        return max_pos_in_original_array
+        max_pos_in_slice = np.unravel_index(np.argmax(slice_), slice_.shape)
 
+        if slice_[max_pos_in_slice] == 0:
+            return None
+        
+        max_pos_in_original_array = (start_row + max_pos_in_slice[0], start_col + max_pos_in_slice[1])
+        
+        return max_pos_in_original_array
 
 
 if  __name__ == "__main__":
