@@ -42,7 +42,8 @@ def test_reduce_pheromones():
 
     # Reducing by 50%
     reducing_factor = 0.5
-    pheromone.reduce_pheromones(reducing_factor)
+    pheromone.reducing_factor = 0.5
+    pheromone.reduce_pheromones()
     
     # Directly checking the array
     assert pheromone.pheromone_array[1, pos[1], pos[0]] == pheromone_status_food * reducing_factor
