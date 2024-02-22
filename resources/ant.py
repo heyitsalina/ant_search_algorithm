@@ -88,7 +88,7 @@ class Ant:
         Args:
             pheromone_direction (numpy array, optional): An additional directional influence based on pheromones.
         ---------
-
+    
         Returns:
             tuple: The future position of the ant after moving.
         """
@@ -134,7 +134,6 @@ class Ant:
             tuple: The current (x, y) coordinates of the ant if it is within the specified radius; 
                    otherwise, returns None.
         """
-
         target_center_x, target_center_y = target_position[0] + center_offset, target_position[1] + center_offset
 
         ant_x, ant_y = self.coordinates
@@ -167,7 +166,6 @@ class Ant:
         Args:
             food (Food): The food source to pick up food from.
         """
-        
         amount_taken = min(food.amount_of_food, self.amount_to_carry)
         food.amount_of_food -= amount_taken
         self.ant_carries = amount_taken 
@@ -185,7 +183,6 @@ class Ant:
         Returns:
             bool: True if the ant can drop food, False otherwise.
         """
-
         return self.pheromone_status == 1 and self.is_near_target(colony.coordinates)
     
     @time_this
@@ -197,7 +194,6 @@ class Ant:
         Args:
             colony (Colony): The colony to drop food at.
         """
-
         colony.food_counter += self.ant_carries
         self.ant_carries = 0 
         self.switch_pheromone()
