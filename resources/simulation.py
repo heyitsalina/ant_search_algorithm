@@ -104,13 +104,13 @@ class Simulation:
             y = max_y
         return np.array([x, y])
 
-    def check_food_collision_with_obstacles(self, food):
-        width, height = food.size
-        bottom_left_x, bottom_left_y = food.coordinates
-        top_right_x, top_right_y = food.coordinates[0] + width, food.coordinates[1] + height
+    def check_object_collision_with_obstacles(self, object):
+        width, height = object.size
+        bottom_left_x, bottom_left_y = object.coordinates
+        top_right_x, top_right_y = object.coordinates[0] + width, object.coordinates[1] + height
 
 
-        width, height = food.size
+        width, height = object.size
         for obstacle in self.obstacles:
             obstacle_min_x, obstacle_max_x, obstacle_min_y, obstacle_max_y = obstacle.pos[0]-5, obstacle.pos[0] + obstacle.size[0] +5, obstacle.pos[1] - 5, obstacle.pos[1] + obstacle.size[1] + 5
 
@@ -120,8 +120,8 @@ class Simulation:
                 return True #collision
         return False
 
-    def relocate_object(self, food):
-        step_size = max(food.size)
+    def relocate_object(self, object):
+        step_size = max(object.size)
 
         directions = {
         "right": (step_size, 0),
@@ -130,29 +130,29 @@ class Simulation:
         "up": (0, step_size),
     }
         for direction, (dx, dy) in directions.items(): 
-            new_position = (food.coordinates[0] + dx, food.coordinates[1] + dy)
+            new_position = (object.coordinates[0] + dx, object.coordinates[1] + dy)
             # Create temp food object
-            temp_food = Food(size=food.size, coordinates=new_position, amount_of_food=food.amount_of_food)
+            temp_food = Food(size=object.size, coordinates=new_position, amount_of_food=object.amount_of_food)
             # Adjust the new position to ensure it is within bounds
-            adjusted_position = self.adjust_food_position_within_bounds(temp_food)
+            adjusted_position = self.adjust_object_position_within_bounds(temp_food)
             temp_food.coordinates = adjusted_position
     
-            if not self.check_food_collision_with_obstacles(temp_food):
-                food.coordinates = adjusted_position
+            if not self.check_object_collision_with_obstacles(temp_food):
+                object.coordinates = adjusted_position
                 return True  # Successfully relocated without collision and within bounds
 
         return False 
 
-    def adjust_food_position_within_bounds(self, food):
+    def adjust_object_position_within_bounds(self, object):
         min_x, max_x, min_y, max_y = self.bounds
-        food_width, food_height = food.size
-        x, y = food.coordinates
+        object_width, object_height = object.size
+        x, y = object.coordinates
 
         # Adjust for right and top edges
-        if x + food_width > max_x:
-            x = max_x - food_width
-        if y + food_height > max_y:
-            y = max_y - food_height
+        if x + object_width > max_x:
+            x = max_x - object_width
+        if y + object_height > max_y:
+            y = max_y - object_height
 
         # Adjust for left and bottom edges
         if x < min_x:
