@@ -106,29 +106,18 @@ class Simulation:
         x, y = future_position
         
         for obstacle in self.obstacles:
-            min_x, max_x, min_y, max_y = obstacle.pos[0]-2.5, obstacle.pos[0] + obstacle.size[0]-2.5, obstacle.pos[1]-5, obstacle.pos[1] + obstacle.size[1]
-            if x >= min_x and x <= max_x and y >= min_y and y <= max_y:
+            min_x, max_x = obstacle.pos[0], obstacle.pos[0] + obstacle.size[0]
+            min_y, max_y = obstacle.pos[1], obstacle.pos[1] + obstacle.size[1]
+            
+            if x >= min_x - 2.5 and x <= max_x and y >= min_y - 5 and y <= max_y:
+                # Determine closest edge of the obstacle
                 x_diff = min(abs(x - min_x), abs(x - max_x))
                 y_diff = min(abs(y - min_y), abs(y - max_y))
 
                 if x_diff < y_diff:
-                    if x_diff == abs(x - min_x):
-                        x = min_x - 5
-                        if x < min_x:
-                            x = min_x
-                    else:
-                        x = max_x + 1
-                        if x > max_x:
-                            x = max_x
+                    x = min_x - 2.5 if x_diff == abs(x - min_x) else max_x - 2.5
                 else:
-                    if y_diff == abs(y - min_y):
-                        y = min_y - 5
-                        if y < min_y:
-                            y = min_y
-                    else:
-                        y = max_y + 1
-                        if y > max_y:
-                            y = max_y
+                    y = min_y - 5 if y_diff == abs(y - min_y) else max_y
 
         return np.array([x, y])
 
