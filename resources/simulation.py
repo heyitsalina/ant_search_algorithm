@@ -119,6 +119,20 @@ class Simulation:
                 return True #collision
         return False
 
+    def relocate_object(self, food):
+        step_size = max(food.size)
+
+        directions = ["left", "down", "right", "up"]
+
+        for direction in directions: 
+            if direction == "right":
+                food.coordinates = (food.coordinates[0] + step_size, food.coordinates[1])
+            if direction == "down":
+                food.coordinates = (food.coordinates[0], food.coordinates[1] + step_size)
+            if direction == "left":
+                food.coordinates = (food.coordinates[0] - step_size, food.coordinates[1])
+            if direction == "up":
+                food.coordinates = (food.coordinates[0], food.coordinates[1] - step_size)
 
     def is_within_bounds(self, position, size):
         x, y = position
