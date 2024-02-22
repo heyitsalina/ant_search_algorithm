@@ -3,22 +3,36 @@ import time
 class TimeTracker:
     """
     Tracks execution times of functions using a dictionary.
+    ---------
 
     Attributes:
-    execution_times (dict): Stores accumulated execution times of decorated functions.
+    execution_times (dict):
+        Stores accumulated execution times of decorated functions.
+    ----------
+
+    Methods:
+    def time_this()
+    def wrapper()
+    def print_execution_times()
     """
     execution_times = {}
 
 def time_this(func):
     """
     A decorator that measures the execution time of a function and adds it to the total execution time.
+    ------------
 
     Parameters:
-    func (function): The function to be decorated.
+    func (function):
+        The function to be decorated.
+    ------------
 
     Returns:
-    function: The wrapper function.
+    function: 
+        The wrapper function.
     """
+
+    
     def wrapper(*args, **kwargs):
         start_time = time.time()
         result = func(*args, **kwargs)
@@ -32,10 +46,11 @@ def time_this(func):
         return result
     return wrapper
 
+
 def print_execution_times():
     """
     Prints the total execution time for each tracked function.
-
+    ----------
     This function iterates over the recorded execution times stored in
     TimeTracker.execution_times, prints the total time for each function, and
     then clears the stored times.
