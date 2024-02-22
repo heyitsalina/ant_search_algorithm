@@ -42,7 +42,7 @@ def test_reduce_pheromones():
 
     # Reducing by 50%
     reducing_factor = 0.5
-    pheromone.reducing_factor = 0.5
+    pheromone.reducing_factor = reducing_factor
     pheromone.reduce_pheromones()
     
     # Directly checking the array
@@ -52,7 +52,8 @@ def test_reduce_pheromones():
 
     # Reducing by 0.5^6
     reducing_factor = 0.5**6
-    pheromone.reduce_pheromones(reducing_factor)
+    pheromone.reducing_factor = reducing_factor
+    pheromone.reduce_pheromones()
     
     
     # The final values should be exactly 0 after the reduction
