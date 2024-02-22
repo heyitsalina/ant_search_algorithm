@@ -1,5 +1,6 @@
 import ast
 import json
+import webbrowser
 import numpy as np
 from resources import config
 from kivymd.app import MDApp
@@ -83,6 +84,7 @@ class GUI(MDApp):
         button_widget = ButtonWidget(simulation_widget)
         
         background.add_widget(simulation_widget)
+        background.add_widget(InfoButton())
         background.add_widget(SettingsButton())
         root.add_widget(background)
         root.add_widget(button_widget)
@@ -228,6 +230,19 @@ class SettingsButton(MDIconButton):
             ],
         )
         error_dialog.open()
+
+
+class InfoButton(MDIconButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.icon = "information-outline"
+        self.pos_hint = {"top": 0.98}
+        self.theme_text_color = "Custom"
+        self.text_color = (0, 0, 0, 1)
+        self.icon_size = 60
+    
+    def on_press(self, *args):
+        webbrowser.open("https://github.com/heyitsalina/ant_search_algorithm/blob/main/images/basic_features.gif")
 
 
 class ResizableDraggablePicture(Scatter):
@@ -643,10 +658,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         error_dialog.open()
 
     def adjust_view(self, instance):
-        if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2 + 45, (self.height - sim.bounds[2])//2):
+        if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2 + 90, (self.height - sim.bounds[2])//2): # +45
             return False
         self.scale = 1
-        self.pos = ((self.width - sim.bounds[1])//2 + 45, (self.height - sim.bounds[2])//2)
+        self.pos = ((self.width - sim.bounds[1])//2 + 90, (self.height - sim.bounds[2])//2)
 
     def delete_object(self, object):
         if isinstance(object, Food):
