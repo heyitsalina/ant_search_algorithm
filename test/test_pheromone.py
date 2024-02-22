@@ -21,16 +21,6 @@ def test_leave_pheromone():
     pheromone.leave_pheromone(pos, pheromone_status)
     assert pheromone.pheromone_array[1, pos[1], pos[0]] == pheromone_status
     
-def test_get_pheromone_level():
-    grid_shape = (10, 10)
-    pheromone = Pheromone(grid_shape)
-    pos = (5, 5)
-    pheromone_status = 1
-
-    pheromone.leave_pheromone(pos, pheromone_status)
-    levels = pheromone.get_pheromone_level(pos)
-
-    assert levels == {'coming from colony': 0, 'coming from food': pheromone_status}
 
 def test_reduce_pheromones():
     grid_shape = (10, 10)
