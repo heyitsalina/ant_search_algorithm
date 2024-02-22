@@ -28,7 +28,6 @@ class Pheromone:
         self.pheromone_array = np.zeros((2, grid_shape[0], grid_shape[1]))
         self.reducing_factor = reducing_factor
 
-    #@time_this
     def leave_pheromone(self, pos, pheromone_status):
         """
         Leaves pheromone at a given position based on the pheromone status. This method is typically
