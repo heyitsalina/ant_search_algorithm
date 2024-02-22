@@ -59,7 +59,7 @@ A demonstration of the advanced functions of Ant Simulation:
 
 This ant food search simulation offers an intuitive GUI to interact with the simulation. It allows you to directly influence the simulation environment and observe the complex behaviors of ants in their quest for food. Here’s how you can interact with the simulation:
 
-- **Placing Entities**: To add food sources or ant colonies to the simulation, click on the respective symbols for food and ants located in the bottom left corner of the GUI. Then, click on the desired location on the map to place them. This method allows for easy customization of the simulation's starting conditions. You can place several.
+- **Placing Entities**: To add food sources, ant colonies or obstacles to the simulation, click on the respective symbols for food, ants and obstacles located in the bottom left corner of the GUI. Then, click on the desired location on the map to place them. This method allows for easy customization of the simulation's starting conditions. You can place several.
 
 - **Updating Entity Parameters**: You can tailor the simulation to your specific interests by adjusting entity parameters. Double-click on any placed entity (food or colony) to open its settings.
 
@@ -89,8 +89,8 @@ We welcome contributions to our Ant Food Search Simulation project! To ensure th
 
 ### Familiarize Yourself with the Project
 
-- **Project Structure:** We have included a diagram of the project structure in the repository to help you understand how the project is organized.
-- **Code Documentation:** The classes, methods, and parameters are thoroughly described using docstrings in the code files. This documentation is your go-to resource for understanding the functionality and purpose of the code.
+- **Project Structure:** We have included a diagram of the project structure in the repository to help you understand how the project is organized. [diagram](devs/diagram)
+- **Code Documentation:** The classes, methods, and parameters are thoroughly described using docstrings in the code files. This documentation is your go-to resource for understanding the functionality and purpose of the code. Additionaly there is a summary of the most important classes/methods and a brief explanation of provided algorithms here. [docs](devs/docs/)
 
 ### How to Contribute
 
