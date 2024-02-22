@@ -1,5 +1,5 @@
 import numpy as np
-from resources.timer_decorator import time_this
+
 
 class Pheromone:
     def __init__(self, grid_shape, reducing_factor=0.09):
