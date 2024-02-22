@@ -48,3 +48,11 @@ def test_reduce_pheromones():
     assert pheromone.pheromone_array[1, pos[1], pos[0]] == pheromone_status_food * reducing_factor
     assert pheromone.pheromone_array[0, pos[1], pos[0]] == pheromone_status_colony * reducing_factor
 
+
+    # Reducing by 0.5^5
+    reducing_factor = 0.5**5
+    pheromone.reduce_pheromones(reducing_factor)
+
+    # The final values should be exactly 0 after the reduction
+    assert pheromone.pheromone_array[1, pos[1], pos[0]] == 0
+    assert pheromone.pheromone_array[0, pos[1], pos[0]] == 0
