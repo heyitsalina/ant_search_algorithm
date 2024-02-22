@@ -1,6 +1,12 @@
 import time
 
 class TimeTracker:
+    """
+    Tracks execution times of functions using a dictionary.
+
+    Attributes:
+    execution_times (dict): Stores accumulated execution times of decorated functions.
+    """
     execution_times = {}
 
 def time_this(func):
