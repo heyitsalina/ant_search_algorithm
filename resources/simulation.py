@@ -128,11 +128,11 @@ class Simulation:
             if direction == "right":
                 new_position = (food.coordinates[0] + step_size, food.coordinates[1])
             if direction == "down":
-                new_position = (food.coordinates[0], food.coordinates[1] + step_size)
+                new_position = (food.coordinates[0], food.coordinates[1] - step_size)
             if direction == "left":
                 new_position = (food.coordinates[0] - step_size, food.coordinates[1])
             if direction == "up":
-                new_position = (food.coordinates[0], food.coordinates[1] - step_size)
+                new_position = (food.coordinates[0], food.coordinates[1] + step_size)
             
             # create temp food object
             temp_food = Food(size=food.size, coordinates=new_position, amount_of_food=food.amount_of_food)
