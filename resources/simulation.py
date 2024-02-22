@@ -75,8 +75,9 @@ class Simulation:
         self.colonies.append(colony)
 
     def add_food(self, food):
+        self.check_food_collision_with_obstacles(food)
+        self.relocate_object(food)
         self.food.append(food)
-        #self.relocate_object(food)
     
     def check_future_position(self, future_position):
         """
