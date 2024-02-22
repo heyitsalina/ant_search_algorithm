@@ -10,10 +10,9 @@ class Simulation:
     """
     This class represents the simulation in which the ants are moving and the 
     Colony and Food objects are.
-    ...
+    ----------
 
     Attributes
-    ----------
     food : list
         A list containing the Food objects.
     colonies : list
@@ -22,9 +21,9 @@ class Simulation:
         Indicates if the simulation in running.
     bounds: Tuple
         defines the spatial boundaries of the simulation area (min_x, max_x, min_y, max_y)
-    
+    ---------
+
     Methods
-    -------
     start():
         Start the simulation.
     next_epoch():
@@ -35,6 +34,25 @@ class Simulation:
         Add a Food object to the simulation.
     check_future_position():    
         Adjusts the given position to ensure it stays within the simulation bounds.
+    add_obstacle():
+        Add an Obstacle object to the simulation.
+    def check_object_collision_with_obstacles():
+        Checks for collision between an object defined by its coordinates and size and obstacles in the simulation.
+    def relocate_object():
+        Relocates the given object to a new position within the simulation.
+    def adjust_object_position_within_bounds():
+        Adjusts the given coordinates to ensure the object remains within the defined bounds of the simulation.
+    def check_for_obstacles():
+        Checks if the future position of an object intersects with any obstacles in the simulation.
+    def map_ant_coordinates_to_pheromone_index():
+        Takes the coordinates of an ant and maps them to the corresponding index in the pheromone grid.
+    def create_statistic():
+        Creates statistical data about the simulation and saves it to a JSON file.
+    def find_pheromone_trace
+        Finds the direction of a pheromone trace relative to the given coordinates within the search radius.
+    def get_pheromone_position():
+        Retrieves the position of the maximum value in a slice of the pheromone array within the specified search radius.
+
     """
     def __init__(self):
         self.food = []
@@ -104,14 +122,14 @@ class Simulation:
     def check_future_position(self, future_position):
         """
         Adjusts the given position to ensure it stays within the simulation bounds.
+        -----------
 
-        Args
-        -------
+        Args:
         future_position (np.array):
             The anticipated future position of an ant.
+        -----------
 
-        Returns
-        -------
+        Returns.
         np.array: The adjusted position within the simulation bounds.
         """
         min_x, max_x, min_y, max_y = self.bounds
@@ -128,6 +146,22 @@ class Simulation:
 
     @time_this
     def check_object_collision_with_obstacles(self, coordinates, size):
+        """
+        Checks for collision between an object defined by its coordinates and size
+        and obstacles in the simulation using Axis-Aligned Bounding Box (AABB) collision detection.
+        -----------
+
+        Args:
+        coordinates (tuple): 
+            The (x, y) coordinates of the object.
+        size (tuple):
+            The (width, height) size of the object.
+        -----------
+
+        Returns:
+        bool: 
+            True if collision with any obstacle detected, False otherwise.
+        """
         width, height = size
         bottom_left_x, bottom_left_y = coordinates
         top_right_x, top_right_y = coordinates[0] + width, coordinates[1] + height
@@ -144,6 +178,19 @@ class Simulation:
 
     @time_this
     def relocate_object(self, object):
+        """
+        Relocates the given object to a new position within the environment, avoiding collisions with obstacles.
+        --------
+
+        Args:
+        object:
+            The object to be relocated.
+        ---------
+
+        Returns:
+        bool:
+            True if the object is successfully relocated without collision and within bounds, False otherwise.
+    """
         step_size = max(object.size)
 
         directions = {
@@ -165,6 +212,21 @@ class Simulation:
 
     @time_this
     def adjust_object_position_within_bounds(self, coordinates, size):
+        """
+        Adjusts the given coordinates to ensure the object remains within the defined bounds of the simulation.
+        --------
+
+        Args:
+        coordinates (tuple):
+            The (x, y) coordinates of the object.
+        size (tuple): 
+            The (width, height) size of the object.
+        --------
+
+        Returns:
+        tuple:
+            The adjusted (x, y) coordinates of the object within the bounds.
+        """
         min_x, max_x, min_y, max_y = self.bounds
         object_width, object_height = size
         x, y = coordinates
@@ -185,6 +247,20 @@ class Simulation:
 
     @time_this
     def check_for_obstacles(self, future_position):
+        """
+        Checks if the future position of an object intersects with any obstacles in the simulation
+        and adjusts the position accordingly to avoid collision.
+        --------
+
+        Args:
+        future_position (tuple):
+            The (x, y) coordinates representing the future position of the object.
+        ---------
+
+        Returns:
+        numpy array: 
+            The adjusted (x, y) coordinates to avoid obstacles.
+        """
         x, y = future_position
         
         for obstacle in self.obstacles:
@@ -208,16 +284,18 @@ class Simulation:
         This method takes the coordinates of an ant and maps them to the
         corresponding index in the pheromone grid based on the simulation bounds
         and the shape of the pheromone grid.
+        --------
 
-        Args
-        -------
-            ant_coordinates (tuple): The x and y coordinates of the ant's position.
-            colony (Colony): The colony object containing the pheromone grid.
+        Args:
+        ant_coordinates (tuple):
+            The x and y coordinates of the ant's position.
+        colony (Colony):
+            The colony object containing the pheromone grid.
+        --------
 
-        Returns
-        -------
-            tuple: A tuple containing the row and column indices in the
-            pheromone grid that correspond to the ant's position.
+        Returns:
+        tuple:
+            A tuple containing the row and column indices in the pheromone grid that correspond to the ant's position.
         """
         
         width_board = self.bounds[1] - self.bounds[0]
@@ -236,6 +314,10 @@ class Simulation:
     
     @time_this
     def create_statistic(self):
+        """
+        Creates statistical data about the simulation and saves it to a JSON file.
+        Additionally, generates a PDF report based on the collected statistics.
+        """
         data = {
             "simulation" : [],
             "colonies": [],
@@ -286,6 +368,27 @@ class Simulation:
 
     @time_this
     def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_array, colony, search_radius):
+        """
+        Finds the direction of a pheromone trace relative to the given coordinates within the search radius.
+        ----------
+
+        Args:
+        coordinates (tuple):
+            The (x, y) coordinates of the ant or colony.
+        pheromone_status (int):
+            The status of the pheromone trace (1 or 0).
+        pheromone_array (numpy array): 
+            The array containing pheromone information.
+        colony:
+            The colony to which the ant belongs.
+        search_radius (int): 
+            The radius within which to search for pheromones.
+        ------------
+
+        Returns:
+        numpy array:
+            The direction vector pointing towards the detected pheromone trace.
+        """
         depth = 0 if pheromone_status == 1 else 1
         pheromone_shape = pheromone_array[0].shape
 
@@ -310,6 +413,25 @@ class Simulation:
 
     @time_this
     def get_pheromone_position(self, row, col, arr, search_radius):
+        """
+        Retrieves the position of the maximum value in a slice of the pheromone array within the specified search radius.
+        -----------
+
+        Args:
+        row (int):
+            The row index of the center of the search.
+        col (int): 
+            The column index of the center of the search.
+        arr (numpy array): 
+            The pheromone array to search.
+        search_radius (int): 
+            The radius within which to search for the maximum value.
+        -----------
+
+        Returns:
+        tuple:
+            The row and column indices of the maximum value in the original array.
+        """
         start_row = max(0, row - search_radius)
         end_row = min(arr.shape[0], row + search_radius + 1)
         start_col = max(0, col - search_radius)
