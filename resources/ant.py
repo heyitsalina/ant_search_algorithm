@@ -1,4 +1,5 @@
 import numpy as np
+from resources.timer_decorator import time_this
 
 class Ant:
     def __init__(self, coordinates, amount_to_carry, step_size=1, search_radius=1, pheromone_influence=0.01):
@@ -47,8 +48,10 @@ class Ant:
     def switch_pheromone(self):
         """Switches the pheromone status of the ant."""
         self.pheromone_status *= -1
-    
+        
+    @time_this 
     def move(self, angle_offset=0, pheromone_direction=None):
+
         position = np.array(self.coordinates)
         
         if angle_offset == 0:
@@ -72,8 +75,10 @@ class Ant:
 
         future_position = position + self.direction
         return tuple(future_position)
-
+         
+    @time_this
     def is_near_target(self, target_position, center_offset=45, radius=20):
+
         """
         Determines if an ant is within a specified radius of a food or colony source.
 
@@ -111,6 +116,7 @@ class Ant:
         """
         return self.pheromone_status == -1 and  self.is_near_target(food.coordinates) and food.amount_of_food > 0
    
+    @time_this
     def carry_food(self, food):
         """
         Have the ant pick up food from the specified source and update its status.
@@ -135,8 +141,9 @@ class Ant:
             bool: True if the ant can drop food, False otherwise.
         """
 
-        return self.pheromone_status == 1 and self.is_near_target(colony.coordinates) 
-
+        return self.pheromone_status == 1 and self.is_near_target(colony.coordinates)
+    
+    @time_this
     def drop_food(self, colony):
         """
         Have the ant drop food at its colony and update its status.

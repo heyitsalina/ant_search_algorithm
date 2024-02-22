@@ -1,4 +1,5 @@
 import numpy as np
+from resources.timer_decorator import time_this
 
 class Pheromone:
     def __init__(self, grid_shape):
@@ -26,7 +27,7 @@ class Pheromone:
 
         self.pheromone_array = np.zeros((2, grid_shape[0], grid_shape[1]))
 
-
+    @time_this
     def leave_pheromone(self, pos, pheromone_status):
         """
         Leaves pheromone at a given position based on the pheromone status. This method is typically
