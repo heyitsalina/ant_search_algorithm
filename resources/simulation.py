@@ -115,7 +115,7 @@ class Simulation:
             y = min_y + 1
         elif y > max_y:
             y = max_y
-        return np.array([x, y])
+        return self.check_for_obstacles(np.array([x, y]))
 
     def check_object_collision_with_obstacles(self, coordinates, size):
         width, height = size
@@ -171,7 +171,7 @@ class Simulation:
 
         return (x, y)
 
-
+    @time_this
     def check_for_obstacles(self, future_position):
         x, y = future_position
         
