@@ -126,21 +126,38 @@ class Simulation:
 
         for direction in directions: 
             if direction == "right":
-                food.coordinates = (food.coordinates[0] + step_size, food.coordinates[1])
+                new_position = (food.coordinates[0] + step_size, food.coordinates[1])
             if direction == "down":
-                food.coordinates = (food.coordinates[0], food.coordinates[1] + step_size)
+                new_position = (food.coordinates[0], food.coordinates[1] + step_size)
             if direction == "left":
-                food.coordinates = (food.coordinates[0] - step_size, food.coordinates[1])
+                new_position = (food.coordinates[0] - step_size, food.coordinates[1])
             if direction == "up":
-                food.coordinates = (food.coordinates[0], food.coordinates[1] - step_size)
+                new_position = (food.coordinates[0], food.coordinates[1] - step_size)
 
-    def is_within_bounds(self, position, size):
-        x, y = position
-        width, height = size
+            # Adjust the new position to ensure it is within bounds
+            adjusted_position = self.check_future_position(np.array(new_position))
+
+
+    def adjust_food_position_within_bounds(self, food):
         min_x, max_x, min_y, max_y = self.bounds
-        # Check if the new position is within bounds, considering the food size
-        return min_x <= x < max_x - width and min_y <= y < max_y - height
-    
+        food_width, food_height = food.size
+        x, y = food.coordinates
+
+        # Adjust for right and top edges
+        if x + food_width > max_x:
+            x = max_x - food_width
+        if y + food_height > max_y:
+            y = max_y - food_height
+
+        # Adjust for left and bottom edges
+        if x < min_x:
+            x = min_x
+        if y < min_y:
+            y = min_y
+
+        return np.array([x, y])
+
+
     def check_for_obstacles(self, future_position):
         x, y = future_position
         
