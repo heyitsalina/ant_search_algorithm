@@ -90,6 +90,14 @@ class Simulation:
     @time_this
     def add_obstacle(self, obstacle):
         self.obstacles.append(obstacle)
+
+        for food in self.food:
+            if self.check_object_collision_with_obstacles(food.coordinates, food.size):
+                self.relocate_object(food)
+        
+        for colony in self.colonies:
+            if self.check_object_collision_with_obstacles(colony.coordinates, colony.size):
+                self.relocate_object(colony)
         
     @time_this
     def check_future_position(self, future_position):
