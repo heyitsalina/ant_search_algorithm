@@ -134,7 +134,7 @@ class Simulation:
 
 
         for obstacle in self.obstacles:
-            obstacle_min_x, obstacle_max_x, obstacle_min_y, obstacle_max_y = obstacle.pos[0]-5, obstacle.pos[0] + obstacle.size[0] +5, obstacle.pos[1] - 5, obstacle.pos[1] + obstacle.size[1] + 5
+            obstacle_min_x, obstacle_max_x, obstacle_min_y, obstacle_max_y = obstacle.coordinates[0], obstacle.coordinates[0] + obstacle.size[0], obstacle.coordinates[1], obstacle.coordinates[1] + obstacle.size[1] 
 
             # Axis-Aligned Bounding Box (AABB) collision detection method
             if (bottom_left_x <= obstacle_max_x and top_right_x >= obstacle_min_x) and (bottom_left_y <= obstacle_max_y and top_right_y >= obstacle_min_y):
