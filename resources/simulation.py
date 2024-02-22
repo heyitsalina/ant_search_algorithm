@@ -72,6 +72,8 @@ class Simulation:
             colony.pheromone.reduce_pheromones(reduce_fac, 0.001)
 
     def add_colony(self, colony):
+        self.check_object_collision_with_obstacles(colony)
+        self.relocate_object(colony)
         self.colonies.append(colony)
 
     def add_food(self, food):
