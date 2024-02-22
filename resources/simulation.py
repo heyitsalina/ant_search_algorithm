@@ -77,6 +77,7 @@ class Simulation:
 
     def add_food(self, food):
         self.food.append(food)
+        self.relocate_object(food)
     
     def check_future_position(self, future_position):
         """
@@ -140,7 +141,7 @@ class Simulation:
                 food.coordinates = adjusted_position
                 return True  # Successfully relocated without collision and within bounds
 
-        return False # maybe still implement that it goes somewhere random
+        return False 
 
     def adjust_food_position_within_bounds(self, food):
         min_x, max_x, min_y, max_y = self.bounds
