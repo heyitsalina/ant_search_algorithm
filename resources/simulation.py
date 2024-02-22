@@ -44,9 +44,12 @@ class Simulation:
         self.bounds = () #(min_x, max_x, min_y, max_y)
         self.epoch = 0
         
-    
+    #To find the best parameters for ants to transport the most food units to the colony, use the Grid-Search below. 
+    #To do this, the following adjustment must be made:
+    #def next_epoch(self, reduce_fac = 0.5, pheromone_influence = 0.01):
+    #Then adjust the calls in the next_epoch method accordingly  
     @time_this
-    def next_epoch(self, reduce_fac = 0.5, pheromone_influence = 0.01):
+    def next_epoch(self):
 
         self.epoch += 1
         active_food_objects = [food for food in self.food if food.amount_of_food != 0]
@@ -60,7 +63,6 @@ class Simulation:
                 if ant.try_drop_food(colony):
                     ant.drop_food(colony)
 
-                ant.pheromone_influence = pheromone_influence
                 pheromone_direction = self.find_pheromone_trace(ant.coordinates, ant.pheromone_status, colony.pheromone.pheromone_array, colony, ant.search_radius)
                 future_position = ant.move(pheromone_direction=pheromone_direction)
                 future_position = self.check_for_obstacles(future_position)
@@ -73,7 +75,7 @@ class Simulation:
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)    
 
-            colony.pheromone.reduce_pheromones(reduce_fac, 0.001)
+            colony.pheromone.reduce_pheromones(0.99, 0.001)
 
     def add_colony(self, colony):
         self.colonies.append(colony)
