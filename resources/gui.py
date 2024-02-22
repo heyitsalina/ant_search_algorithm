@@ -658,10 +658,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         error_dialog.open()
 
     def adjust_view(self, instance):
-        if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2 + 90, (self.height - sim.bounds[2])//2): # +45
+        if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2 + 95, (self.height - sim.bounds[2])//2):
             return False
         self.scale = 1
-        self.pos = ((self.width - sim.bounds[1])//2 + 90, (self.height - sim.bounds[2])//2)
+        self.pos = ((self.width - sim.bounds[1])//2 + 95, (self.height - sim.bounds[2])//2)
 
     def delete_object(self, object):
         if isinstance(object, Food):
