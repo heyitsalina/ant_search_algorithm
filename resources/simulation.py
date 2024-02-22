@@ -116,10 +116,16 @@ class Simulation:
             # Axis-Aligned Bounding Box (AABB) collision detection method
             if (bottom_left_x <= obstacle_max_x and top_right_x >= obstacle_min_x) and (bottom_left_y <= obstacle_max_y and top_right_y >= obstacle_min_y):
 
-                
-
                 return True #collision
         return False
+
+
+    def is_within_bounds(self, position, size):
+        x, y = position
+        width, height = size
+        min_x, max_x, min_y, max_y = self.bounds
+        # Check if the new position is within bounds, considering the food size
+        return min_x <= x < max_x - width and min_y <= y < max_y - height
     
     def check_for_obstacles(self, future_position):
         x, y = future_position
