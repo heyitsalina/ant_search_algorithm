@@ -4,6 +4,7 @@ import os
 import json
 from resources.simulation import Simulation
 from resources.colony import Colony
+from resources.food import Food
 
 
 
@@ -27,12 +28,19 @@ def test_simulation_initialisation():
 
 def test_add_colony_and_food():
     sim = Simulation()
+    sim.bounds = (0, 720, -480, 0)
+    food = Food(size=(10,10), coordinates=(100,100), amount_of_food=100)
+    colony = Colony(grid_pheromone_shape=(100, 100), amount=10, size=(10,10), coordinates=(100.0, 100.0), color=(1, 1, 1, 1))
+    sim.add_colony(colony)
+    sim.add_food(food)
     
-    sim.add_colony("Colony1")
-    sim.add_food("Food1")
 
-    assert sim.colonies == ["Colony1"]
-    assert sim.food == ["Food1"]
+    assert colony in sim.colonies
+    assert food in sim.food
+    
+
+
+    
 
 
 def test_check_future_position():
