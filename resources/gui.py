@@ -38,10 +38,9 @@ sim = Simulation()
 class GUI(MDApp):
     """
     This class is used to create a graphical user interface (GUI) for the simulation.
-    ...
-
-    Methods
     -------
+
+    Methods:
     build():
         initialize kivy window
     on_start():
@@ -247,10 +246,9 @@ class ResizableDraggablePicture(Scatter):
 class SimulationWidget(ResizableDraggablePicture, Widget):
     """
     This class is the actual widget for the simulation.
-    ...
+    ----------
 
     Attributes
-    ----------
     is_running : bool
         indicates whether the simulation is running
     size : tuple
@@ -259,9 +257,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         position of the canvas
     dialog : MDDialog()
         a dialog window that shows settings about an object when it's double clicked
+    -------
 
     Methods
-    -------
     update_world():
         calculate the next epoch and update canvas
     update_canvas():
@@ -312,13 +310,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
 
         This method draws a rectangular boundary on the canvas to visualize the bounds
         of the simulation area.
-
-        Parameters
-        ----------
-        None
-
-        Returns
         -------
+
+        Parameters:
+        None
+        -------
+
+        Returns:
         None
         """
         min_x, max_x, min_y, max_y = sim.bounds
@@ -799,10 +797,9 @@ class Obstacles_Button(MDFloatingActionButton):
 class ButtonWidget(BoxLayout):
     """
     This class is the widget for all the buttons.
-    ...
-    
-    Attributs
     ---------
+    
+    Attributes
     simulation_widget : SimulationWidget()
         instance of the SimulationWidget() to connect both widgets
     food_button : FoodButton()
@@ -811,9 +808,9 @@ class ButtonWidget(BoxLayout):
         the colony button
     start_stop_button: Button()
         the start/stop button
+    ---------
     
     Methods
-    -------
     change_border_size():
         change the size of the border
     on_food_button_press():
