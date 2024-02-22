@@ -26,6 +26,8 @@ class Pheromone:
         """
         self.pheromone_array = np.zeros((2, grid_shape[0], grid_shape[1]))
 
+
+
     @time_this
     def leave_pheromone(self, pos, pheromone_status):
         """
@@ -42,7 +44,6 @@ class Pheromone:
         Returns:
             None. This method modifies the internal state of the pheromone tensor.
         """
-        
         depth = 0
         if pheromone_status == 1:
             depth = 1
@@ -62,13 +63,11 @@ class Pheromone:
             reduction_factor (float): The factor by which the pheromones should be reduced each epoch.
             zero_threshold (float): The value at which the pheromone value is so low that it should be considered 0.
         ------------
-        
+
         Returns:
             None. This method modifies the internal state of the pheromone tensor.
         
         """
-
-
         self.pheromone_array *= reducing_factor
         self.pheromone_array[0][self.pheromone_array[0] > - zero_threshold] = 0
         self.pheromone_array[1][self.pheromone_array[1] < zero_threshold] = 0
