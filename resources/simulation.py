@@ -128,7 +128,7 @@ class Simulation:
         "left": (-step_size, 0),
         "up": (0, step_size),
     }
-        for dx, dy in directions.values: 
+        for direction, (dx, dy) in directions.items(): 
             new_position = (food.coordinates[0] + dx, food.coordinates[1] + dy)
             # Create temp food object
             temp_food = Food(size=food.size, coordinates=new_position, amount_of_food=food.amount_of_food)
