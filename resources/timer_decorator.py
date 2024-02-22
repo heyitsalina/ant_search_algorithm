@@ -27,6 +27,13 @@ def time_this(func):
     return wrapper
 
 def print_execution_times():
+    """
+    Prints the total execution time for each tracked function.
+
+    This function iterates over the recorded execution times stored in
+    TimeTracker.execution_times, prints the total time for each function, and
+    then clears the stored times.
+    """
     for func_name, total_time in TimeTracker.execution_times.items():
         print(f"Total execution time of {func_name}: {total_time:.4f} seconds")
     TimeTracker.execution_times.clear()
