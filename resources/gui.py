@@ -29,6 +29,7 @@ from kivy.metrics import dp
 from resources.simulation import Simulation
 from resources.food import Food
 from resources.colony import Colony
+from resources.obstacle import Obstacle
 from resources.pheromone import Pheromone
 
 
@@ -198,12 +199,10 @@ class SettingsButton(MDIconButton):
                 
                 sim.obstacles = []
                 for obstacle_data in data["obstacles"]:
-                    obstacle = Image(
-                                source="../images/obstacle.png",
-                                pos=obstacle_data["pos"],
-                                size=obstacle_data["size"]
-                                )
-                    sim.obstacles.append(obstacle)
+                    obstacle = Obstacle(coordinates=obstacle_data["coordinates"], 
+                                        size=obstacle_data["size"]
+                                        )
+                    sim.add_obstacle(obstacle)
                 
                 self.parent.children[1].update_canvas()
             except Exception as e:
@@ -394,7 +393,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def draw_obstacles(self):
         with self.canvas:
             for obstacle in sim.obstacles:
-                Image(source="../images/obstacle.png", pos=obstacle.pos, size=obstacle.size)
+                Image(source="../images/obstacle.png", pos=obstacle.coordinates, size=obstacle.size)
 
     def toggle_simulation(self, instance):
         self.is_running = not self.is_running
@@ -429,7 +428,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     return True
             
             for obstacle in sim.obstacles:
-                obstacle_x, obstacle_y = obstacle.pos
+                obstacle_x, obstacle_y = obstacle.coordinates
                 if obstacle_x  < transformed_touch[0] < obstacle_x + 50 and \
                     obstacle_y < transformed_touch[1] < obstacle_y + 50:
                     self.show_obstacle_dialog(obstacle)
@@ -647,7 +646,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             sim.food.remove(object)
         elif isinstance(object, Colony):
             sim.colonies.remove(object)
-        elif isinstance(object, Image):
+        elif isinstance(object, Obstacle):
             sim.obstacles.remove(object)
         self.dialog.dismiss()
         self.update_canvas()
@@ -939,9 +938,9 @@ class ButtonWidget(BoxLayout):
         if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
             self.play_place_sound()
             with self.simulation_widget.canvas:
-                obstacle = Image(source="../images/obstacle.png", pos=(transformed_touch[0] - 25, transformed_touch[1] - 25), size=(50, 50))
+                Image(source="../images/obstacle.png", pos=(transformed_touch[0] - 25, transformed_touch[1] - 25), size=(50, 50))
             self.simulation_widget.unbind(on_touch_down=self.place_obstacle)
-            sim.obstacles.append(obstacle)
+            sim.add_obstacle(Obstacle(coordinates=(transformed_touch[0] - 25, transformed_touch[1] - 25), size=(50, 50)))
 
     def play_button_sound(self, *args):
         if self.parent.children[1].sound:
