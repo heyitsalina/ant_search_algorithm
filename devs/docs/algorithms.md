@@ -13,7 +13,6 @@ Ants decide their movement based on a combination of random exploration and pher
 
 - **Initial Direction**: At the start, ants move in a randomly chosen direction.
 - **Pheromone Influence**: Ants adjust their path based on pheromone concentrations, favoring directions with higher pheromone levels.
-- **Obstacle Avoidance**: Ants detect and navigate around obstacles encountered during their search.
 - **Food Detection and Collection**: Upon locating food, ants collect it and switch their status to return to the colony, leaving a pheromone trail.
 
 ## Pheromone Management
