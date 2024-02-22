@@ -50,12 +50,11 @@ class Ant:
         self.pheromone_status *= -1
         
     @time_this 
-    def move(self, angle_offset=0, pheromone_direction=None):
+    def move(self, pheromone_direction=None):
 
         position = np.array(self.coordinates)
         
-        if angle_offset == 0:
-            angle_offset = np.random.uniform(-np.pi / 4, np.pi / 4)
+        angle_offset = np.random.uniform(-np.pi / 4, np.pi / 4)
         
         cos_offset = np.cos(angle_offset)
         sin_offset = np.sin(angle_offset)
