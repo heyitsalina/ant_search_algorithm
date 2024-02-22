@@ -122,19 +122,15 @@ class Simulation:
     def relocate_object(self, food):
         step_size = max(food.size)
 
-        directions = ["left", "down", "right", "up"]
-
-        for direction in directions: 
-            if direction == "right":
-                new_position = (food.coordinates[0] + step_size, food.coordinates[1])
-            if direction == "down":
-                new_position = (food.coordinates[0], food.coordinates[1] - step_size)
-            if direction == "left":
-                new_position = (food.coordinates[0] - step_size, food.coordinates[1])
-            if direction == "up":
-                new_position = (food.coordinates[0], food.coordinates[1] + step_size)
-            
-            # create temp food object
+        directions = {
+        "right": (step_size, 0),
+        "down": (0, -step_size),
+        "left": (-step_size, 0),
+        "up": (0, step_size),
+    }
+        for dx, dy in directions.values: 
+            new_position = (food.coordinates[0] + dx, food.coordinates[1] + dy)
+            # Create temp food object
             temp_food = Food(size=food.size, coordinates=new_position, amount_of_food=food.amount_of_food)
             # Adjust the new position to ensure it is within bounds
             adjusted_position = self.adjust_food_position_within_bounds(temp_food)
