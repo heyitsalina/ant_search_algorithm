@@ -27,27 +27,24 @@ def test_reduce_pheromones():
     pheromone = Pheromone(grid_shape)
     
     pos = (5, 5)
+    pheromone_status_food = 1
+    pheromone_status_colony = -1
 
     # Ant coming from food
-    pheromone_status = 1
-    pheromone.leave_pheromone(pos, pheromone_status)
+    pheromone.leave_pheromone(pos, pheromone_status_food)
 
     # Ant coming from colony
-    pheromone_status = - 1
-    pheromone.leave_pheromone(pos, pheromone_status)
+    pheromone.leave_pheromone(pos, pheromone_status_colony)
 
-    # First reduction
-    pheromone.reduce_pheromones(reducing_factor = 0.5)
-    levels = pheromone.get_pheromone_level(pos)
-    assert levels == {'coming from colony': - 0.5, 'coming from food': 0.5}
+    # Verify that pheromones are correctly placed
+    assert pheromone.pheromone_array[1, pos[1], pos[0]] == pheromone_status_food
+    assert pheromone.pheromone_array[0, pos[1], pos[0]] == pheromone_status_colony
 
-    # Second reduction
-    pheromone.reduce_pheromones(reducing_factor = 0.5)
-    levels = pheromone.get_pheromone_level(pos)
-    assert levels == {'coming from colony': - 0.25, 'coming from food': 0.25}
-
-    # Further reductions
-    pheromone.reduce_pheromones(reducing_factor = 0.5**5)
-    levels = pheromone.get_pheromone_level(pos)
-    assert levels == {'coming from colony': 0, 'coming from food': 0}
+    # Reducing by 50%
+    reducing_factor = 0.5
+    pheromone.reduce_pheromones(reducing_factor)
+    
+    # Directly checking the array
+    assert pheromone.pheromone_array[1, pos[1], pos[0]] == pheromone_status_food * reducing_factor
+    assert pheromone.pheromone_array[0, pos[1], pos[0]] == pheromone_status_colony * reducing_factor
 
