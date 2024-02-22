@@ -76,16 +76,29 @@ class Simulation:
 
             colony.pheromone.reduce_pheromones(0.99, 0.001)
 
+    @time_this
     def add_colony(self, colony):
+        if self.check_object_collision_with_obstacles(colony.coordinates, colony.size):
+            self.relocate_object(colony)
         self.colonies.append(colony)
 
+    @time_this
     def add_food(self, food):
+        if self.check_object_collision_with_obstacles(food.coordinates, food.size):
+            self.relocate_object(food)
         self.food.append(food)
     
-
     @time_this
     def add_obstacle(self, obstacle):
         self.obstacles.append(obstacle)
+
+        for food in self.food:
+            if self.check_object_collision_with_obstacles(food.coordinates, food.size):
+                self.relocate_object(food)
+        
+        for colony in self.colonies:
+            if self.check_object_collision_with_obstacles(colony.coordinates, colony.size):
+                self.relocate_object(colony)
         
     @time_this
     def check_future_position(self, future_position):
@@ -111,9 +124,65 @@ class Simulation:
             y = min_y + 1
         elif y > max_y:
             y = max_y
-            
         return self.check_for_obstacles(np.array([x, y]))
-    
+
+    @time_this
+    def check_object_collision_with_obstacles(self, coordinates, size):
+        width, height = size
+        bottom_left_x, bottom_left_y = coordinates
+        top_right_x, top_right_y = coordinates[0] + width, coordinates[1] + height
+
+
+        for obstacle in self.obstacles:
+            obstacle_min_x, obstacle_max_x, obstacle_min_y, obstacle_max_y = obstacle.coordinates[0], obstacle.coordinates[0] + obstacle.size[0], obstacle.coordinates[1], obstacle.coordinates[1] + obstacle.size[1] 
+
+            # Axis-Aligned Bounding Box (AABB) collision detection method
+            if (bottom_left_x <= obstacle_max_x and top_right_x >= obstacle_min_x) and (bottom_left_y <= obstacle_max_y and top_right_y >= obstacle_min_y):
+
+                return True #collision
+        return False
+
+    @time_this
+    def relocate_object(self, object):
+        step_size = max(object.size)
+
+        directions = {
+        "right": (step_size, 0),
+        "down": (0, -step_size),
+        "left": (-step_size, 0),
+        "up": (0, step_size),
+    }
+        for direction, (dx, dy) in directions.items(): 
+            new_position = (object.coordinates[0] + dx, object.coordinates[1] + dy)
+            # Adjust the new position to ensure it is within bounds
+            adjusted_position = self.adjust_object_position_within_bounds(new_position, object.size)
+            
+            if not self.check_object_collision_with_obstacles(adjusted_position, object.size):
+                object.coordinates = adjusted_position
+                return True  # Successfully relocated without collision and within bounds
+
+        return False 
+
+    @time_this
+    def adjust_object_position_within_bounds(self, coordinates, size):
+        min_x, max_x, min_y, max_y = self.bounds
+        object_width, object_height = size
+        x, y = coordinates
+
+        # Adjust for right and top edges
+        if x + object_width > max_x:
+            x = max_x - object_width
+        if y + object_height > max_y:
+            y = max_y - object_height
+
+        # Adjust for left and bottom edges
+        if x < min_x:
+            x = min_x
+        if y < min_y:
+            y = min_y
+
+        return (x, y)
+
     @time_this
     def check_for_obstacles(self, future_position):
         x, y = future_position
