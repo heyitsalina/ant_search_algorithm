@@ -83,7 +83,11 @@ class Simulation:
     def add_food(self, food):
         self.food.append(food)
     
+
     @time_this
+    def add_obstacle(self, obstacle):
+        self.obstacles.append(obstacle)
+
     def check_future_position(self, future_position):
         """
         Adjusts the given position to ensure it stays within the simulation bounds.
@@ -114,11 +118,10 @@ class Simulation:
         x, y = future_position
         
         for obstacle in self.obstacles:
-            min_x, max_x = obstacle.pos[0], obstacle.pos[0] + obstacle.size[0]
-            min_y, max_y = obstacle.pos[1], obstacle.pos[1] + obstacle.size[1]
+            min_x, max_x = obstacle.coordinates[0], obstacle.coordinates[0] + obstacle.size[0]
+            min_y, max_y = obstacle.coordinates[1], obstacle.coordinates[1] + obstacle.size[1]
             
             if x >= min_x - 2.5 and x <= max_x and y >= min_y - 5 and y <= max_y:
-                # Determine closest edge of the obstacle
                 x_diff = min(abs(x - min_x), abs(x - max_x))
                 y_diff = min(abs(y - min_y), abs(y - max_y))
 
@@ -201,7 +204,7 @@ class Simulation:
 
         for obstacle in self.obstacles:
             obstacle_data = {
-                "pos": obstacle.pos,
+                "coordinates": obstacle.coordinates,
                 "size": obstacle.size
             }
             data["obstacles"].append(obstacle_data)
