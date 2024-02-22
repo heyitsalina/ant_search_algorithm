@@ -104,13 +104,12 @@ class Simulation:
             y = max_y
         return np.array([x, y])
 
-    def check_object_collision_with_obstacles(self, object):
-        width, height = object.size
-        bottom_left_x, bottom_left_y = object.coordinates
-        top_right_x, top_right_y = object.coordinates[0] + width, object.coordinates[1] + height
+    def check_object_collision_with_obstacles(self, coordinates, size):
+        width, height = size
+        bottom_left_x, bottom_left_y = coordinates
+        top_right_x, top_right_y = coordinates[0] + width, coordinates[1] + height
 
 
-        width, height = object.size
         for obstacle in self.obstacles:
             obstacle_min_x, obstacle_max_x, obstacle_min_y, obstacle_max_y = obstacle.pos[0]-5, obstacle.pos[0] + obstacle.size[0] +5, obstacle.pos[1] - 5, obstacle.pos[1] + obstacle.size[1] + 5
 
@@ -131,22 +130,19 @@ class Simulation:
     }
         for direction, (dx, dy) in directions.items(): 
             new_position = (object.coordinates[0] + dx, object.coordinates[1] + dy)
-            # Create temp food object
-            temp_food = Food(size=object.size, coordinates=new_position, amount_of_food=object.amount_of_food)
             # Adjust the new position to ensure it is within bounds
-            adjusted_position = self.adjust_object_position_within_bounds(temp_food)
-            temp_food.coordinates = adjusted_position
-    
-            if not self.check_object_collision_with_obstacles(temp_food):
+            adjusted_position = self.adjust_object_position_within_bounds(new_position, object.size)
+            
+            if not self.check_object_collision_with_obstacles(adjusted_position, object.size):
                 object.coordinates = adjusted_position
                 return True  # Successfully relocated without collision and within bounds
 
         return False 
 
-    def adjust_object_position_within_bounds(self, object):
+    def adjust_object_position_within_bounds(self, coordinates, size):
         min_x, max_x, min_y, max_y = self.bounds
-        object_width, object_height = object.size
-        x, y = object.coordinates
+        object_width, object_height = size
+        x, y = coordinates
 
         # Adjust for right and top edges
         if x + object_width > max_x:
