@@ -59,7 +59,6 @@ class Simulation:
                 ant.pheromone_influence = pheromone_influence
                 pheromone_direction = self.find_pheromone_trace(ant.coordinates, ant.pheromone_status, colony.pheromone.pheromone_array, colony, ant.search_radius)
                 future_position = ant.move(pheromone_direction=pheromone_direction)
-                future_position = self.check_for_obstacles(future_position)
                 adjusted_position = self.check_future_position(future_position)
                 ant.coordinates = adjusted_position
                 
@@ -103,7 +102,8 @@ class Simulation:
             y = min_y + 1
         elif y > max_y:
             y = max_y
-        return np.array([x, y])
+            
+        return self.check_for_obstacles(np.array([x, y]))
     
     def check_for_obstacles(self, future_position):
         x, y = future_position
