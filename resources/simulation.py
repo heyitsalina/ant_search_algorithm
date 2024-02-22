@@ -48,7 +48,7 @@ class Simulation:
     #To do this, the following adjustment must be made:
     #def next_epoch(self, reduce_fac = 0.5, pheromone_influence = 0.01):
     #Then adjust the calls in the next_epoch method accordingly  
-    @time_this
+    #@time_this
     def next_epoch(self):
 
         self.epoch += 1
@@ -74,7 +74,7 @@ class Simulation:
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)    
 
-            colony.pheromone.reduce_pheromones(0.99, 0.001)
+            colony.pheromone.reduce_pheromones()
 
     def add_colony(self, colony):
         self.colonies.append(colony)
@@ -83,11 +83,11 @@ class Simulation:
         self.food.append(food)
     
 
-    @time_this
+    #@time_this
     def add_obstacle(self, obstacle):
         self.obstacles.append(obstacle)
         
-    @time_this
+    #@time_this
     def check_future_position(self, future_position):
         """
         Adjusts the given position to ensure it stays within the simulation bounds.
@@ -114,7 +114,7 @@ class Simulation:
             
         return self.check_for_obstacles(np.array([x, y]))
     
-    @time_this
+    #@time_this
     def check_for_obstacles(self, future_position):
         x, y = future_position
         
@@ -133,7 +133,7 @@ class Simulation:
 
         return np.array([x, y])
 
-    @time_this
+    #@time_this
     def map_ant_coordinates_to_pheromone_index(self, ant_coordinates, colony):
         """
         This method takes the coordinates of an ant and maps them to the
@@ -165,7 +165,7 @@ class Simulation:
 
         return idx_row, idx_col
     
-    @time_this
+    #@time_this
     def create_statistic(self):
         data = {
             "simulation" : [],
@@ -192,6 +192,7 @@ class Simulation:
                 "amount to carry": colony.ants[0].amount_to_carry,
                 "search radius": colony.ants[0].search_radius,
                 "pheromone influence": colony.ants[0].pheromone_influence,
+                "pheromone reduction": colony.pheromone.reducing_factor
             }
             data["colonies"].append(colony_data)
 
@@ -215,7 +216,7 @@ class Simulation:
 
         build_pdf()
 
-    @time_this
+    #@time_this
     def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_array, colony, search_radius):
         depth = 0 if pheromone_status == 1 else 1
         pheromone_shape = pheromone_array[0].shape
@@ -239,7 +240,7 @@ class Simulation:
         return pheromone_direction
 
 
-    @time_this
+    #@time_this
     def get_pheromone_position(self, row, col, arr, search_radius):
         start_row = max(0, row - search_radius)
         end_row = min(arr.shape[0], row + search_radius + 1)
