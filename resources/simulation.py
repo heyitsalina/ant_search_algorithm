@@ -76,17 +76,18 @@ class Simulation:
 
             colony.pheromone.reduce_pheromones(0.99, 0.001)
 
+    @time_this
     def add_colony(self, colony):
         if self.check_object_collision_with_obstacles(colony.coordinates, colony.size):
             self.relocate_object(colony)
         self.colonies.append(colony)
 
+    @time_this
     def add_food(self, food):
         if self.check_object_collision_with_obstacles(food.coordinates, food.size):
             self.relocate_object(food)
         self.food.append(food)
     
-
     @time_this
     def add_obstacle(self, obstacle):
         self.obstacles.append(obstacle)
@@ -125,6 +126,7 @@ class Simulation:
             y = max_y
         return self.check_for_obstacles(np.array([x, y]))
 
+    @time_this
     def check_object_collision_with_obstacles(self, coordinates, size):
         width, height = size
         bottom_left_x, bottom_left_y = coordinates
@@ -140,6 +142,7 @@ class Simulation:
                 return True #collision
         return False
 
+    @time_this
     def relocate_object(self, object):
         step_size = max(object.size)
 
@@ -160,6 +163,7 @@ class Simulation:
 
         return False 
 
+    @time_this
     def adjust_object_position_within_bounds(self, coordinates, size):
         min_x, max_x, min_y, max_y = self.bounds
         object_width, object_height = size
