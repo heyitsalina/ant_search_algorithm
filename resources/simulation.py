@@ -133,11 +133,13 @@ class Simulation:
                 new_position = (food.coordinates[0] - step_size, food.coordinates[1])
             if direction == "up":
                 new_position = (food.coordinates[0], food.coordinates[1] - step_size)
-
-            # Adjust the new position to ensure it is within bounds
-            adjusted_position = self.adjust_food_position_within_bounds(np.array(new_position))
+            
             # create temp food object
-            temp_food = Food(size=food.size, coordinates=adjusted_position, amount_of_food=food.amount_of_food)
+            temp_food = Food(size=food.size, coordinates=new_position, amount_of_food=food.amount_of_food)
+            # Adjust the new position to ensure it is within bounds
+            adjusted_position = self.adjust_food_position_within_bounds(temp_food)
+            temp_food.coordinates = adjusted_position
+    
             if not self.check_food_collision_with_obstacles(temp_food):
                 food.coordinates = adjusted_position
                 return True  # Successfully relocated without collision and within bounds
