@@ -76,7 +76,7 @@ class Simulation:
 
     def add_food(self, food):
         self.food.append(food)
-        self.relocate_object(food)
+        #self.relocate_object(food)
     
     def check_future_position(self, future_position):
         """
