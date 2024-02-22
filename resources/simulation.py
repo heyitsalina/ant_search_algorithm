@@ -135,8 +135,14 @@ class Simulation:
                 new_position = (food.coordinates[0], food.coordinates[1] - step_size)
 
             # Adjust the new position to ensure it is within bounds
-            adjusted_position = self.check_future_position(np.array(new_position))
+            adjusted_position = self.adjust_food_position_within_bounds(np.array(new_position))
+            # create temp food object
+            temp_food = Food(size=food.size, coordinates=adjusted_position, amount_of_food=food.amount_of_food)
+            if not self.check_food_collision_with_obstacles(temp_food):
+                food.coordinates = adjusted_position
+                return True  # Successfully relocated without collision and within bounds
 
+        return False # maybe still implement that it goes somewhere random
 
     def adjust_food_position_within_bounds(self, food):
         min_x, max_x, min_y, max_y = self.bounds
