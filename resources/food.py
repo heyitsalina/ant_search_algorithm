@@ -1,4 +1,5 @@
 import random
+from resources.timer_decorator import time_this
 
 class Food:
     def __init__(self, size, coordinates, amount_of_food, move_after_number_of_epochs = 500, show_life_bar=True, move_randomly = False):
@@ -22,7 +23,8 @@ class Food:
         self.move_randomly = move_randomly 
         self.move_after_number_of_epochs = move_after_number_of_epochs
         self.epoch = 0
-        
+    
+    @time_this
     def move_randomly_after_while(self, bounds):
         """
         Moves the food source randomly within the given bounds at specified epochs.
