@@ -23,7 +23,7 @@ class Food:
         ----------
 
         Methods:
-        def move_randomly_after_while():
+        move_randomly_after_while():
             Moves the food source randomly within the given bounds at specified epochs.
             
         """
