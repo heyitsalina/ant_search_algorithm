@@ -1,0 +1,80 @@
+{
+    "simulation": [
+        {
+            "epochs": 452,
+            "boundaries": [
+                0,
+                720,
+                -480,
+                0
+            ]
+        }
+    ],
+    "colonies": [
+        {
+            "amount": 300,
+            "size": [
+                100,
+                100
+            ],
+            "coordinates": [
+                140,
+                -300
+            ],
+            "pheromone grid": [
+                12,
+                18
+            ],
+            "color": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "food counter": 0,
+            "step size": 3,
+            "amount to carry": 1,
+            "search radius": 1,
+            "pheromone influence": 0.01,
+            "pheromone reduction": 0.9
+        },
+        {
+            "amount": 300,
+            "size": [
+                100,
+                100
+            ],
+            "coordinates": [
+                480,
+                -300
+            ],
+            "pheromone grid": [
+                12,
+                18
+            ],
+            "color": [
+                0,
+                0,
+                1,
+                1
+            ],
+            "food counter": 1,
+            "step size": 3,
+            "amount to carry": 1,
+            "search radius": 1,
+            "pheromone influence": 0.01,
+            "pheromone reduction": 0.9
+        }
+    ],
+    "food": [
+        {
+            "start amount": 100,
+            "amount of food": 0,
+            "coordinates": [
+                310,
+                -300
+            ]
+        }
+    ],
+    "obstacles": []
+}

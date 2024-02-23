@@ -4,16 +4,19 @@ __pycache__/
 *$py.class
 
 # LaTeX
-*.aux
 *.fdb_latexmk
 *.fls
 *.gz
 *.pdf
 *.tex
-*.out
 
 # json
 *.json
+
+# example exceptions
+!examples/*/*
+*.out
+*.aux
 
 # C extensions
 *.so
