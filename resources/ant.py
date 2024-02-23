@@ -27,23 +27,23 @@ class Ant:
         ---------
 
         Methods:
-        def first_direction():
+        first_direction():
             Generates a random direction on the 2D plane using spherical coordinates.
-        def move():
+        move():
             Moves the agent based on its current direction and optional pheromone influence.
-        def switch_pheromone():
+        switch_pheromone():
             Switches the pheromone status of the ant.
-        def move(): 
+        move(): 
             Moves the ant in the search space.
-        def is_near_target():
+        is_near_target():
             Determines if an ant is within a specified radius of a food or colony source.
-        def try_carry_food ():
+        try_carry_food ():
             Determine if the ant can pick up food from a specified source.
-        def carry_food()
+        carry_food()
             Have the ant pick up food from the specified source and update its status.
-        def try_drop_food():
+        try_drop_food():
             Determine if the ant can drop food at its colony.
-        def drop_food():
+        drop_food():
             Have the ant drop food at its colony and update its status.
         """
         
