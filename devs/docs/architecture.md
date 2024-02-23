@@ -16,7 +16,7 @@ Central hub for simulating ant and food interactions within an environment.
 ### Key Methods:
 
 - `next_epoch`: Advances the simulation, updating ant positions and interactions.
-- `add_colony`, `add_food`: Adds colonies and food sources to the simulation.
+- `add_colony`, `add_food`, `add_obstacle`: Adds colonies, food and obstacle sources to the simulation.
 - `check_future_position`: Ensures entities stay within bounds.
 - `check_for_obstacles`: Ensures that entities do not collide with obstacles and adjusts the future position if it overlaps with obstacles.
 - `map_ant_coordinates_to_pheromone_index`: Maps ant coordinates to the corresponding indices in the pheromone grid.
@@ -37,11 +37,10 @@ Simulates individual ant behaviors in food search and collection.
 
 ### Key Methods:
 
-- `move`: Simulates the movement of the ant. If it's the first move (epoch), the ant sets a random initial direction. Otherwise, it applies a random rotation to the existing direction, potentially influenced by pheromones, and updates its position accordingly.
-- Movement and decision-making based on environmental cues and pheromone trails.
-- Checking if the ant is within a specified radius of a given target position to interact.
-- Interactions with food sources for collection.
-- Switching the pheromone status.
+- `move`: Simulates the movement of the ant. It applies a random rotation to the existing direction, potentially influenced by pheromones, and updates its position accordingly.
+- `is_near_target`: Checking if the ant is within a specified radius of a given target position to interact.
+- `carry_food`, `drop_food`: Interactions with food sources for collection.
+- `switch_pheromone`: Switching the pheromone status.
 
 ## Colony Management (`colony.py`)
 
@@ -49,7 +48,6 @@ Manages ant colonies, including resource allocation and ant behavior coordinatio
 
 ### Key Methods:
 
-- Generation and management of ants within the colony.
-- Accumulation of resources from collected food.
+- `add_ants`: Generation and management of ants within the colony.
 
 This focused overview emphasizes the system's modular design and the interaction between its components through specific methods, offering a clearer understanding of how the simulation operates.
