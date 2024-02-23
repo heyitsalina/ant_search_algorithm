@@ -207,7 +207,7 @@ class SettingsButton(MDIconButton):
                                         )
                     sim.add_obstacle(obstacle)
                 
-                self.parent.children[1].update_canvas()
+                self.parent.children[2].update_canvas()
             except Exception as e:
                 self.show_error_dialog(f"Error: {str(e)}" + "\n\n" + "Could not load settings. Try to restart the program.")
     
