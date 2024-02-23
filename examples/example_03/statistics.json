@@ -1,0 +1,134 @@
+{
+    "simulation": [
+        {
+            "epochs": 548,
+            "boundaries": [
+                0,
+                1080,
+                -720,
+                0
+            ]
+        }
+    ],
+    "colonies": [
+        {
+            "amount": 300,
+            "size": [
+                100,
+                100
+            ],
+            "coordinates": [
+                32.63,
+                -704.799
+            ],
+            "pheromone grid": [
+                18,
+                27
+            ],
+            "color": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "food counter": 1,
+            "step size": 7,
+            "amount to carry": 1,
+            "search radius": 1,
+            "pheromone influence": 0.01,
+            "pheromone reduction": 0.9
+        },
+        {
+            "amount": 300,
+            "size": [
+                100,
+                100
+            ],
+            "coordinates": [
+                17.626,
+                -104.189
+            ],
+            "pheromone grid": [
+                18,
+                27
+            ],
+            "color": [
+                0,
+                0,
+                1,
+                1
+            ],
+            "food counter": 1,
+            "step size": 7,
+            "amount to carry": 1,
+            "search radius": 1,
+            "pheromone influence": 0.01,
+            "pheromone reduction": 0.9
+        },
+        {
+            "amount": 300,
+            "size": [
+                100,
+                100
+            ],
+            "coordinates": [
+                955.371,
+                -99.684
+            ],
+            "pheromone grid": [
+                18,
+                27
+            ],
+            "color": [
+                0,
+                1,
+                0.2,
+                1
+            ],
+            "food counter": 0,
+            "step size": 7,
+            "amount to carry": 1,
+            "search radius": 1,
+            "pheromone influence": 0.01,
+            "pheromone reduction": 0.9
+        },
+        {
+            "amount": 300,
+            "size": [
+                100,
+                100
+            ],
+            "coordinates": [
+                967.374,
+                -721.316
+            ],
+            "pheromone grid": [
+                18,
+                27
+            ],
+            "color": [
+                0.5,
+                0.5,
+                0.5,
+                1
+            ],
+            "food counter": 0,
+            "step size": 7,
+            "amount to carry": 1,
+            "search radius": 1,
+            "pheromone influence": 0.01,
+            "pheromone reduction": 0.9
+        }
+    ],
+    "food": [
+        {
+            "start amount": 1000,
+            "amount of food": 861,
+            "coordinates": [
+                485.748,
+                -381.971
+            ]
+        }
+    ],
+    "obstacles": []
+}

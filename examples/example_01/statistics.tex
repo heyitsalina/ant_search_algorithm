@@ -1,0 +1,84 @@
+
+    \documentclass{article}
+    \usepackage{hyperref}
+    \usepackage{tikz}
+    \usepackage{pgfplots}
+    \begin{document}
+
+    \title{Ant Search Statistics}
+    \author{\url{https://github.com/heyitsalina/ant_search_algorithm}}
+    \maketitle
+
+    \section{General Information}
+
+    Epochs: 452\newline
+Boundaries: [0, 720, -480, 0]
+
+
+    \section{Colonies}
+
+    \subsection*{Colony 1}
+\begin{itemize}
+\item Amount: 300
+\item Coordinates: [140, -300]
+\item Pheromone Grid: [12, 18]
+\item Color: [0, 0, 0, 1]
+\item Food Count: 0
+\item Step Size: 3
+\item Amount to Carry: 1
+\item Search Radius: 1
+\item Pheromone Influence: 0.01
+\end{itemize}
+\subsection*{Colony 2}
+\begin{itemize}
+\item Amount: 300
+\item Coordinates: [480, -300]
+\item Pheromone Grid: [12, 18]
+\item Color: [0, 0, 1, 1]
+\item Food Count: 1
+\item Step Size: 3
+\item Amount to Carry: 1
+\item Search Radius: 1
+\item Pheromone Influence: 0.01
+\end{itemize}
+
+
+    \section{Food}
+
+    \subsection*{Food 1}
+\begin{itemize}
+\item Start amount: 100
+\item Amount of food: 0
+\item Coordinates: [310, -300]
+\end{itemize}
+
+
+    \section{Obstacles}
+
+    
+
+    \section{Overview}
+
+    \begin{tikzpicture}
+    \begin{axis}[xmin=0, xmax=720, ymin=-480, ymax=0, width=12cm, height=7cm, legend pos=outer north east, legend image post style={scale=0.5}]
+
+    \addplot[only marks, mark=triangle, mark size=8pt, blue] coordinates {
+    (190,-250) (530,-250) 
+    };
+    \addlegendentry{Colony}
+
+    \addplot[only marks, mark=*, mark size=8pt, red] coordinates {
+    (360,-250) 
+    };
+    \addlegendentry{Food}
+
+    \addplot[only marks, mark=square, mark size=8pt, black] coordinates {
+    
+    };
+    \addlegendentry{Obstacle}
+
+    \end{axis}
+    \end{tikzpicture}
+
+    \end{document}
+    

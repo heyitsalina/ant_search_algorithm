@@ -1,0 +1,140 @@
+
+    \documentclass{article}
+    \usepackage{hyperref}
+    \usepackage{tikz}
+    \usepackage{pgfplots}
+    \begin{document}
+
+    \title{Ant Search Statistics}
+    \author{\url{https://github.com/heyitsalina/ant_search_algorithm}}
+    \maketitle
+
+    \section{General Information}
+
+    Epochs: 317\newline
+Boundaries: [0, 720, -480, 0]
+
+
+    \section{Colonies}
+
+    \subsection*{Colony 1}
+\begin{itemize}
+\item Amount: 400
+\item Coordinates: [313.838, -305.557]
+\item Pheromone Grid: [12, 18]
+\item Color: [0, 0, 0, 1]
+\item Food Count: 22
+\item Step Size: 5
+\item Amount to Carry: 1
+\item Search Radius: 2
+\item Pheromone Influence: 0.01
+\end{itemize}
+
+
+    \section{Food}
+
+    \subsection*{Food 1}
+\begin{itemize}
+\item Start amount: 100
+\item Amount of food: 19
+\item Coordinates: [154.614, -344.545]
+\end{itemize}
+\subsection*{Food 2}
+\begin{itemize}
+\item Start amount: 100
+\item Amount of food: 0
+\item Coordinates: [312.144, -158.079]
+\end{itemize}
+\subsection*{Food 3}
+\begin{itemize}
+\item Start amount: 100
+\item Amount of food: 82
+\item Coordinates: [470.52, -285.215]
+\end{itemize}
+\subsection*{Food 4}
+\begin{itemize}
+\item Start amount: 100
+\item Amount of food: 54
+\item Coordinates: [293.511, -457.272]
+\end{itemize}
+
+
+    \section{Obstacles}
+
+    \subsection*{Obstacle 1}
+\begin{itemize}
+\item Coordinates: [235.51188732776916, -291.57494000984474]
+\item Size: [50, 50]
+\end{itemize}
+\subsection*{Obstacle 2}
+\begin{itemize}
+\item Coordinates: [432.00001043283714, -289.8797972625796]
+\item Size: [50, 50]
+\end{itemize}
+\subsection*{Obstacle 3}
+\begin{itemize}
+\item Coordinates: [260.07290271590267, -234.78765797646213]
+\item Size: [50, 50]
+\end{itemize}
+\subsection*{Obstacle 4}
+\begin{itemize}
+\item Coordinates: [313.42959131771, -194.95180341573098]
+\item Size: [50, 50]
+\end{itemize}
+\subsection*{Obstacle 5}
+\begin{itemize}
+\item Coordinates: [369.3270746148414, -193.25666066846577]
+\item Size: [50, 50]
+\end{itemize}
+\subsection*{Obstacle 6}
+\begin{itemize}
+\item Coordinates: [416.75524226089226, -232.24494385556432]
+\item Size: [50, 50]
+\end{itemize}
+\subsection*{Obstacle 7}
+\begin{itemize}
+\item Coordinates: [393.0411584378668, -339.88650830690165]
+\item Size: [50, 50]
+\end{itemize}
+\subsection*{Obstacle 8}
+\begin{itemize}
+\item Coordinates: [345.61299079181595, -363.61850676861377]
+\item Size: [50, 50]
+\end{itemize}
+\subsection*{Obstacle 9}
+\begin{itemize}
+\item Coordinates: [287.17471279936035, -375.48450599946983]
+\item Size: [50, 50]
+\end{itemize}
+\subsection*{Obstacle 10}
+\begin{itemize}
+\item Coordinates: [233.8180241975531, -347.51465066959486]
+\item Size: [50, 50]
+\end{itemize}
+
+
+    \section{Overview}
+
+    \begin{tikzpicture}
+    \begin{axis}[xmin=0, xmax=720, ymin=-480, ymax=0, width=12cm, height=7cm, legend pos=outer north east, legend image post style={scale=0.5}]
+
+    \addplot[only marks, mark=triangle, mark size=8pt, blue] coordinates {
+    (363.838,-255.55700000000002) 
+    };
+    \addlegendentry{Colony}
+
+    \addplot[only marks, mark=*, mark size=8pt, red] coordinates {
+    (204.614,-294.545) (362.144,-108.07900000000001) (520.52,-235.21499999999997) (343.511,-407.272) 
+    };
+    \addlegendentry{Food}
+
+    \addplot[only marks, mark=square, mark size=8pt, black] coordinates {
+    (260.51188732776916,-266.57494000984474) (457.00001043283714,-264.8797972625796) (285.07290271590267,-209.78765797646213) (338.42959131771,-169.95180341573098) (394.3270746148414,-168.25666066846577) (441.75524226089226,-207.24494385556432) (418.0411584378668,-314.88650830690165) (370.61299079181595,-338.61850676861377) (312.17471279936035,-350.48450599946983) (258.8180241975531,-322.51465066959486) 
+    };
+    \addlegendentry{Obstacle}
+
+    \end{axis}
+    \end{tikzpicture}
+
+    \end{document}
+    
