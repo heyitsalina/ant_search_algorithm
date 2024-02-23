@@ -101,7 +101,7 @@ We welcome contributions to our Ant Food Search Simulation project! To ensure th
 
 ### Familiarize Yourself with the Project
 
-- **Project Structure:** We have included a diagram of the project structure in the repository to help you understand how the project is organized. [diagram](devs/diagram)
+- **Project Structure:** We have included a diagram of the project structure in the repository to help you understand how the project is organized. [diagram](devs/code_diagram.png)
 - **Code Documentation:** The classes, methods, and parameters are thoroughly described using docstrings in the code files. This documentation is your go-to resource for understanding the functionality and purpose of the code. Additionaly there is a summary of the most important classes/methods and a brief explanation of provided algorithms here. [docs](devs/docs/)
 
 ### How to Contribute
