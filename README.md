@@ -66,13 +66,19 @@ This ant food search simulation offers an intuitive GUI to interact with the sim
   - **Food Settings**:
     - **Amount of Food**: Specify how much food is available at a food object. This value determines how long the food will last as ants collect it.
     - **Show Life Bar**: Toggle the visibility of a life bar that dynamically represents the remaining amount of food at each food source.
+    - **Move after number of epochs**: Specify after how many epochs the food object is randomly moved.
+    - **Move randomly**: Toggle whether the food should be moved to a random position after a certain number of epochs.
   
   - **Colony Settings**:
     - **Number of Ants**: Set the initial number of ants in a colony.
     - **Step Size**: Adjust the speed at which ants move across the map.
     - **Amount to Carry**: Define how many pieces of food an ant can carry back to the colony from a food source.
     - **Color**: Choose the color of your ant colony for easy identification.
+    - **Search Radius**: Set the radius in which the ants perceive the surrounding phereomones.
+    - **Pheromone Influence**:  Determine how much influence the pheromone trace has on the movement of the ants.
+    - **Pheromone Reduction Factor**: Adjust how much the pheromones are reduced in each epoch.
     - **Pheromone Grid**: Configure the shape and size of the pheromone grid, which affects how ants navigate to food sources and back to the colony.
+    - **Show Pheromone Grid**: Toggle the visibility of the pheromones.
 
 - **Simulation Controls**: The simulation can be dynamically controlled using the **start**, **stop**, and **clear** buttons located within the GUI. Use these to begin the simulation, pause or stop the action to make adjustments, or reset the environment for a new setup.
 
@@ -80,6 +86,12 @@ This ant food search simulation offers an intuitive GUI to interact with the sim
   - In the top right corner, access the settings menu to disable sound.
   - You can zoom to focus on specific areas of interest within the simulation. If you need to reset your view, simply click the **Adjust View** button to return to the default perspective.
   - The window size can be adjusted from the bottom right corner.
+
+- **Studies and Examples**: Studies make it possible to create summaries of the simulations carried out and load them back into the user interface.
+  - A new study can be started via the settings menu. The next time the simulation is stopped, the study is finished and all settings are saved in `statistics.json` in the statistics folder. In addition, a .tex file is created with the data in this file and, if a corresponding LaTeX compiler is available, a summarizing PDF is created.
+  - Through the settings menu there is also the possibility to load the settings of the .json files created in studies back into the gui.
+  - The examples folder contains examples that include the corresponding `statistics.json`. By copying the corresponding file into the statistics folder, the example can be simulated again. 
+  - **If the `statistics.json` file is changed (even by a new study), the program must be restarted before the corresponding settings can be reloaded.**
 
 Experiment with different configurations and observe how each change affects the behavior and efficiency of the ant colonies. The Ant Simulation Project is designed to be a versatile tool for exploring the fascinating dynamics of ant behavior and food search strategies.
 
