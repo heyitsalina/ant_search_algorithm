@@ -1,5 +1,6 @@
 import ast
 import json
+import webbrowser
 import numpy as np
 from resources import config
 from kivymd.app import MDApp
@@ -82,6 +83,7 @@ class GUI(MDApp):
         button_widget = ButtonWidget(simulation_widget)
         
         background.add_widget(simulation_widget)
+        background.add_widget(InfoButton())
         background.add_widget(SettingsButton())
         root.add_widget(background)
         root.add_widget(button_widget)
@@ -185,6 +187,7 @@ class SettingsButton(MDIconButton):
                                     )
                     colony.ants = []
                     colony.add_ants(colony_data["amount to carry"], colony_data["step size"], colony_data["search radius"], colony_data["pheromone influence"])
+                    colony.pheromone.reducing_factor = colony_data["pheromone reduction"]
                     sim.colonies.append(colony)
 
                 sim.food = []
@@ -226,6 +229,19 @@ class SettingsButton(MDIconButton):
             ],
         )
         error_dialog.open()
+
+
+class InfoButton(MDIconButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.icon = "information-outline"
+        self.pos_hint = {"top": 0.98}
+        self.theme_text_color = "Custom"
+        self.text_color = (0, 0, 0, 1)
+        self.icon_size = 60
+    
+    def on_press(self, *args):
+        webbrowser.open("https://github.com/heyitsalina/ant_search_algorithm/blob/main/images/basic_features.gif")
 
 
 class ResizableDraggablePicture(Scatter):
@@ -443,9 +459,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             pheromone_grid_label = MDTextField(hint_text="Pheromone grid", text=str(colony.pheromone.pheromone_array[0].shape))
             search_radius_label = MDTextField(hint_text="Search radius of the ants", text=str(colony.ants[0].search_radius))
             pheromone_influence_label = MDTextField(hint_text="Pheromone influence", text=str(colony.ants[0].pheromone_influence))
+            reducing_factor_label = MDTextField(hint_text="Pheromone reduction factor", text=str(colony.pheromone.reducing_factor))
             switch_label = MDBoxLayout(orientation="horizontal", spacing="30dp")
             pheromone_switch = CustomSwitch(active=colony.show_pheromone)
-            pheromone_text = MDLabel(text="Show Pheromone Grid", pos_hint={"center_x": 1.5, "center_y": .35}) #.65
+            pheromone_text = MDLabel(text="Show Pheromone Grid", pos_hint={"center_x": 1.5, "center_y": .5})
             switch_label.add_widget(pheromone_switch)
             switch_label.add_widget(pheromone_text)
 
@@ -462,10 +479,11 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                                         color_label,
                                         search_radius_label,
                                         pheromone_influence_label,
+                                        reducing_factor_label,
                                         show_pheromone_label,
                                         orientation="vertical",
                                         size_hint_y=None,
-                                        height="450dp"),
+                                        height="500dp"),
                 buttons=[
                     MDFlatButton(
                         text="Cancel",
@@ -477,7 +495,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                     ),
                     MDFlatButton(
                         text="Apply Changes",
-                        on_release=lambda *args: self.apply_ant_changes(colony, ants_label.text, ant_settings_label.text, carry_label.text, color_label.text, search_radius_label.text, pheromone_influence_label.text, pheromone_grid_label.text, pheromone_switch.active)
+                        on_release=lambda *args: self.apply_ant_changes(colony, ants_label.text, ant_settings_label.text, carry_label.text, color_label.text, search_radius_label.text, pheromone_influence_label.text, reducing_factor_label.text, pheromone_grid_label.text, pheromone_switch.active)
                     ),
                 ],
             )
@@ -559,7 +577,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         )
         self.dialog.open()
 
-    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_search_radius, new_pheromone_influence, new_pheromone_grid, new_pheromone_state):
+    def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_search_radius, new_pheromone_influence, new_reducing_factor, new_pheromone_grid, new_pheromone_state):
         try:
             new_ant_count = int(new_ant_count)
             new_amount_to_carry = int(new_amount_to_carry)
@@ -567,6 +585,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             new_color = ast.literal_eval(new_color)
             new_search_radius = int(new_search_radius)
             new_pheromone_influence = float(new_pheromone_influence)
+            new_reducing_factor = float(new_reducing_factor)
             new_pheromone_grid = ast.literal_eval(new_pheromone_grid)
             
             if new_ant_count < 0:
@@ -581,12 +600,15 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             if new_pheromone_influence < 0:
                 self.show_error_dialog("Number of pheromone influence has to be non-negative.")
                 return
+            if new_reducing_factor < 0:
+                self.show_error_dialog("Pheromone reduction factor has to be non-negative.")
+                return
 
             colony.amount = new_ant_count
             colony.ants = []
             colony.add_ants(step_size=new_step_size, amount_to_carry=new_amount_to_carry, search_radius=new_search_radius, pheromone_influence=new_pheromone_influence)
             colony.color = new_color
-            colony.pheromone = Pheromone(grid_shape=new_pheromone_grid)
+            colony.pheromone = Pheromone(grid_shape=new_pheromone_grid, reducing_factor=new_reducing_factor)
             colony.show_pheromone = new_pheromone_state
             self.dialog.dismiss()
 
@@ -634,10 +656,10 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         error_dialog.open()
 
     def adjust_view(self, instance):
-        if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2 + 45, (self.height - sim.bounds[2])//2):
+        if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2 + 95, (self.height - sim.bounds[2])//2):
             return False
         self.scale = 1
-        self.pos = ((self.width - sim.bounds[1])//2 + 45, (self.height - sim.bounds[2])//2)
+        self.pos = ((self.width - sim.bounds[1])//2 + 95, (self.height - sim.bounds[2])//2)
 
     def delete_object(self, object):
         if isinstance(object, Food):

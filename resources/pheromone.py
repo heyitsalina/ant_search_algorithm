@@ -1,8 +1,8 @@
 import numpy as np
-from resources.timer_decorator import time_this
+
 
 class Pheromone:
-    def __init__(self, grid_shape):
+    def __init__(self, grid_shape, reducing_factor=0.09):
         """
         Manages pheromone information in a tensor within a simulated environment.
         The tensor represents the pheromone strength at different positions within the simulation area.
@@ -25,10 +25,8 @@ class Pheromone:
                 Reduces the pheromone strength in the tensor after each epoch.
         """
         self.pheromone_array = np.zeros((2, grid_shape[0], grid_shape[1]))
+        self.reducing_factor = reducing_factor
 
-
-
-    @time_this
     def leave_pheromone(self, pos, pheromone_status):
         """
         Leaves pheromone at a given position based on the pheromone status. This method is typically
@@ -53,7 +51,7 @@ class Pheromone:
         self.pheromone_array[depth, pos[0], pos[1]] += pheromone_status
 
 
-    def reduce_pheromones(self, reducing_factor = 0.5, zero_threshold = 0.01):
+    def reduce_pheromones(self, zero_threshold = 0.01):
         """
         Reduces the pheromone level by a reduction factor every epoch.
         By the multiplication these will be reduced weighted by their amount, higher amount of pheromones results in higher reduction.
@@ -68,6 +66,8 @@ class Pheromone:
             None. This method modifies the internal state of the pheromone tensor.
         
         """
-        self.pheromone_array *= reducing_factor
+
+
+        self.pheromone_array *= self.reducing_factor
         self.pheromone_array[0][self.pheromone_array[0] > - zero_threshold] = 0
         self.pheromone_array[1][self.pheromone_array[1] < zero_threshold] = 0

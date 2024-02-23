@@ -4,7 +4,7 @@ import pandas as pd
 from resources.colony import Colony
 from resources.food import Food
 from statistics.statistics import build_pdf
-from resources.timer_decorator import time_this, print_execution_times
+from resources.timer_decorator import print_execution_times
 
 class Simulation:
     """
@@ -66,7 +66,6 @@ class Simulation:
     #To do this, the following adjustment must be made:
     #def next_epoch(self, reduce_fac = 0.5, pheromone_influence = 0.01):
     #Then adjust the calls in the next_epoch method accordingly  
-    @time_this
     def next_epoch(self):
 
         self.epoch += 1
@@ -92,21 +91,18 @@ class Simulation:
                 colony.pheromone.leave_pheromone(pos = (idx_row, idx_col),
                                                  pheromone_status = ant.pheromone_status)    
 
-            colony.pheromone.reduce_pheromones(0.99, 0.001)
+            colony.pheromone.reduce_pheromones()
 
-    @time_this
     def add_colony(self, colony):
         if self.check_object_collision_with_obstacles(colony.coordinates, colony.size):
             self.relocate_object(colony)
         self.colonies.append(colony)
 
-    @time_this
     def add_food(self, food):
         if self.check_object_collision_with_obstacles(food.coordinates, food.size):
             self.relocate_object(food)
         self.food.append(food)
     
-    @time_this
     def add_obstacle(self, obstacle):
         self.obstacles.append(obstacle)
 
@@ -118,7 +114,6 @@ class Simulation:
             if self.check_object_collision_with_obstacles(colony.coordinates, colony.size):
                 self.relocate_object(colony)
         
-    @time_this
     def check_future_position(self, future_position):
         """
         Adjusts the given position to ensure it stays within the simulation bounds.
@@ -144,7 +139,6 @@ class Simulation:
             y = max_y
         return self.check_for_obstacles(np.array([x, y]))
 
-    @time_this
     def check_object_collision_with_obstacles(self, coordinates, size):
         """
         Checks for collision between an object defined by its coordinates and size
@@ -176,7 +170,6 @@ class Simulation:
                 return True #collision
         return False
 
-    @time_this
     def relocate_object(self, object):
         """
         Relocates the given object to a new position within the environment, avoiding collisions with obstacles.
@@ -210,7 +203,6 @@ class Simulation:
 
         return False 
 
-    @time_this
     def adjust_object_position_within_bounds(self, coordinates, size):
         """
         Adjusts the given coordinates to ensure the object remains within the defined bounds of the simulation.
@@ -245,7 +237,6 @@ class Simulation:
 
         return (x, y)
 
-    @time_this
     def check_for_obstacles(self, future_position):
         """
         Checks if the future position of an object intersects with any obstacles in the simulation
@@ -278,7 +269,6 @@ class Simulation:
 
         return np.array([x, y])
 
-    @time_this
     def map_ant_coordinates_to_pheromone_index(self, ant_coordinates, colony):
         """
         This method takes the coordinates of an ant and maps them to the
@@ -312,7 +302,6 @@ class Simulation:
 
         return idx_row, idx_col
     
-    @time_this
     def create_statistic(self):
         """
         Creates statistical data about the simulation and saves it to a JSON file.
@@ -343,6 +332,7 @@ class Simulation:
                 "amount to carry": colony.ants[0].amount_to_carry,
                 "search radius": colony.ants[0].search_radius,
                 "pheromone influence": colony.ants[0].pheromone_influence,
+                "pheromone reduction": colony.pheromone.reducing_factor
             }
             data["colonies"].append(colony_data)
 
@@ -366,7 +356,6 @@ class Simulation:
 
         build_pdf()
 
-    @time_this
     def find_pheromone_trace(self, coordinates, pheromone_status, pheromone_array, colony, search_radius):
         """
         Finds the direction of a pheromone trace relative to the given coordinates within the search radius.
@@ -410,8 +399,6 @@ class Simulation:
 
         return pheromone_direction
 
-
-    @time_this
     def get_pheromone_position(self, row, col, arr, search_radius):
         """
         Retrieves the position of the maximum value in a slice of the pheromone array within the specified search radius.

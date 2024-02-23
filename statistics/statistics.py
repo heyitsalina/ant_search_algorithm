@@ -79,6 +79,7 @@ def build_pdf():
             colonies_content += "\\item Amount to Carry: %s\n" % colony_data['amount to carry']
             colonies_content += "\\item Search Radius: %s\n" % colony_data['search radius']
             colonies_content += "\\item Pheromone Influence: %s\n" % colony_data['pheromone influence']
+            colonies_content += "\\item Pheromone Reduction: %s\n" % colony_data['pheromone reduction']
             colonies_content += "\\end{itemize}\n"
 
     food_content = ""
