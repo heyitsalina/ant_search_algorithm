@@ -34,7 +34,7 @@ class Colony:
         -----------
 
         Methods:
-        def add_ants():
+        add_ants():
             Add ants to the colony.
         """
 
