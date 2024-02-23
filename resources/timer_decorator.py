@@ -11,9 +11,9 @@ class TimeTracker:
     ----------
 
     Methods:
-    def time_this()
-    def wrapper()
-    def print_execution_times()
+    time_this()
+    wrapper()
+    print_execution_times()
     """
     execution_times = {}
 
