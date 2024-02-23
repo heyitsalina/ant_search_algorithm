@@ -18,10 +18,10 @@ class Pheromone:
         ----------
 
         Methods:
-            leave_pheromone():
+        leave_pheromone():
                 Leaves a pheromone from each ant at every movement, adding it to the corresponding location in the tensor.
 
-            reduce_pheromone(reducing_factor: float, zero_threshold: float):
+        reduce_pheromone(reducing_factor: float, zero_threshold: float):
                 Reduces the pheromone strength in the tensor after each epoch.
         """
         self.pheromone_array = np.zeros((2, grid_shape[0], grid_shape[1]))
