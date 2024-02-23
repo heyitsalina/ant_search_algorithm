@@ -207,6 +207,7 @@ class SettingsButton(MDIconButton):
                     sim.add_obstacle(obstacle)
                 
                 self.parent.children[2].update_canvas()
+                self.parent.children[2].adjust_view()
             except Exception as e:
                 self.show_error_dialog(f"Error: {str(e)}" + "\n\n" + "Could not load settings. Try to restart the program.")
     
@@ -418,7 +419,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 sim.create_statistic()
                 self.parent.study = False
             
-    def clear_canvas(self, instance):
+    def clear_canvas(self, *args):
         sim.food = []
         sim.colonies = []
         sim.obstacles = []
@@ -655,7 +656,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         )
         error_dialog.open()
 
-    def adjust_view(self, instance):
+    def adjust_view(self, *args):
         if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2 + 95, (self.height - sim.bounds[2])//2):
             return False
         self.scale = 1
@@ -906,7 +907,7 @@ class ButtonWidget(BoxLayout):
             0 
         )
 
-        self.simulation_widget.clear_canvas(0)
+        self.simulation_widget.clear_canvas()
         self.simulation_widget.draw_bounds()
         self.simulation_widget.adjust_view(0)
 
