@@ -36,21 +36,21 @@ class Simulation:
         Adjusts the given position to ensure it stays within the simulation bounds.
     add_obstacle():
         Add an Obstacle object to the simulation.
-    def check_object_collision_with_obstacles():
+    check_object_collision_with_obstacles():
         Checks for collision between an object defined by its coordinates and size and obstacles in the simulation.
-    def relocate_object():
+    relocate_object():
         Relocates the given object to a new position within the simulation.
-    def adjust_object_position_within_bounds():
+    adjust_object_position_within_bounds():
         Adjusts the given coordinates to ensure the object remains within the defined bounds of the simulation.
-    def check_for_obstacles():
+    check_for_obstacles():
         Checks if the future position of an object intersects with any obstacles in the simulation.
-    def map_ant_coordinates_to_pheromone_index():
+    map_ant_coordinates_to_pheromone_index():
         Takes the coordinates of an ant and maps them to the corresponding index in the pheromone grid.
-    def create_statistic():
+    create_statistic():
         Creates statistical data about the simulation and saves it to a JSON file.
-    def find_pheromone_trace
+    find_pheromone_trace
         Finds the direction of a pheromone trace relative to the given coordinates within the search radius.
-    def get_pheromone_position():
+    get_pheromone_position():
         Retrieves the position of the maximum value in a slice of the pheromone array within the specified search radius.
 
     """
