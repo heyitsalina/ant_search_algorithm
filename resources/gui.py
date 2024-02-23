@@ -39,14 +39,13 @@ sim = Simulation()
 class GUI(MDApp):
     """
     This class is used to create a graphical user interface (GUI) for the simulation.
-    -------
 
     Methods:
     build():
         initialize kivy window
     on_start():
         show fps monitor
-    on_mouse_pos()
+    on_mouse_pos():
         notice if cursor is over the buttons
     mouse_leave_css():
         change cursor back to arrow
@@ -59,6 +58,13 @@ class GUI(MDApp):
     title = "Ant Search Simulation"
 
     def build(self):
+        """
+        Initialize the GUI window and set up widgets and event bindings.
+
+        Returns
+        root : MDScreen
+            The root widget of the application screen.
+        """
         Window.bind(mouse_pos=self.on_mouse_pos)
         Window.bind(size=self.on_window_resize)
 
@@ -93,9 +99,15 @@ class GUI(MDApp):
         return root
 
     def on_start(self):
+        """
+        Show the fps monitor when the application starts.
+        """
         self.fps_monitor_start()
 
     def on_mouse_pos(self, *args):
+        """
+        Notice if the cursor is over the buttons.
+        """
         pos = args[1]
         buttons = self.root.children[0].children
         for button in buttons:
@@ -105,17 +117,50 @@ class GUI(MDApp):
                 Clock.schedule_once(self.mouse_leave_css, 0)
 
     def mouse_leave_css(self, *args):
+        """
+        Change cursor back to arrow.
+        """
         Window.set_system_cursor('arrow')
 
     def mouse_enter_css(self, *args):
+        """
+        Change cursor to hand icon.
+        """
         Window.set_system_cursor('hand')
 
     def on_window_resize(self, *args):
+        """
+        Adjust the view when the size of the window is changed.
+        """
         Clock.schedule_interval(lambda instance: self.root.children[1].children[1].adjust_view(instance), 0.2)
 
 
 class SettingsButton(MDIconButton):
+    """
+    Class representing the settings button.
+
+    Attributes:
+        icon (str): The icon name representing the settings button.
+        pos_hint (dict): The position hint of the settings button.
+        theme_text_color (str): The theme text color of the settings button.
+        text_color (tuple): The text color of the settings button.
+        icon_size (int): The size of the icon in the settings button.
+    --------
+
+    Methods:
+    on_press():
+        Handle the press event of the settings button.
+    apply_changes():
+        Apply changes based on the selected settings.
+    load_settings():
+        Load settings from a JSON file.
+    show_error_dialog():
+        Display an error dialog.
+    """
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the settings button.
+        """
         super().__init__(*args, **kwargs)
         self.icon = "cog-outline"
         self.pos_hint = {"right": 1, "top": 0.98}
@@ -124,6 +169,9 @@ class SettingsButton(MDIconButton):
         self.icon_size = 60
     
     def on_press(self, *args):
+        """
+        Handle the press event of the settings button.
+        """
         settings_content = MDBoxLayout(orientation="vertical", spacing="12dp", size_hint_y=None, height="160dp")
         sound_layout = MDBoxLayout(orientation="horizontal", size_hint=(0.7, .5))
         sound_layout.add_widget(MDLabel(text="Sound"))
@@ -163,6 +211,17 @@ class SettingsButton(MDIconButton):
         self.dialog.open()
 
     def apply_changes(self, new_sound_status, new_study_status, new_load_status):
+        """
+        Apply changes based on the selected settings.
+
+        Args:
+        new_sound_status : bool
+            The new status of the sound setting.
+        new_study_status : bool
+            The new status of the study setting.
+        new_load_status : bool
+            The new status of the load data setting.
+        """
         self.parent.sound = new_sound_status
         self.parent.study = new_study_status
         if new_load_status:
@@ -170,48 +229,58 @@ class SettingsButton(MDIconButton):
         self.dialog.dismiss()
 
     def load_settings(self):
-            try:
-                with open('statistics/statistics.json', 'r') as json_file:
-                    data = json.load(json_file)
+        """
+        Load settings from a JSON file.
+        """
+        try:
+            with open('statistics/statistics.json', 'r') as json_file:
+                data = json.load(json_file)
 
-                sim.bounds = data["simulation"][0]["boundaries"]
+            sim.bounds = data["simulation"][0]["boundaries"]
 
-                sim.colonies = []
-                for colony_data in data["colonies"]:
-                    colony = Colony(
-                                    grid_pheromone_shape=colony_data['pheromone grid'],
-                                    amount=colony_data["amount"],
-                                    coordinates=colony_data["coordinates"],
-                                    color=colony_data["color"],
-                                    size=(100, 100)
-                                    )
-                    colony.ants = []
-                    colony.add_ants(colony_data["amount to carry"], colony_data["step size"], colony_data["search radius"], colony_data["pheromone influence"])
-                    colony.pheromone.reducing_factor = colony_data["pheromone reduction"]
-                    sim.colonies.append(colony)
-
-                sim.food = []
-                for food_data in data["food"]:
-                    food = Food(
-                                amount_of_food=food_data["start amount"],
-                                coordinates=food_data["coordinates"],
+            sim.colonies = []
+            for colony_data in data["colonies"]:
+                colony = Colony(
+                                grid_pheromone_shape=colony_data['pheromone grid'],
+                                amount=colony_data["amount"],
+                                coordinates=colony_data["coordinates"],
+                                color=colony_data["color"],
                                 size=(100, 100)
                                 )
-                    sim.food.append(food)
-                
-                sim.obstacles = []
-                for obstacle_data in data["obstacles"]:
-                    obstacle = Obstacle(coordinates=obstacle_data["coordinates"], 
-                                        size=obstacle_data["size"]
-                                        )
-                    sim.add_obstacle(obstacle)
-                
-                self.parent.children[2].update_canvas()
-                self.parent.children[2].adjust_view()
-            except Exception as e:
-                self.show_error_dialog(f"Error: {str(e)}" + "\n\n" + "Could not load settings. Try to restart the program.")
+                colony.ants = []
+                colony.add_ants(colony_data["amount to carry"], colony_data["step size"], colony_data["search radius"], colony_data["pheromone influence"])
+                colony.pheromone.reducing_factor = colony_data["pheromone reduction"]
+                sim.colonies.append(colony)
+
+            sim.food = []
+            for food_data in data["food"]:
+                food = Food(
+                            amount_of_food=food_data["start amount"],
+                            coordinates=food_data["coordinates"],
+                            size=(100, 100)
+                            )
+                sim.food.append(food)
+            
+            sim.obstacles = []
+            for obstacle_data in data["obstacles"]:
+                obstacle = Obstacle(coordinates=obstacle_data["coordinates"], 
+                                    size=obstacle_data["size"]
+                                    )
+                sim.add_obstacle(obstacle)
+            
+            self.parent.children[2].update_canvas()
+            self.parent.children[2].adjust_view()
+        except Exception as e:
+            self.show_error_dialog(f"Error: {str(e)}" + "\n\n" + "Could not load settings. Try to restart the program.")
     
     def show_error_dialog(self, error_message):
+        """
+        Display an error dialog.
+
+        Args:
+        error_message : str
+            The error message to be displayed.
+        """
         sound = SoundLoader.load("../sounds/error.mp3")
         if sound:
             sound.play()
@@ -233,7 +302,30 @@ class SettingsButton(MDIconButton):
 
 
 class InfoButton(MDIconButton):
+    """
+    Class representing the information button.
+
+    Attributes:
+        icon : str
+            The icon name representing the settings button.
+        pos_hint : dict
+            The position hint of the settings button.
+        theme_text_color : str
+            The theme text color of the settings button.
+        text_color : tuple
+            The text color of the settings button.
+        icon_size : int
+            The size of the icon in the settings button.
+    --------
+
+    Methods:
+    on_press(*args):
+        Handle the press event of the information button.
+    """
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the information button.
+        """
         super().__init__(*args, **kwargs)
         self.icon = "information-outline"
         self.pos_hint = {"top": 0.98}
@@ -242,11 +334,28 @@ class InfoButton(MDIconButton):
         self.icon_size = 60
     
     def on_press(self, *args):
+        """
+        Handle the press event of the information button.
+        """
         webbrowser.open("https://github.com/heyitsalina/ant_search_algorithm/blob/main/images/basic_features.gif")
 
 
 class ResizableDraggablePicture(Scatter):
+    """
+    Class is responsible for being able to zoom into the canvas. 
+
+    Methods:
+    on_touch_down(touch):
+        Handle the touch down event.
+    """
     def on_touch_down(self, touch):
+        """
+        Handle the touch down event.
+
+        Args:
+        touch : MotionEvent
+            The touch event.
+        """
         if touch.is_mouse_scrolling:
             factor = None
             if touch.button == 'scrolldown':
@@ -265,7 +374,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     This class is the actual widget for the simulation.
     ----------
 
-    Attributes
+    Attributes:
     is_running : bool
         indicates whether the simulation is running
     size : tuple
@@ -276,7 +385,7 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         a dialog window that shows settings about an object when it's double clicked
     -------
 
-    Methods
+    Methods:
     update_world():
         calculate the next epoch and update canvas
     update_canvas():
@@ -316,6 +425,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     """
 
     def __init__(self, **kwargs):
+        """
+        Initialize the SimulationWidget.
+        """
         super(SimulationWidget, self).__init__(**kwargs)
         self.is_running = False
         self.update_canvas()
@@ -324,17 +436,6 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
     def draw_bounds(self):
         """
         Draw the bounds of the simulation area on the canvas.
-
-        This method draws a rectangular boundary on the canvas to visualize the bounds
-        of the simulation area.
-        -------
-
-        Parameters:
-        None
-        -------
-
-        Returns:
-        None
         """
         min_x, max_x, min_y, max_y = sim.bounds
 
@@ -349,6 +450,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             Image(source="../images/background.png", pos=(min_x, min_y), size=(max_x-min_x+5, max_y-min_y+5), allow_stretch=True, keep_ratio=False)
 
     def update_canvas(self):
+        """
+        Update the canvas.
+        """
         self.canvas.clear()
         self.draw_bounds()
         self.draw_obstacles()
@@ -358,11 +462,21 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.draw_food_life_bar()      
 
     def update_world(self, dt):
+        """
+        Calculate the next epoch and update canvas.
+
+        Args:
+        dt : float
+            Time interval.
+        """
         if self.is_running:
             sim.next_epoch()
             self.update_canvas()
     
     def draw_pheromone(self):
+        """
+        Draw the pheromone grid.
+        """
         with self.canvas:
             for colony in sim.colonies:
                 if colony.show_pheromone:
@@ -378,12 +492,18 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                                     Rectangle(pos=(col*scale[0]+2.5, -row*(scale[1]) - scale[1]+2.5), size=(scale[0], scale[1]))
 
     def draw_food(self):
+        """
+        Draw the food objects.
+        """
         with self.canvas:
             for food in sim.food:
                 if food.amount_of_food > 0:
                     Image(source="../images/apple.png", pos=food.coordinates, size=(100, 100))
 
     def draw_ants(self):
+        """
+        Draw the Colony objects and their ants.
+        """
         with self.canvas:
             for colony in sim.colonies:
                 Image(source="../images/colony.png", pos=colony.coordinates, size=(100, 100))
@@ -396,6 +516,9 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                         Ellipse(pos=(ant.coordinates[0]+1.5, ant.coordinates[1]+1.5), size=(2, 2))
     
     def draw_food_life_bar(self):
+        """
+        Draw a life bar of the Food object above them.
+        """
         with self.canvas:
             for food in sim.food:
                 if food.show_life_bar:
@@ -406,11 +529,21 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                         Rectangle(pos=(food.coordinates[0]+15, food.coordinates[1]+80), size=(70*food.amount_of_food/food.start_amount, 10))
 
     def draw_obstacles(self):
+        """
+        Draw the obstacles.
+        """
         with self.canvas:
             for obstacle in sim.obstacles:
                 Image(source="../images/obstacle.png", pos=obstacle.coordinates, size=obstacle.size)
 
     def toggle_simulation(self, instance):
+        """
+        Change whether the simulation is running or not.
+
+        Args:
+        instance : Object
+            The instance triggering the method.
+        """
         self.is_running = not self.is_running
         instance.text = 'Stop' if self.is_running else 'Start'
 
@@ -420,12 +553,27 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 self.parent.study = False
             
     def clear_canvas(self, *args):
+        """
+        Clear the canvas.
+        """
         sim.food = []
         sim.colonies = []
         sim.obstacles = []
         self.update_canvas()
 
     def on_touch_down(self, touch):
+        """
+        Notice double clicks.
+
+        Args:
+        touch : MotionEvent
+            The touch event.
+        -------
+
+        Returns:
+        bool
+            Whether the event was consumed.
+        """
         if not self.is_running and touch.is_double_tap:
             transformed_touch = self.to_local(*touch.pos)
             for colony in sim.colonies:
@@ -452,6 +600,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         return super(SimulationWidget, self).on_touch_down(touch)
 
     def show_colony_dialog(self, colony):
+            """
+            Show a dialog to change the colony settings.
+
+            Args:
+            colony : Colony
+                The colony object to be edited.
+            """
             ants_label = MDTextField(hint_text="Number of ants", text=str(len(colony.ants)))
             ant_settings_label = MDTextField(hint_text="Step size", text=str(colony.ants[0].step_size))
             carry_label = MDTextField(hint_text="Amount to carry", text=str(colony.ants[0].amount_to_carry))
@@ -503,6 +658,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.dialog.open()
     
     def show_food_dialog(self, food):
+        """
+        Show a dialog to change the food settings.
+
+        Args:
+        food : Food
+            The food object to be edited.
+        """
         food_label = MDBoxLayout(orientation="vertical", spacing="12dp")
 
         food_amount_label = MDBoxLayout(orientation="horizontal", size_hint=(1, .9), spacing="30dp")
@@ -560,6 +722,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.dialog.open()
     
     def show_obstacle_dialog(self, obstacle):
+        """
+        Show a dialog to change the obstacle settings.
+
+        Args:
+        obstacle : Obstacle
+            The obstacle object for which settings are being managed.
+        """
         self.dialog = MDDialog(
             title='Obstacle Settings',
             type="custom",
@@ -579,6 +748,31 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         self.dialog.open()
 
     def apply_ant_changes(self, colony, new_ant_count, new_step_size, new_amount_to_carry, new_color, new_search_radius, new_pheromone_influence, new_reducing_factor, new_pheromone_grid, new_pheromone_state):
+        """
+        Apply changes made in the dialog window to ant settings.
+
+        Args:
+        colony : Colony
+            The colony object whose ant settings are being modified.
+        new_ant_count : str
+            The new number of ants in the colony.
+        new_step_size : str
+            The new step size for the ants.
+        new_amount_to_carry : str
+            The new amount of food each ant can carry.
+        new_color : str
+            The new color of the colony.
+        new_search_radius : str
+            The new search radius for the ants.
+        new_pheromone_influence : str
+            The new pheromone influence for the ants.
+        new_reducing_factor : str
+            The new pheromone reduction factor.
+        new_pheromone_grid : str
+            The new shape of the pheromone grid.
+        new_pheromone_state : bool
+            The new state indicating whether to show the pheromone grid.
+        """
         try:
             new_ant_count = int(new_ant_count)
             new_amount_to_carry = int(new_amount_to_carry)
@@ -620,6 +814,21 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
             self.show_error_dialog(f"Error: {str(e)}")
 
     def apply_food_changes(self, food, new_food_amount, new_life_bar_state, new_move_random_epoch, new_move_randomly_state):
+        """
+        Apply changes made in the dialog window to food settings.
+
+        Args:
+        food : Food
+            The food object whose settings are being modified.
+        new_food_amount : str
+            The new amount of food.
+        new_life_bar_state : bool
+            The new state indicating whether to show the life bar for the food.
+        new_move_random_epoch : str
+            The new number of epochs after which the food moves randomly.
+        new_move_randomly_state : bool
+            The new state indicating whether the food moves randomly.
+        """
         try:
             new_food_amount = int(new_food_amount)
             new_move_random_epoch = int(new_move_random_epoch)
@@ -637,6 +846,13 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
                 self.show_error_dialog("Please enter a valid integer for food amount.")
 
     def show_error_dialog(self, error_message):
+        """
+        Display an error dialog window with the provided error message.
+
+        Args:
+        error_message : str
+            The error message to be displayed in the dialog window.
+        """
         sound = SoundLoader.load("../sounds/error.mp3")
         if sound:
             sound.play()
@@ -657,12 +873,22 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
         error_dialog.open()
 
     def adjust_view(self, *args):
+        """
+        Adjust the view of the simulation widget.
+        """
         if self.scale == 1 and self.pos == ((self.width - sim.bounds[1])//2 + 95, (self.height - sim.bounds[2])//2):
             return False
         self.scale = 1
         self.pos = ((self.width - sim.bounds[1])//2 + 95, (self.height - sim.bounds[2])//2)
 
     def delete_object(self, object):
+        """
+        Delete the specified object from the simulation.
+
+        Args:
+        object : Food, Colony, or Obstacle
+            The object to be deleted from the simulation.
+        """
         if isinstance(object, Food):
             sim.food.remove(object)
         elif isinstance(object, Colony):
@@ -674,11 +900,32 @@ class SimulationWidget(ResizableDraggablePicture, Widget):
 
 
 class CustomSwitch(MDSwitch):
+    """
+    Custom switch widget that extends the functionality of MDSwitch.
+
+    Attributes:
+        icon_active (str): The icon to be displayed when the switch is active.
+    --------
+
+    Methods:
+        on_active(instance_switch, active_value):
+            Callback invoked when the switch is toggled.
+    """
     def __init__(self, **kwargs):
+        """
+        Initialize the CustomSwitch widget.
+        """
         super().__init__(**kwargs)
         self.icon_active = "check"
 
     def on_active(self, instance_switch, active_value):
+        """
+        Callback invoked when the switch is toggled.
+
+        Args:
+            instance_switch (CustomSwitch): The instance of the CustomSwitch widget.
+            active_value (bool): The new state of the switch (True for active, False for inactive).
+        """
         if self.theme_cls.material_style == "M3" and self.widget_style != "ios":
             size = (
                 (
@@ -721,7 +968,23 @@ class CustomSwitch(MDSwitch):
 
 
 class FoodButton(MDFloatingActionButton):
+    """
+    Class representing the food button.
+
+    Attributes:
+        icon (str):
+            The icon name representing the food button.
+        theme_cls.material_style (str):
+            The material style of the button.
+        icon_size (int):
+            The size of the icon in the food button.
+        md_bg_color (tuple):
+            The background color of the button.
+    """
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the food button.
+        """
         super().__init__(*args, **kwargs)
         self.icon = "food-apple-outline"
         self.theme_cls.material_style = "M3"
@@ -730,7 +993,23 @@ class FoodButton(MDFloatingActionButton):
 
 
 class ColonyButton(MDFloatingActionButton):
+    """
+    Class representing the colony button.
+
+    Attributes:
+        icon (str):
+            The icon representing the colony button.
+        theme_cls.material_style (str):
+            The material style of the button.
+        icon_size (int):
+            The size of the icon in the colony button.
+        md_bg_color (tuple):
+            The background color of the button.
+    """
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the colony button.
+        """
         super().__init__(*args, **kwargs)
         self.icon = "../images/ant_icon.png"
         self.theme_cls.material_style = "M3"
@@ -739,7 +1018,34 @@ class ColonyButton(MDFloatingActionButton):
 
 
 class SizeButton(MDFloatingActionButtonSpeedDial):
+    """
+    Class representing the size button.
+
+    Attributes:
+        theme_cls.theme_style (str):
+            The theme style of the button.
+        theme_cls.primary_palette (str):
+            The primary color palette of the button.
+        icon (str):
+            The icon representing the size button.
+        label_text_color (str):
+            The text color of the button label.
+        label_bg_color (str):
+            The background color of the button label.
+        label_radius (int):
+            The radius of the button label.
+        root_button_anim (bool):
+            Flag indicating whether root button animation is enabled.
+    --------
+
+    Methods:
+        on_enter(instance_button):
+            Called when the mouse cursor is over a button from the stack.
+    """
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the size button.
+        """
         super().__init__(*args, **kwargs)
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
@@ -750,7 +1056,9 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
         self.root_button_anim = True
  
     def on_enter(self, instance_button):
-        """Called when the mouse cursor is over a button from the stack."""
+        """
+        Called when the mouse cursor is over a button from the stack.
+        """
         if self.state == "open":
             for widget in self.children:
                 if self.hint_animation:
@@ -785,7 +1093,21 @@ class SizeButton(MDFloatingActionButtonSpeedDial):
 
 
 class StartStopButton(MDFillRoundFlatButton):
+    """
+    Class representing the start/stop button.
+
+    Attributes:
+        text (str):
+            The text displayed on the button.
+        font_size (int):
+            The font size of the button text.
+        padding (int):
+            The padding of the button.
+    """
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the start/stop button.
+        """
         super().__init__(*args, **kwargs)
         self.text = 'Start'
         self.font_size = 40
@@ -793,7 +1115,21 @@ class StartStopButton(MDFillRoundFlatButton):
 
 
 class ClearCanvasButton(MDFillRoundFlatButton):
+    """
+    Class representing the clear canvas button.
+
+    Attributes:
+        text (str):
+            The text displayed on the button.
+        font_size (int):
+            The font size of the button text.
+        padding (int):
+            The padding of the button.
+    """
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the clear canvas button.
+        """
         super().__init__(*args, **kwargs)
         self.text = 'Clear'
         self.font_size = 40
@@ -801,15 +1137,46 @@ class ClearCanvasButton(MDFillRoundFlatButton):
 
 
 class AdjustViewButton(MDFillRoundFlatButton):
+    """
+    Class representing the adjust view button.
+
+    Attributes:
+        text (str):
+            The text displayed on the button.
+        font_size (int):
+            The font size of the button text.
+        padding (int):
+            The padding of the button.
+    """
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the adjust view button.
+        """
         super().__init__(*args, **kwargs)
-        self.text="Adjust\n view"
+        self.text = "Adjust\n view"
         self.font_size = 30
         self.padding = 20
 
 
 class Obstacles_Button(MDFloatingActionButton):
+    """
+    Class representing the obstacles button.
+
+    Attributes:
+        icon (str):
+            The icon displayed on the button.
+        theme_cls (str):
+            The material style of the button.
+        icon_size (int):
+            The size of the icon.
+        md_bg_color (tuple):
+            The background color of the button.
+    """
+    
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the obstacles button.
+        """
         super().__init__(*args, **kwargs)
         self.icon = "square-outline"
         self.theme_cls.material_style = "M3"
@@ -820,43 +1187,56 @@ class Obstacles_Button(MDFloatingActionButton):
 class ButtonWidget(BoxLayout):
     """
     This class is the widget for all the buttons.
-    ---------
     
-    Attributes
-    simulation_widget : SimulationWidget()
-        instance of the SimulationWidget() to connect both widgets
-    food_button : FoodButton()
-        the food button
-    colony_button : ColonyButton()
-        the colony button
-    start_stop_button: Button()
-        the start/stop button
-    ---------
+    Attributes:
+        simulation_widget (SimulationWidget):
+            An instance of the SimulationWidget to connect both widgets.
+        food_button (FoodButton):
+            The food button.
+        colony_button (ColonyButton):
+            The colony button.
+        start_stop_button (Button):
+            The start/stop button.
+        obstacles_button (Obstacles_Button):
+            The obstacles button.
+        food_button_pressed (bool):
+            Indicates whether the food button is pressed.
+        colony_button_pressed (bool):
+            Indicates whether the colony button is pressed.
+    --------
     
-    Methods
-    change_border_size():
-        change the size of the border
-    on_food_button_press():
-        executed after pressing the food button
-    on_obstacle_button_press():
-        executed after pressing the obstacle button
-    on_colony_button_press():
-        executed after pressing the colony button
-    on_clear_button_press():
-        clear the canvas and stop the simulation
-    place_food():
-        place the food on the canvas
-    place_colony():
-        place the colony on the canvas
-    place_obstacle():
-        place an obstacle on the canvas
-    play_button_sound():
-        play sound if button is pressed
-    play_place_sound():
-        play sound when a new object is placed on the canvas
+    Methods:
+        __init__(simulation_widget, **kwargs):
+            Initialize the ButtonWidget.
+        change_border_size(new_border_size):
+            Change the size of the simulation border.
+        on_food_button_press(instance):
+            Executed after pressing the food button.
+        on_obstacles_button_press(instance):
+            Executed after pressing the obstacle button.
+        on_colony_button_press(instance):
+            Executed after pressing the colony button.
+        on_clear_button_press(instance):
+            Clear the canvas and stop the simulation.
+        place_food(instance, touch):
+            Place the food on the canvas.
+        place_colony(instance, touch):
+            Place the colony on the canvas.
+        place_obstacle(instance, touch):
+            Place an obstacle on the canvas.
+        play_button_sound(*args):
+            Play sound if a button is pressed.
+        play_place_sound(*args):
+            Play sound when a new object is placed on the canvas.
     """
     
     def __init__(self, simulation_widget, **kwargs):
+        """
+        Initialize the ButtonWidget.
+
+        Args:
+            simulation_widget (SimulationWidget): An instance of the SimulationWidget.
+        """
         super(ButtonWidget, self).__init__(**kwargs)
         self.simulation_widget = simulation_widget
 
@@ -897,6 +1277,12 @@ class ButtonWidget(BoxLayout):
         self.colony_button_pressed = False
 
     def change_border_size(self, new_border_size):
+        """
+        Change the size of the simulation border.
+
+        Args:
+            new_border_size (tuple): The new size of the simulation border.
+        """
         if self.simulation_widget.is_running:
             self.start_stop_button.trigger_action(0)
             
@@ -912,18 +1298,42 @@ class ButtonWidget(BoxLayout):
         self.simulation_widget.adjust_view()
 
     def on_food_button_press(self, instance):
+        """
+        Executed after pressing the food button.
+
+        Args:
+            instance: The instance of the food button.
+        """
         if not self.simulation_widget.is_running:
             self.simulation_widget.bind(on_touch_down=self.place_food)
        
     def on_colony_button_press(self, instance):
+        """
+        Executed after pressing the colony button.
+
+        Args:
+            instance: The instance of the colony button.
+        """
         if not self.simulation_widget.is_running:
             self.simulation_widget.bind(on_touch_down=self.place_colony)       
     
     def on_obstacles_button_press(self, instance):
+        """
+        Executed after pressing the obstacle button.
+
+        Args:
+            instance: The instance of the obstacle button.
+        """
         if not self.simulation_widget.is_running:
             self.simulation_widget.bind(on_touch_down=self.place_obstacle)
 
     def on_clear_button_press(self, instance):
+        """
+        Clear the canvas and stop the simulation.
+
+        Args:
+            instance: The instance of the clear button.
+        """
         if self.simulation_widget.is_running:
             self.start_stop_button.trigger_action(0)
         else:
@@ -931,6 +1341,13 @@ class ButtonWidget(BoxLayout):
         self.simulation_widget.clear_canvas(instance)
         
     def place_food(self, instance, touch):
+        """
+        Place the food on the canvas.
+
+        Args:
+            instance: The instance of the button widget.
+            touch: The touch event.
+        """
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
         
         if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
@@ -941,6 +1358,13 @@ class ButtonWidget(BoxLayout):
             sim.add_food(Food(size=(100, 100), coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), amount_of_food=100))
 
     def place_colony(self, instance, touch):
+        """
+        Place the colony on the canvas.
+
+        Args:
+            instance: The instance of the button widget.
+            touch: The touch event.
+        """
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
 
         if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
@@ -953,6 +1377,15 @@ class ButtonWidget(BoxLayout):
                                   coordinates=(transformed_touch[0] - 50, transformed_touch[1] - 50), color=(0, 0, 0, 1)))
 
     def place_obstacle(self, instance, touch):
+        """
+        Place an obstacle on the canvas based on the touch position.
+
+        Args:
+        instance : instance
+            The instance of the widget.
+        touch : instance
+            The touch event that triggered the placement of the obstacle.
+        """
         transformed_touch = self.simulation_widget.to_local(touch.x, touch.y)
 
         if sim.bounds[0] < transformed_touch[0]-50 < sim.bounds[1]-90 and sim.bounds[2]-25 < transformed_touch[1]-50 < sim.bounds[3]-90:
@@ -963,12 +1396,18 @@ class ButtonWidget(BoxLayout):
             sim.add_obstacle(Obstacle(coordinates=(transformed_touch[0] - 25, transformed_touch[1] - 25), size=(50, 50)))
 
     def play_button_sound(self, *args):
+        """
+        Play a sound when a button is clicked.
+        """
         if self.parent.children[1].sound:
             sound = SoundLoader.load("../sounds/click.mp3")
             if sound:
                 sound.play()
-    
+
     def play_place_sound(self, *args):
+        """
+        Play a sound when an object is placed on the canvas.
+        """
         if self.parent.children[1].sound:
             sound = SoundLoader.load("../sounds/place.mp3")
             if sound:
