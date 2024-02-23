@@ -909,7 +909,7 @@ class ButtonWidget(BoxLayout):
 
         self.simulation_widget.clear_canvas()
         self.simulation_widget.draw_bounds()
-        self.simulation_widget.adjust_view(0)
+        self.simulation_widget.adjust_view()
 
     def on_food_button_press(self, instance):
         if not self.simulation_widget.is_running:
