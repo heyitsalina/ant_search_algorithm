@@ -132,7 +132,7 @@ class GUI(MDApp):
         """
         Adjust the view when the size of the window is changed.
         """
-        Clock.schedule_interval(lambda instance: self.root.children[1].children[1].adjust_view(instance), 0.2)
+        Clock.schedule_interval(lambda instance: self.root.children[1].children[2].adjust_view(instance), 0.2)
 
 
 class SettingsButton(MDIconButton):
