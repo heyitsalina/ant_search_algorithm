@@ -12,7 +12,6 @@ class TimeTracker:
 
     Methods:
     time_this()
-    wrapper()
     print_execution_times()
     """
     execution_times = {}
