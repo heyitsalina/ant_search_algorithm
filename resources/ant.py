@@ -105,7 +105,8 @@ class Ant:
 
         if pheromone_direction is not None:
             self.direction += pheromone_direction * self.pheromone_influence
-
+            
+        new_x, new_y = self.direction
         magnitude = np.sqrt(new_x ** 2 + new_y ** 2)
         self.direction *= self.step_size / magnitude
 
